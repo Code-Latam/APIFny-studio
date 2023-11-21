@@ -1,0 +1,316 @@
+import React, { useState, useEffect,useRef  } from "react"
+import { Graph } from "react-d3-graph"
+import "./graphview.css"
+import axios from "axios";
+import Modal from "../modal/Modal";
+import Modallink from "../modallink/Modallink";
+
+const config = {
+  nodeHighlightBehavior: true,
+  directed: true,
+  node: 
+  {
+    
+    highlightStrokeColor: "red",
+    labelProperty: "label",
+    fontSize: 10,
+    fontColor:"#03A062",
+    draggable: true
+  },
+  link: {
+    highlightColor: "#03A062",
+    renderArrow: true,
+    strokeWidth: 2,
+  },
+  width: 400, // Set the width of the graph (adjust as needed)
+  height: 300, // Set the height of the graph (adjust as needed)
+  "freezeAllDragEvents": false,
+  "staticGraph": false,
+};
+
+const Graphview = ({ selectedProduct, selectedWork,onTaskChange }) => {
+    // Define a state variable to store the data from the API
+    const [data, setData] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedWorkflow, setSelectedWorkflow] = useState(null);
+    const [selectedEditMode, setSelectedEditMode] = useState(false);
+
+    const [showModallink, setShowModallink] = useState(false);
+    const [selectedTask, setSelectedTask] = useState(null);
+    const [nodesAdded, setNodesAdded] = useState(0);
+  
+    const onClickGraph = function(graph) {
+      setSelectedWorkflow(graph);
+      setNodesAdded(0);
+      console.log("graph");
+      console.log(graph);
+      onTaskChange("workflow",selectedProduct, graph.name,null,null);
+    };
+
+    const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+    function generateUniqueString(startingLetter) {
+      const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      const prefix = startingLetter;
+      let uniqueString = prefix;
+    
+      for (let i = 0; i < 3; i++) {
+        const randomIndex = Math.floor(Math.random() * alphabet.length);
+        uniqueString += alphabet.charAt(randomIndex);
+      }
+    
+      return uniqueString;
+    }
+
+    async function handleAddNode()  {
+      if (!selectedWorkflow) {
+        alert("Please select a workflow first by clicking on it, before adding nodes");
+        return;
+      }
+      
+     
+      // generate a new node id based on the length of the nodes array
+      const newNodeId = generateUniqueString(T);
+      
+      console.log(newNodeId);
+
+
+      const mybody = {
+        clientNr: process.env.REACT_APP_CLIENTNR,
+        explorerId: process.env.REACT_APP_EXPLORERID,
+        workflowName: selectedWorkflow.name,
+        taskId: newNodeId,
+        name: "No Name",
+        description: "No Description Yet",
+        apiName:"",
+        x:  getRandomNumber(25, 150), 
+        y:  getRandomNumber(25, 150),
+      };
+
+      console.log("task insert object");
+      console.log(mybody);
+
+      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/task/register", mybody);
+      
+      // onTaskChange("task",selectedProduct, selectedWorkflow.name,"",newNodeId);
+      setNodesAdded(nodesAdded+1);
+    };
+
+   
+
+
+    function handleAddLink()
+    {
+      setShowModallink(true);
+    }
+
+    
+    const handleDeleteNode = async () => {
+      if (!selectedTask) {
+        alert("Please select a task before trying to delete.");
+        return;
+      }
+    
+      const nodeToDelete = {
+        clientNr: process.env.REACT_APP_CLIENTNR,
+        explorerId: process.env.REACT_APP_EXPLORERID,
+        workflowName: selectedWorkflow.name,
+        taskId: selectedTask.id, // You might need to adjust this based on your data structure
+      };
+
+      console.log("Node to Delete:");
+      console.log(nodeToDelete);
+    
+      try {
+        // Make the API call to delete the node
+        const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/task/delete", nodeToDelete);
+        
+        // Update the state or perform any other necessary actions
+        setNodesAdded(nodesAdded - 1);
+      } catch (error) {
+        console.error("Error deleting node:", error);
+        // Handle the error appropriately
+      }
+    };
+
+    function updateNodePosition(nodeId, x, y) {
+      // Use the axios.post method to send a POST request with the node id, x, and y as the request body
+      const myPositionPayload = {
+        clientNr: process.env.REACT_APP_CLIENTNR,
+        explorerId: process.env.REACT_APP_EXPLORERID,
+        workflowName: selectedWorkflow.name,
+        taskId: nodeId,
+        x: x,
+        y: y
+      }
+      try { 
+      console.log("Payload");
+      console.log(myPositionPayload);
+      const myresponse = axios.post(process.env.REACT_APP_CENTRAL_BACK + "/task/update",myPositionPayload)
+    }
+    catch (error) {
+      console.error("Error updating node:", error);
+      // Handle the error appropriately
+    };
+    }
+
+    const onClickNode = function(nodeId, node,graphName, graph) {
+      if ( node.apiName && node.apiName !=="")
+      {
+      onTaskChange("taskapi",selectedProduct,graphName,node.apiName,nodeId);
+      }
+      else
+      {
+        onTaskChange("task",selectedProduct, graphName,node.apiName,nodeId);
+      }
+      setSelectedTask(node);
+      setSelectedWorkflow(graph);
+    };
+
+    const onDoubleClickNode = function(nodeId, node,graphName) {
+      if ( node.apiName && node.apiName !=="")
+      {
+      onTaskChange("api",selectedProduct,graphName,node.apiName,nodeId);
+      }
+      else
+      {
+        alert("Task is not an API, double click will not work")
+      }
+
+      setSelectedTask(node);
+      setSelectedWorkflow(graph);
+    };
+
+ const onZoomChange = function(previousZoom, newZoom) {
+};
+
+
+    const handleShowModal = (graph) => {
+      setSelectedWorkflow(graph);
+      setShowModal(true);
+    };
+
+   
+
+    const handleShowModaltask = (nodeId,node) => {
+      setSelectedTask(node);
+      setShowModaltask(true);
+    };
+
+    const fetchData = async () => {
+      try {
+        const mybody = {
+          clientNr: process.env.REACT_APP_CLIENTNR,
+          explorerId: process.env.REACT_APP_EXPLORERID,
+        };
+        console.log("in fetch");
+        console.log(selectedProduct);
+        console.log(selectedWork);
+
+        if (selectedProduct && selectedWork) {
+          // Case: Both product and workflow are selected
+          mybody.productName = selectedProduct;
+          mybody.name = selectedWork;
+        } else if (selectedProduct) {
+          // Case: Only product is selected
+          mybody.productName = selectedProduct;
+        }
+    
+        // Use different API endpoints for each case
+
+
+        let endpoint = "/workflow/queryonegraph";
+    
+        if (!selectedProduct) {
+          endpoint = "/workflow/queryallgraphs";
+        } else if (selectedProduct && !selectedWork) {
+          endpoint = "/workflow/queryallgraphsgivenproduct";
+        }
+    
+        // Make the API call using axios and parse the response as JSON
+        const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + endpoint, mybody);
+        const json = response.data;
+    
+        // Set the data state variable with the filtered JSON data
+        setData(json);
+        console.log(json);
+        if ((json.length > 0) && selectedProduct && selectedWork) {
+          onClickGraph(json[0]);
+        }
+      } catch (error) {
+        // Handle any errors
+        console.error(error);
+      }
+    };
+    
+  
+    // Use useEffect to fetch the data when the component mounts
+    useEffect(() => {
+      fetchData();
+    },[selectedProduct,selectedWork,nodesAdded]);
+
+    return (
+      <div className= "App">
+        <div className="top-part">
+          {data.map((graph, index) => (
+            <div key={index}>
+              <div
+            className="graph-header"
+            onClick={() => {
+              console.log("Clicked graph:", graph); // Debugging statement
+              handleShowModal(graph);
+            }}
+          >
+            {graph.name}
+          </div>
+          <Graph
+              key={index}
+              id={`graph-${index}`}
+              data={{
+                ...graph,
+                nodes: graph.nodes.map((node) => ({
+                  ...node,
+                  // Set color based on conditions
+                  color:
+                    node.apiName !== ""
+                      ? "blue"
+                      : "#03A062",
+                })),
+              }}
+              config={config}
+              onClickGraph={() => onClickGraph(graph)}
+              onClickNode={(nodeId,node) => onClickNode(nodeId,node, graph.name,graph)}
+              onDoubleClickNode={(nodeId,node) => onDoubleClickNode(nodeId,node, graph.name,graph)}
+              onZoomChange={onZoomChange}
+              onNodePositionChange={updateNodePosition}
+            />
+            </div>
+          ))}
+        </div>
+        <div className="buttons">
+        <button className = "actionButton" onClick={() => handleAddNode()}>Add Task</button>
+        <button className = "actionButton" onClick={() => handleDeleteNode()}>Delete Task</button>
+        <button className = "actionButton" onClick={() => handleAddLink()}>Add Link</button> 
+        </div>
+        {showModal && (
+        <Modal
+          graph={selectedWorkflow}
+          onClose={() => {
+            setSelectedWorkflow(null);
+            setShowModal(false);
+          }}
+        />
+      )}
+        {showModallink && (
+        <Modallink
+          graph={selectedWorkflow}
+          onClose={() => {
+            setShowModallink(false);
+          }}
+        />
+      )}
+      </div>
+    );
+          }   
+    
+export default Graphview;

@@ -1,0 +1,21 @@
+.code-container {
+    background-color: black;
+    padding: 0px;
+    color: green;
+   
+  }
+
+  .code-display
+  {
+    margin-left : 10px
+  }
+  .copied
+  {
+    color: green;
+  }
+
+  .copy-button
+  {
+    float: left;
+    margin: 10px;
+  }
