@@ -8,6 +8,8 @@ function Modallink({ graph, onClose }) {
   const [targets, setTargets] = useState([]);
   const [selectedSource, setSelectedSource] = useState(null);
   const [selectedTarget, setSelectedTarget] = useState(null);
+  const [selectedType, setSelectedType] = useState("STRAIGHT");
+  const typeOptions = ["STRAIGHT", "CURVE_SMOOTH", "CURVE_FULL"];
 
   useEffect(() => {
     // Fetch sources and targets from your API
@@ -53,7 +55,8 @@ function Modallink({ graph, onClose }) {
 
     const MyNewLinkObject = {
       source: nodeIdSource,
-      target: nodeIdtarget
+      target: nodeIdtarget,
+      type: selectedType
     }
 
     if (!validNewLink(MyNewLinkObject,currentLinks ))
@@ -66,17 +69,19 @@ function Modallink({ graph, onClose }) {
     const mypayload = {
       clientNr: process.env.REACT_APP_CLIENTNR,
       explorerId: process.env.REACT_APP_EXPLORERID,
-      workflowName: selectedWorkflow.name,
-      linkId: selectedWorkflow.linkId,
+      workflowName: graph.name,
       links: currentLinks
     };
 
-    console.log("task insert object");
-    console.log(mybody);
+    console.log("GRAPH");
+    console.log(graph);
 
-    const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/link/update", mybody);
+    console.log("Link create Payload for API");
+    console.log(mypayload);
+
+    const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/link/update", mypayload);
     
-    setNodesAdded(nodesAdded+1);
+    // setNodesAdded(nodesAdded+1);
     return true;
   };
 
@@ -141,6 +146,18 @@ function Modallink({ graph, onClose }) {
             {targets.map((target) => (
               <option key={target.taskId} value={target.taskId}>
                 {target.name}
+              </option>
+            ))}
+          </select>
+          <label htmlFor="linkType">Link Type</label>
+          <select
+            id="linkType"
+            value={selectedType}
+            onChange={(e) => setSelectedType(e.target.value)}
+          >
+            {typeOptions.map((type) => (
+              <option key={type} value={type}>
+                {type}
               </option>
             ))}
           </select>

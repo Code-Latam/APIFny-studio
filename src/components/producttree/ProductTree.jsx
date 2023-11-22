@@ -8,6 +8,7 @@ import Graphview from "../../components/graphview/Graphview";
 import Productview from "../productview/Productview";
 import Workflowview from '../workflowview/Workflowview';
 import Taskview from '../taskview/Taskview';
+import Linkview from '../linkview/Linkview';
 import ContextMenu from "../contextmenu/ContextMenu"; 
 import { FiMoreVertical } from 'react-icons/fi'
 import {convertToOpenAPI} from "../../utils/utils.js";
@@ -42,6 +43,7 @@ const ProductTree = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedWork, setSelectedWorkflow] = useState(null);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
+  const [selectedLink, setSelectedLink] = useState(null);
   const [selectedApi, setSelectedApi] = useState(null);
   const [selectedCodeType, setCodeType] = useState(null);
   const [products, setProducts] = useState([]);
@@ -229,10 +231,6 @@ const ProductTree = () => {
 
 
   const handleSelectedItemChange = (newselectItem,newProductName,newWorkflowName,newApiName, newTaskId) => {
-    console.log("We are in product Tree");
-    console.log(newselectItem);
-    console.log(newWorkflowName);
-    console.log(newTaskId);
     
     setSelectedItemType(newselectItem);
     setSelectedProduct(newProductName);
@@ -240,7 +238,18 @@ const ProductTree = () => {
     setSelectedTaskId(newTaskId);
     setSelectedApi(newApiName);
     setSelectedWorkflow(newWorkflowName);
+    setSelectedLink(null);
   };
+
+  const handleSelectedLinkChange = (newselectItem,newProductName,newWorkflowName,newLink) => {
+    
+    setSelectedItemType(newselectItem);
+    setSelectedProduct(newProductName);
+    setSelectedWorkflow(newWorkflowName);
+    setSelectedLink(newLink)
+    setSelectedTaskId(null)
+  };
+
 
   const handleProductClick = (product) => {
     console.log("product clicked");
@@ -339,6 +348,7 @@ const ProductTree = () => {
             selectedProduct={selectedProduct}
             selectedWork={selectedWork}
             onTaskChange = {handleSelectedItemChange}
+            onLinkChange = {handleSelectedLinkChange}
           />
         </div>
         <div className="lower-panel">
@@ -377,6 +387,14 @@ const ProductTree = () => {
          explorerId = {explorerId}
          workflowName = {selectedWork}
          taskId = {selectedTaskId}
+       /> 
+         : null} 
+        {selectedItemType === 'link' ?
+         <Linkview
+         clientNr = {clientNr}
+         explorerId = {explorerId}
+         workflowName = {selectedWork}
+         mylink = {selectedLink}
        /> 
          : null} 
         {selectedItemType === 'api'  ?

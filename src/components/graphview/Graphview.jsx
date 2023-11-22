@@ -28,7 +28,7 @@ const config = {
   "staticGraph": false,
 };
 
-const Graphview = ({ selectedProduct, selectedWork,onTaskChange }) => {
+const Graphview = ({ selectedProduct, selectedWork,onTaskChange,onLinkChange }) => {
     // Define a state variable to store the data from the API
     const [data, setData] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -37,9 +37,12 @@ const Graphview = ({ selectedProduct, selectedWork,onTaskChange }) => {
 
     const [showModallink, setShowModallink] = useState(false);
     const [selectedTask, setSelectedTask] = useState(null);
+    const [selectedLink, setSelectedLink] = useState(null);
     const [nodesAdded, setNodesAdded] = useState(0);
   
     const onClickGraph = function(graph) {
+      setSelectedTask(null);
+      setSelectedLink(null);
       setSelectedWorkflow(graph);
       setNodesAdded(0);
       console.log("graph");
@@ -67,10 +70,11 @@ const Graphview = ({ selectedProduct, selectedWork,onTaskChange }) => {
         alert("Please select a workflow first by clicking on it, before adding nodes");
         return;
       }
+
       
      
       // generate a new node id based on the length of the nodes array
-      const newNodeId = generateUniqueString(T);
+      const newNodeId = generateUniqueString("T");
       
       console.log(newNodeId);
 
@@ -80,7 +84,7 @@ const Graphview = ({ selectedProduct, selectedWork,onTaskChange }) => {
         explorerId: process.env.REACT_APP_EXPLORERID,
         workflowName: selectedWorkflow.name,
         taskId: newNodeId,
-        name: "No Name",
+        name: newNodeId,
         description: "No Description Yet",
         apiName:"",
         x:  getRandomNumber(25, 150), 
@@ -104,8 +108,62 @@ const Graphview = ({ selectedProduct, selectedWork,onTaskChange }) => {
       setShowModallink(true);
     }
 
+    function removeFromLinkList(objToRemove, arr) {
+      // Use Array.findIndex to find the index of the object in the array
+      const indexToRemove = arr.findIndex(obj => obj.source === objToRemove.source && obj.target === objToRemove.target);
+  
+      // Check if the object was found
+      if (indexToRemove !== -1) {
+          // Use Array.splice to remove the object at the found index
+          arr.splice(indexToRemove, 1);
+      }
+      // Return the updated array
+    return arr;
+      }
+
+    const handleDeleteLink = async () => {
+      if (!selectedWorkflow) {
+        alert("Please select a workflow before trying to delete a link.");
+        return;
+      }
+      if (!selectedLink) {
+        alert("Please select a link before trying to delete a link.");
+        return;
+      }
+
+      selectedLink
+      const myCurrentLinkList = selectedWorkflow.links;
+      console.log("SELECTEDWORKFLOW")
+      console.log(selectedWorkflow);
+
+      const myNewLinkList = removeFromLinkList(selectedLink, myCurrentLinkList)
+    
+      const myPayload = {
+        clientNr: process.env.REACT_APP_CLIENTNR,
+        explorerId: process.env.REACT_APP_EXPLORERID,
+        workflowName: selectedWorkflow.name,
+        links: myNewLinkList, // You might need to adjust this based on your data structure
+      };
+
+    
+      try {
+        // Make the API call to delete the node
+        const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/link/update", myPayload);
+        
+        // Update the state or perform any other necessary actions
+        setNodesAdded(nodesAdded + 1);
+        setSelectedLink(null);
+      } catch (error) {
+        console.error("Error deleting Link:", error);
+        // Handle the error appropriately
+      }
+    };
     
     const handleDeleteNode = async () => {
+      if (!selectedWorkflow) {
+        alert("Please select a workflow before trying to delete.");
+        return;
+      }
       if (!selectedTask) {
         alert("Please select a task before trying to delete.");
         return;
@@ -126,19 +184,20 @@ const Graphview = ({ selectedProduct, selectedWork,onTaskChange }) => {
         const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/task/delete", nodeToDelete);
         
         // Update the state or perform any other necessary actions
-        setNodesAdded(nodesAdded - 1);
+        setNodesAdded(nodesAdded + 1);
+        setSelectedTask(null);
       } catch (error) {
         console.error("Error deleting node:", error);
         // Handle the error appropriately
       }
     };
 
-    function updateNodePosition(nodeId, x, y) {
+    function updateNodePosition(nodeId, x, y, workflowName) {
       // Use the axios.post method to send a POST request with the node id, x, and y as the request body
       const myPositionPayload = {
         clientNr: process.env.REACT_APP_CLIENTNR,
         explorerId: process.env.REACT_APP_EXPLORERID,
-        workflowName: selectedWorkflow.name,
+        workflowName: workflowName,
         taskId: nodeId,
         x: x,
         y: y
@@ -154,6 +213,22 @@ const Graphview = ({ selectedProduct, selectedWork,onTaskChange }) => {
     };
     }
 
+   const handleClickLink = function(sourceId,targetId,graph) {
+    console.log("LINK CLICKED");
+    console.log(sourceId);
+    console.log(targetId);
+    console.log(graph);
+    const myLinkObject =
+    {
+      source: sourceId,
+      target: targetId
+    };
+    setSelectedLink(myLinkObject);
+    onLinkChange("link",selectedProduct, graph.name,myLinkObject);
+    // setSelectedWorkflow(graph);
+
+   }
+
     const onClickNode = function(nodeId, node,graphName, graph) {
       if ( node.apiName && node.apiName !=="")
       {
@@ -165,9 +240,10 @@ const Graphview = ({ selectedProduct, selectedWork,onTaskChange }) => {
       }
       setSelectedTask(node);
       setSelectedWorkflow(graph);
+      setSelectedLink(null);
     };
 
-    const onDoubleClickNode = function(nodeId, node,graphName) {
+    const onDoubleClickNode = function(nodeId, node,graphName,graph) {
       if ( node.apiName && node.apiName !=="")
       {
       onTaskChange("api",selectedProduct,graphName,node.apiName,nodeId);
@@ -178,7 +254,7 @@ const Graphview = ({ selectedProduct, selectedWork,onTaskChange }) => {
       }
 
       setSelectedTask(node);
-      setSelectedWorkflow(graph);
+      // setSelectedWorkflow(graph);
     };
 
  const onZoomChange = function(previousZoom, newZoom) {
@@ -280,17 +356,20 @@ const Graphview = ({ selectedProduct, selectedWork,onTaskChange }) => {
               config={config}
               onClickGraph={() => onClickGraph(graph)}
               onClickNode={(nodeId,node) => onClickNode(nodeId,node, graph.name,graph)}
+              onClickLink = {(source,target) => handleClickLink(source,target,graph)}
               onDoubleClickNode={(nodeId,node) => onDoubleClickNode(nodeId,node, graph.name,graph)}
               onZoomChange={onZoomChange}
-              onNodePositionChange={updateNodePosition}
+              onNodePositionChange = {(nodeId,x,y) => updateNodePosition(nodeId,x,y, graph.name)}
+        
             />
             </div>
           ))}
         </div>
         <div className="buttons">
         <button className = "actionButton" onClick={() => handleAddNode()}>Add Task</button>
-        <button className = "actionButton" onClick={() => handleDeleteNode()}>Delete Task</button>
-        <button className = "actionButton" onClick={() => handleAddLink()}>Add Link</button> 
+        <button className = "actionButton" onClick={() => handleDeleteNode()}>Remove Task</button>
+        <button className = "actionButton" onClick={() => handleAddLink()}>Add Link</button>
+        <button className = "actionButton" onClick={() => handleDeleteLink()}>Remove Link</button>  
         </div>
         {showModal && (
         <Modal
