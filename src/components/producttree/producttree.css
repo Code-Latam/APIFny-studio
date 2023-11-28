@@ -1,5 +1,6 @@
 .tree-node {
     color: #03A062;
+    cursor: pointer;
   }
   
   /* Apply indentation for child nodes */
@@ -11,6 +12,7 @@
   .workflow {
     color: #03A062;
     margin-left: 30px;
+    cursor: pointer;
   }
 
   /* Set up a main container to hold the left and right panels */
@@ -33,6 +35,7 @@
     width: 30%;
     height: 100%;
     min-width: 350px;
+    padding: 10px;
   }
   
 
@@ -66,6 +69,11 @@
 .icon-right-align {
   display: flex;
   justify-content: flex-end;
+}
+
+.open-modal-button {
+  margin-right: 5px;
+  background-color: #ccc;
 }
 
 

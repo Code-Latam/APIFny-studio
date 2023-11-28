@@ -1,8 +1,50 @@
 import React, { useState, useEffect } from 'react';
 import "./productview.css";
+import axios from "axios";
 
-function Productview({ clientNr, explorerId, productName }) {
+function Productview({ clientNr, explorerId, productName, designerMode, updateTreeView }) {
   const [product, setProduct] = useState(null);
+
+  const handleDescriptionChange = (event) => {
+    setProduct((prevProduct) => ({
+      ...prevProduct,
+      description: event.target.value,
+    }));
+  };
+
+
+  const handleUpdate = async () => {
+    const apiUrl = process.env.REACT_APP_CENTRAL_BACK + '/product/update';
+
+    // Define the request body
+    const requestBody = {
+      clientNr: clientNr,
+      explorerId: explorerId,
+      
+      productName:product.productName,
+      description: product.description
+    };
+
+      const myResponse = await axios.post(apiUrl, requestBody);
+      alert("Product was succesfully updated.");
+
+  };
+
+  const handleDelete = async () => {
+    const apiUrl = process.env.REACT_APP_CENTRAL_BACK + '/product/delete';
+
+    // Define the request body
+    const requestBody = {
+      clientNr: clientNr,
+      explorerId: explorerId, 
+      productName:product.productName,
+    };
+
+      const myResponse = await axios.post(apiUrl, requestBody);
+      alert("Product was succesfully removed.");
+      updateTreeView();
+
+  };
 
   useEffect(() => {
     // Define the API URL for fetching the product
@@ -46,7 +88,7 @@ function Productview({ clientNr, explorerId, productName }) {
                 type="text"
                 id="productName"
                 value={product.productName}
-                className="ProductViewinputname"
+                className="ProductViewinput"
                 disabled
               />
             </div>
@@ -58,8 +100,9 @@ function Productview({ clientNr, explorerId, productName }) {
                 id="productDescription"
                 value={product.description}
                 className="Productviewinput"
+                onChange={handleDescriptionChange}
                 rows= "10"
-                disabled
+                disabled={!designerMode }
                 style={{ maxHeight: "200px", overflowY: "auto", width: "800px" }}
               />
             </div>
@@ -68,6 +111,12 @@ function Productview({ clientNr, explorerId, productName }) {
           <p>Loading product information...</p>
         )}
       </div>
+      {designerMode && (
+              <div>
+                <button className = "actionbutton" onClick={handleUpdate}>Update</button>
+                <button className = "actionbutton" onClick={handleDelete}>Remove</button>
+              </div>
+            )}
     </div>
   );
 }

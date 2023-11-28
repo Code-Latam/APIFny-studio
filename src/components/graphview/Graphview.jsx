@@ -28,7 +28,7 @@ const config = {
   "staticGraph": false,
 };
 
-const Graphview = ({ selectedProduct, selectedWork,onTaskChange,onLinkChange }) => {
+const Graphview = ({ selectedProduct, selectedWork,onTaskChange,onLinkChange,graphChange }) => {
     // Define a state variable to store the data from the API
     const [data, setData] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -87,6 +87,7 @@ const Graphview = ({ selectedProduct, selectedWork,onTaskChange,onLinkChange }) 
         name: newNodeId,
         description: "No Description Yet",
         apiName:"",
+        symbolType:"circle",
         x:  getRandomNumber(25, 150), 
         y:  getRandomNumber(25, 150),
       };
@@ -133,8 +134,6 @@ const Graphview = ({ selectedProduct, selectedWork,onTaskChange,onLinkChange }) 
 
       selectedLink
       const myCurrentLinkList = selectedWorkflow.links;
-      console.log("SELECTEDWORKFLOW")
-      console.log(selectedWorkflow);
 
       const myNewLinkList = removeFromLinkList(selectedLink, myCurrentLinkList)
     
@@ -173,11 +172,9 @@ const Graphview = ({ selectedProduct, selectedWork,onTaskChange,onLinkChange }) 
         clientNr: process.env.REACT_APP_CLIENTNR,
         explorerId: process.env.REACT_APP_EXPLORERID,
         workflowName: selectedWorkflow.name,
-        taskId: selectedTask.id, // You might need to adjust this based on your data structure
+        taskId: selectedTask.id, 
       };
 
-      console.log("Node to Delete:");
-      console.log(nodeToDelete);
     
       try {
         // Make the API call to delete the node
@@ -213,15 +210,30 @@ const Graphview = ({ selectedProduct, selectedWork,onTaskChange,onLinkChange }) 
     };
     }
 
+  function findType(arr, source, target) {
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].source === source && arr[i].target === target) {
+          return arr[i].type;
+        }
+      }
+      // Return null or any default value if the combination is not found
+      return null;
+  }
+
    const handleClickLink = function(sourceId,targetId,graph) {
     console.log("LINK CLICKED");
     console.log(sourceId);
     console.log(targetId);
     console.log(graph);
+    // find the type of the link
+    // graph.links[..]
+
+    const myType = findType(graph.links, sourceId, targetId)
     const myLinkObject =
     {
       source: sourceId,
-      target: targetId
+      target: targetId,
+      type: myType
     };
     setSelectedLink(myLinkObject);
     onLinkChange("link",selectedProduct, graph.name,myLinkObject);
@@ -323,7 +335,7 @@ const Graphview = ({ selectedProduct, selectedWork,onTaskChange,onLinkChange }) 
     // Use useEffect to fetch the data when the component mounts
     useEffect(() => {
       fetchData();
-    },[selectedProduct,selectedWork,nodesAdded]);
+    },[selectedProduct,selectedWork,nodesAdded, graphChange]);
 
     return (
       <div className= "App">

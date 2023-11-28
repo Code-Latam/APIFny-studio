@@ -12,7 +12,6 @@ function Modallink({ graph, onClose }) {
   const typeOptions = ["STRAIGHT", "CURVE_SMOOTH", "CURVE_FULL"];
 
   useEffect(() => {
-    // Fetch sources and targets from your API
     const fetchData = async () => {
       const myBody = {
         clientNr: process.env.REACT_APP_CLIENTNR,

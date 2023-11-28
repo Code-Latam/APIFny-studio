@@ -1,15 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import "./taskview.css";
+import axios from "axios";
 
-function Taskview({ clientNr, explorerId, workflowName, taskId }) {
+function Taskview({ clientNr, explorerId, workflowName, taskId, designerMode,updateGraphView }) {
 
   console.log("We are in Taskview");
   const [workflow, setWorkflow] = useState(null);
   const [task, setTask] = useState(null);
-  console.log("taskId is:");
-  console.log(taskId);
+  const [selectedType, setSelectedType] = useState("circle");
+  const [selectedApi, setSelectedApi] = useState("");
+  const [apis, setApis] = useState([]);
+
+  const typeOptions = ["circle","cross","diamond","square","star","triangle","wye"];
+
+  
 
   useEffect(() => {
+    const fetchApis = async () => {
+      const myBody = {
+        clientNr: process.env.REACT_APP_CLIENTNR,
+      }
+      try {
+        const apisresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/api/queryall", myBody);
+        const myEmptyApi = { apiName: ""}
+        const myapis = apisresponse.data;
+        myapis.unshift(myEmptyApi);;
+        setApis(myapis);  
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    fetchApis();
+
+
     // Define the API URL for fetching the product
     const apiUrl = process.env.REACT_APP_CENTRAL_BACK + '/task/query';
 
@@ -19,6 +43,7 @@ function Taskview({ clientNr, explorerId, workflowName, taskId }) {
       explorerId: explorerId,
       workflowName: workflowName,
       taskId: taskId
+     
     };
 
       console.log(requestBody)
@@ -34,12 +59,48 @@ function Taskview({ clientNr, explorerId, workflowName, taskId }) {
       .then((response) => response.json())
       .then((data) => {
         // Set the fetched product data to the state
-        setTask(data)
+        setTask(data);
+        setSelectedType(data.symbolType);
+        setSelectedApi(data.apiName)
       })
       .catch((error) => {
         console.error('Error fetching task:', error);
       });
   }, [workflowName,taskId]);
+
+  const handleDescriptionChange = (event) => {
+    setTask((prevTask) => ({
+      ...prevTask,
+      description: event.target.value,
+    }));
+  };
+  const handleNameChange = (event) => {
+    setTask((prevTask) => ({
+      ...prevTask,
+      name: event.target.value,
+    }));
+  };
+
+  const handleUpdate = async () => {
+    const apiUrl = process.env.REACT_APP_CENTRAL_BACK + '/task/update';
+
+    // Define the request body
+    const requestBody = {
+      clientNr: clientNr,
+      explorerId: explorerId,
+      workflowName:workflowName,
+      taskId:taskId,
+      symbolType: selectedType,
+      apiName: selectedApi,
+      name:task.name,
+      description: task.description
+    };
+
+      const myResponse = await axios.post(apiUrl, requestBody);
+      alert("Task was succesfully updated.");
+      updateGraphView();
+
+  };
 
   return (
     <div className="Taskview">
@@ -55,8 +116,43 @@ function Taskview({ clientNr, explorerId, workflowName, taskId }) {
                 id="taskName"
                 value={task.name}
                 className="TaskViewinputname"
-                disabled
+                onChange={handleNameChange}
+                disabled={!designerMode }
               />
+            </div>
+            <div>
+            <label htmlFor="nodeType">node Type</label>
+              <br/>
+              <select
+                id="nodeType"
+                value={selectedType}
+                className="LinkTViewType"
+                onChange={(e) => setSelectedType(e.target.value)}
+                disabled={!designerMode }
+              >
+                {typeOptions.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+            <label htmlFor="api">Implements API:</label>
+              <br/>
+              <select
+                id="api"
+                value={selectedApi}
+                className="LinkTViewType"
+                onChange={(e) => setSelectedApi(e.target.value)}
+                disabled={!designerMode }
+              >
+                {apis.map((api) => (
+                  <option key={api.name} value={api.name}>
+                    {api.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
               <label htmlFor="workflowDescription">Description</label>
@@ -66,8 +162,9 @@ function Taskview({ clientNr, explorerId, workflowName, taskId }) {
                 id="taskDescription"
                 value={task.description}
                 className="Taskviewinput"
+                onChange={handleDescriptionChange}
                 rows= "10"
-                disabled
+                disabled={!designerMode }
                 style={{ maxHeight: "200px", overflowY: "auto", width: "800px" }}
               />
             </div>
@@ -76,6 +173,11 @@ function Taskview({ clientNr, explorerId, workflowName, taskId }) {
           <p>Loading Task information...</p>
         )}
       </div>
+      {designerMode && (
+              <div>
+                <button onClick={handleUpdate}>Update</button>
+              </div>
+            )}
     </div>
   );
 }

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import "./workflowview.css";
+import axios from "axios";
 
-function Workflowview({ clientNr, explorerId, productName, name }) {
+function Workflowview({ clientNr, explorerId, productName, name, designerMode, updateTreeView  }) {
   const [workflow, setWorkflow] = useState(null);
 
   useEffect(() => {
@@ -34,6 +35,46 @@ function Workflowview({ clientNr, explorerId, productName, name }) {
       });
   }, [clientNr, explorerId, productName, name]);
 
+  const handleDescriptionChange = (event) => {
+    setWorkflow((prevWorkflow) => ({
+      ...prevWorkflow,
+      description: event.target.value,
+    }));
+  };
+
+  const handleUpdate = async () => {
+    const apiUrl = process.env.REACT_APP_CENTRAL_BACK + '/workflow/update';
+
+    // Define the request body
+    const requestBody = {
+      clientNr: clientNr,
+      explorerId: explorerId,
+      productName:productName,
+      name:name,
+      description: workflow.description
+    };
+
+      const myResponse = await axios.post(apiUrl, requestBody);
+      alert("Workflow description was succesfully updated.");
+  };
+
+  const handleDelete = async () => {
+    const apiUrl = process.env.REACT_APP_CENTRAL_BACK + '/workflow/delete';
+
+    // Define the request body
+    const requestBody = {
+      clientNr: clientNr,
+      explorerId: explorerId,
+      productName:productName,
+      name:name,
+    };
+
+      const myResponse = await axios.post(apiUrl, requestBody);
+      alert("Workflow was succesfully removed.");
+      updateTreeView();
+
+  };
+
   return (
     <div className="Workflowview">
       <div>
@@ -59,8 +100,9 @@ function Workflowview({ clientNr, explorerId, productName, name }) {
                 id="workflowDescription"
                 value={workflow.description}
                 className="Workflowviewinput"
+                onChange={handleDescriptionChange}
                 rows= "10"
-                disabled
+                disabled={!designerMode }
                 style={{ maxHeight: "200px", overflowY: "auto", width: "800px" }}
               />
             </div>
@@ -69,6 +111,12 @@ function Workflowview({ clientNr, explorerId, productName, name }) {
           <p>Loading Workflow information...</p>
         )}
       </div>
+      {designerMode && (
+              <div>
+                <button className = "actionbutton" onClick={handleUpdate}>Update</button>
+                <button className = "actionbutton" onClick={handleDelete}>Remove</button>
+              </div>
+            )}
     </div>
   );
 }
