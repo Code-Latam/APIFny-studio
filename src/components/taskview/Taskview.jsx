@@ -48,7 +48,7 @@ function Taskview({ clientNr, explorerId, workflowName, taskId, designerMode,upd
 
       console.log(requestBody)
 
-    // Make a POST request to fetch the task
+    // Make a POST request to fetch the tasK
     fetch(apiUrl, {
       method: 'POST',
       headers: {
