@@ -1,9 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import "./workflowview.css";
 import axios from "axios";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; // import styles
+import htmlToMd from 'html-to-md';
+import ReactMarkdown from 'react-markdown';
+import { renderToString } from 'react-dom/server';
 
 function Workflowview({ clientNr, explorerId, productName, name, designerMode, updateTreeView  }) {
   const [workflow, setWorkflow] = useState(null);
+  const [isRichTextMode, setIsRichTextMode] = useState(true);
+
+  const [markdownContent, setMarkdownContent] = useState('');
+
+  const toggleDisplayMode = () => {
+    setIsRichTextMode((prevMode) => !prevMode);
+  };
+
 
   useEffect(() => {
     // Define the API URL for fetching the product
@@ -29,17 +42,37 @@ function Workflowview({ clientNr, explorerId, productName, name, designerMode, u
       .then((data) => {
         // Set the fetched product data to the state
         setWorkflow(data);
+        const markdownContent = htmlToMd(data.description);
+        setMarkdownContent(markdownContent);
       })
       .catch((error) => {
         console.error('Error fetching workflow:', error);
       });
   }, [clientNr, explorerId, productName, name]);
 
-  const handleDescriptionChange = (event) => {
+  const handleDescriptionChange = (value) => {
     setWorkflow((prevWorkflow) => ({
       ...prevWorkflow,
-      description: event.target.value,
+      description: value,
     }));
+    const markdownContent = htmlToMd(value);
+    setMarkdownContent(markdownContent);
+  };
+  
+
+  const handleTextareaChange = (e) => {
+    // Assuming e.target.value contains Markdown content
+    const markdownContent = e.target.value;
+    const htmlContent = <ReactMarkdown>{markdownContent}</ReactMarkdown>;
+    const htmlString = renderToString(htmlContent);
+    
+    console.log("HTML VALUE");
+    console.log(htmlContent);
+    setWorkflow((prevWorkflow) => ({
+      ...prevWorkflow,
+      description: htmlString,
+    }));
+    setMarkdownContent(markdownContent);
   };
 
   const handleUpdate = async () => {
@@ -95,22 +128,46 @@ function Workflowview({ clientNr, explorerId, productName, name, designerMode, u
             <div>
               <label htmlFor="workflowDescription">Description</label>
               <br />
-              <br />
-              <textarea
-                id="workflowDescription"
-                value={workflow.description}
-                className="Workflowviewinput"
-                onChange={handleDescriptionChange}
-                rows= "10"
-                disabled={!designerMode }
-                style={{ maxHeight: "200px", overflowY: "auto", width: "800px" }}
-              />
+              {isRichTextMode ? (
+                 <div style={{ height: "150px", overflowY: "auto", width: "800px", marginTop: "10px" , marginBottom: "14px", border: "1px solid white" }}>
+                <ReactQuill
+                  value={workflow.description}
+                  modules={{
+                    toolbar: [
+                      [{ header: [1, 2, false] }],
+                      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                      [{ list: 'ordered' }, { list: 'bullet' }],
+                      ['link', 'image'],
+                      ['clean'],
+                    ],
+                  }}
+                  theme = "snow"
+                  className="Taskviewinput"
+                  onChange={handleDescriptionChange}
+                  
+                  
+                />
+                </div>
+              ) : (
+                <textarea
+              value={markdownContent}
+              className="Markdowninput"
+              disabled = {!designerMode}
+              style={{ height: "150px", overflowY: "auto", width: "800px" }}
+              onChange={handleTextareaChange}
+            />
+              )}
             </div>
           </div>
         ) : (
           <p>Loading Workflow information...</p>
         )}
       </div>
+      {designerMode && (<div>
+        <button className='editorButton' onClick={toggleDisplayMode}>
+          {isRichTextMode ? 'Use Markdown Editor' : 'Use Rich Text Editor'}
+        </button>
+      </div>)}
       {designerMode && (
               <div>
                 <button className = "actionbutton" onClick={handleUpdate}>Update</button>

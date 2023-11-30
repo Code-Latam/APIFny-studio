@@ -1,15 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import "./productview.css";
 import axios from "axios";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; // import styles
+import htmlToMd from 'html-to-md';
+import ReactMarkdown from 'react-markdown';
+import { renderToString } from 'react-dom/server';
 
 function Productview({ clientNr, explorerId, productName, designerMode, updateTreeView }) {
   const [product, setProduct] = useState(null);
 
-  const handleDescriptionChange = (event) => {
+  const [isRichTextMode, setIsRichTextMode] = useState(true);
+
+  const [markdownContent, setMarkdownContent] = useState('');
+
+  const toggleDisplayMode = () => {
+    setIsRichTextMode((prevMode) => !prevMode);
+  };
+
+  const handleDescriptionChange = (value) => {
     setProduct((prevProduct) => ({
       ...prevProduct,
-      description: event.target.value,
+      description: value,
     }));
+    const markdownContent = htmlToMd(value);
+    setMarkdownContent(markdownContent);
+  };
+
+  const handleTextareaChange = (e) => {
+    // Assuming e.target.value contains Markdown content
+    const markdownContent = e.target.value;
+    const htmlContent = <ReactMarkdown>{markdownContent}</ReactMarkdown>;
+    const htmlString = renderToString(htmlContent);
+    
+    console.log("HTML VALUE");
+    console.log(htmlContent);
+    setProduct((prevProduct) => ({
+      ...prevProduct,
+      description: htmlString,
+    }));
+    setMarkdownContent(markdownContent);
   };
 
 
@@ -69,6 +99,8 @@ function Productview({ clientNr, explorerId, productName, designerMode, updateTr
       .then((data) => {
         // Set the fetched product data to the state
         setProduct(data);
+        const markdownContent = htmlToMd(data.description);
+        setMarkdownContent(markdownContent);
       })
       .catch((error) => {
         console.error('Error fetching product:', error);
@@ -95,22 +127,46 @@ function Productview({ clientNr, explorerId, productName, designerMode, updateTr
             <div>
               <label htmlFor="productDescription">Description</label>
               <br />
-              <br />
-              <textarea
-                id="productDescription"
-                value={product.description}
-                className="Productviewinput"
-                onChange={handleDescriptionChange}
-                rows= "10"
-                disabled={!designerMode }
-                style={{ maxHeight: "200px", overflowY: "auto", width: "800px" }}
-              />
+              {isRichTextMode ? (
+                 <div style={{ height: "150px", overflowY: "auto", width: "800px", marginTop: "10px" , marginBottom: "14px", border: "1px solid white" }}>
+                <ReactQuill
+                  value={product.description}
+                  modules={{
+                    toolbar: [
+                      [{ header: [1, 2, false] }],
+                      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                      [{ list: 'ordered' }, { list: 'bullet' }],
+                      ['link', 'image'],
+                      ['clean'],
+                    ],
+                  }}
+                  theme = "snow"
+                  className="Productviewinput"
+                  onChange={handleDescriptionChange}
+                  
+                  
+                />
+                </div>
+              ) : (
+                <textarea
+              value={markdownContent}
+              className="Markdowninput"
+              disabled = {!designerMode}
+              style={{ height: "150px", overflowY: "auto", width: "800px" }}
+              onChange={handleTextareaChange}
+            />
+              )}
             </div>
           </div>
         ) : (
           <p>Loading product information...</p>
         )}
       </div>
+      {designerMode && (<div>
+        <button className='editorButton' onClick={toggleDisplayMode}>
+          {isRichTextMode ? 'Use Markdown Editor' : 'Use Rich Text Editor'}
+        </button>
+      </div>)}
       {designerMode && (
               <div>
                 <button className = "actionbutton" onClick={handleUpdate}>Update</button>
