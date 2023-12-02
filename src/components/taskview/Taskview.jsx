@@ -9,7 +9,8 @@ import { renderToString } from 'react-dom/server';
 
 function Taskview({ clientNr, explorerId, workflowName, taskId, designerMode,updateGraphView }) {
 
-  console.log("We are in Taskview");
+  console.log("TASKVIEW DESIGNERMODE");
+  console.log(designerMode);
   const [task, setTask] = useState(null);
   const [selectedType, setSelectedType] = useState("circle");
   const [selectedApi, setSelectedApi] = useState("");
@@ -193,7 +194,7 @@ const handleTextareaChange = (e) => {
               <label htmlFor="workflowDescription">Description</label>
               <br />
               {isRichTextMode ? (
-                 <div style={{ height: "150px", overflowY: "auto", width: "800px", marginTop: "10px" , marginBottom: "14px", border: "1px solid white" }}>
+                 <div style={{ height: "150px", overflowY: "auto", width: "780px", marginTop: "10px" , marginBottom: "14px", border: "1px solid white" }}>
                 <ReactQuill
                   value={task.description}
                   modules={{

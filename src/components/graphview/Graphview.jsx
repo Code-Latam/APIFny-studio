@@ -5,31 +5,37 @@ import axios from "axios";
 import Modal from "../modal/Modal";
 import Modallink from "../modallink/Modallink";
 
-const config = {
-  nodeHighlightBehavior: true,
-  directed: true,
-  node: 
-  {
-    
-    highlightStrokeColor: "red",
-    labelProperty: "label",
-    fontSize: 10,
-    fontColor:"#03A062",
-    draggable: true
-  },
-  link: {
-    highlightColor: "#03A062",
-    renderArrow: true,
-    strokeWidth: 2,
-  },
-  width: 400, // Set the width of the graph (adjust as needed)
-  height: 300, // Set the height of the graph (adjust as needed)
-  "freezeAllDragEvents": false,
-  "staticGraph": false,
-};
 
-const Graphview = ({ selectedProduct, selectedWork,onTaskChange,onLinkChange,graphChange }) => {
-    // Define a state variable to store the data from the API
+
+const Graphview = ({ selectedProduct, selectedWork,onTaskChange,onLinkChange,graphChange, designerMode }) => {
+  console.log("SUPERDESIGNERMODE");
+  console.log(designerMode);
+  const config = {
+    nodeHighlightBehavior: true,
+    directed: true,
+    node: 
+    {
+      
+      highlightStrokeColor: "red",
+      labelProperty: "label",
+      fontSize: 10,
+      fontColor:"#03A062",
+      draggable: true,
+    },
+    link: {
+      highlightColor: "#03A062",
+      renderArrow: true,
+      strokeWidth: 2,
+    },
+    width: 400, // Set the width of the graph (adjust as needed)
+    height: 300, // Set the height of the graph (adjust as needed)
+    "freezeAllDragEvents": !designerMode,
+    "staticGraph": !designerMode,
+  };
+  
+  
+  
+  // Define a state variable to store the data from the API
     const [data, setData] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [selectedWorkflow, setSelectedWorkflow] = useState(null);
@@ -377,12 +383,15 @@ const Graphview = ({ selectedProduct, selectedWork,onTaskChange,onLinkChange,gra
             </div>
           ))}
         </div>
+        {designerMode &&(
         <div className="buttons">
         <button className = "actionButton" onClick={() => handleAddNode()}>Add Task</button>
         <button className = "actionButton" onClick={() => handleDeleteNode()}>Remove Task</button>
         <button className = "actionButton" onClick={() => handleAddLink()}>Add Link</button>
         <button className = "actionButton" onClick={() => handleDeleteLink()}>Remove Link</button>  
         </div>
+        )}
+
         {showModal && (
         <Modal
           graph={selectedWorkflow}

@@ -129,7 +129,7 @@ function Workflowview({ clientNr, explorerId, productName, name, designerMode, u
               <label htmlFor="workflowDescription">Description</label>
               <br />
               {isRichTextMode ? (
-                 <div style={{ height: "150px", overflowY: "auto", width: "800px", marginTop: "10px" , marginBottom: "14px", border: "1px solid white" }}>
+                 <div style={{ height: "150px", overflowY: "auto", width: "780px", marginTop: "10px" , marginBottom: "14px", border: "1px solid white" }}>
                 <ReactQuill
                   value={workflow.description}
                   modules={{
@@ -144,8 +144,7 @@ function Workflowview({ clientNr, explorerId, productName, name, designerMode, u
                   theme = "snow"
                   className="Taskviewinput"
                   onChange={handleDescriptionChange}
-                  
-                  
+                  disabled = {!designerMode}                  
                 />
                 </div>
               ) : (

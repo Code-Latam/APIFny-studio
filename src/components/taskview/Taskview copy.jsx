@@ -193,15 +193,14 @@ function Taskview({ clientNr, explorerId, workflowName, taskId, designerMode,upd
                   theme = "snow"
                   className="Taskviewinput"
                   onChange={handleDescriptionChange}
-                  
-                  
+                  disabled = {!designerMode}         
                 />
                 </div>
               ) : (
                 <textarea
               value={markdownContent}
               className="Markdowninput"
-              disabled
+              disabled = {!designerMode}
               style={{ height: "150px", overflowY: "auto", width: "800px" }}
             />
               )}

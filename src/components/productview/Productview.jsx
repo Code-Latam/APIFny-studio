@@ -128,7 +128,7 @@ function Productview({ clientNr, explorerId, productName, designerMode, updateTr
               <label htmlFor="productDescription">Description</label>
               <br />
               {isRichTextMode ? (
-                 <div style={{ height: "150px", overflowY: "auto", width: "800px", marginTop: "10px" , marginBottom: "14px", border: "1px solid white" }}>
+                 <div style={{ height: "150px", overflowY: "auto", width: "780px", marginTop: "10px" , marginBottom: "14px", border: "1px solid white" }}>
                 <ReactQuill
                   value={product.description}
                   modules={{
@@ -143,8 +143,7 @@ function Productview({ clientNr, explorerId, productName, designerMode, updateTr
                   theme = "snow"
                   className="Productviewinput"
                   onChange={handleDescriptionChange}
-                  
-                  
+                  disabled = {!designerMode}            
                 />
                 </div>
               ) : (
@@ -162,11 +161,11 @@ function Productview({ clientNr, explorerId, productName, designerMode, updateTr
           <p>Loading product information...</p>
         )}
       </div>
-      {designerMode && (<div>
+      <div>
         <button className='editorButton' onClick={toggleDisplayMode}>
           {isRichTextMode ? 'Use Markdown Editor' : 'Use Rich Text Editor'}
         </button>
-      </div>)}
+      </div>
       {designerMode && (
               <div>
                 <button className = "actionbutton" onClick={handleUpdate}>Update</button>

@@ -12,6 +12,7 @@ import Linkview from '../linkview/Linkview';
 import ContextMenu from "../contextmenu/ContextMenu"; 
 import Modalworkflow from "../modalworkflow/Modalworkflow"; 
 import Modalproduct from "../modalproduct/Modalproduct"; 
+import Chatbot from "../chatbot/Chatbot"; 
 import { FiMoreVertical } from 'react-icons/fi'
 import {convertToOpenAPI} from "../../utils/utils.js";
 import jsYaml from 'js-yaml';
@@ -40,7 +41,7 @@ const TreeNode = ({ label, children, isChild, topLevelClick }) => {
   );
 };
 
-const ProductTree = () => {
+const ProductTree = ({designerMode}) => {
   const [selectedItemType, setSelectedItemType] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedWork, setSelectedWorkflow] = useState(null);
@@ -359,7 +360,8 @@ const ProductTree = () => {
   return (
     <div className="main-container">
         <div className="left-container">
-        
+          {designerMode && (
+          <div>
           <button className="open-modal-button" onClick={openProductModal}>
           Add Product
           </button>
@@ -368,6 +370,9 @@ const ProductTree = () => {
           </button>
           <br></br>
           <br></br>
+          </div>
+          )}
+
           {renderTree(products, false)}
         </div>
       <div className = "right-container">
@@ -378,10 +383,11 @@ const ProductTree = () => {
             onTaskChange = {handleSelectedItemChange}
             onLinkChange = {handleSelectedLinkChange}
             graphChange = {newGraphItem}
+            designerMode={designerMode}
           />
         </div>
-        <div className="lower-panel">
-
+        <div className='lower-panel'>
+        <div className="lower-left-panel">
         <div className="icon-right-align">
           <FiMoreVertical className="context-menu-icon" onClick={handleContextMenuClick} />
         </div>
@@ -417,7 +423,7 @@ const ProductTree = () => {
         clientNr = {clientNr}
         explorerId = {explorerId}
         productName = {selectedProduct}
-        designerMode = {true}
+        designerMode = {designerMode}
         updateTreeView = {() => {
           setNewTreeItem(newTreeItem+1);
         }}
@@ -429,7 +435,7 @@ const ProductTree = () => {
          explorerId = {explorerId}
          productName = {selectedProduct}
          name = {selectedWork}
-         designerMode = {true}
+         designerMode = {designerMode}
          updateTreeView = {() => {
           setNewTreeItem(newTreeItem+1);
         }}
@@ -441,7 +447,7 @@ const ProductTree = () => {
          explorerId = {explorerId}
          workflowName = {selectedWork}
          taskId = {selectedTaskId}
-         designerMode = {true}
+         designerMode = {designerMode}
          updateGraphView = {() => {
           setNewGraphItem(newGraphItem+1);
         }}
@@ -453,7 +459,7 @@ const ProductTree = () => {
          explorerId = {explorerId}
          workflowName = {selectedWork}
          mylink = {selectedLink}
-         designerMode = {true}
+         designerMode = {designerMode}
          updateGraphView = {() => {
           setNewGraphItem(newGraphItem+1);
         }}
@@ -491,7 +497,17 @@ const ProductTree = () => {
        /> 
          : null} 
         </div>
+        <div classname= "lower-right-panel">
+          <div className = "title-wrap">
+          <div className= "title-bot"> AI Podium</div>
+          </div>
+          <Chatbot
+           clientNr = {clientNr}
+          />
+        </div>
       </div>
+      </div>
+      
       </div>
   );
   
