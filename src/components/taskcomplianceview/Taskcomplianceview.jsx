@@ -1,22 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import "./taskview.css";
+import "./taskcomplianceview.css";
 import axios from "axios";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; // import styles
 import htmlToMd from 'html-to-md';
-// import ReactMarkdown from 'react-markdown';
+import ReactMarkdown from 'react-markdown';
+import { renderToString } from 'react-dom/server';
 
+function Taskcomplianceview({ clientNr, explorerId, workflowName, taskId, designerMode,updateGraphView }) {
 
-function Taskview({ clientNr, explorerId, workflowName, taskId, designerMode,updateGraphView }) {
-
-  console.log("We are in Taskview");
-  const [workflow, setWorkflow] = useState(null);
+  console.log("TASKVIEW DESIGNERMODE");
+  console.log(designerMode);
   const [task, setTask] = useState(null);
-  const [selectedType, setSelectedType] = useState("circle");
-  const [selectedApi, setSelectedApi] = useState("");
-  const [apis, setApis] = useState([]);
 
-  const typeOptions = ["circle","cross","diamond","square","star","triangle","wye"];
 
   const [isRichTextMode, setIsRichTextMode] = useState(true);
 
@@ -30,23 +26,7 @@ function Taskview({ clientNr, explorerId, workflowName, taskId, designerMode,upd
 
   useEffect(() => {
 
-    const fetchApis = async () => {
-      const myBody = {
-        clientNr: process.env.REACT_APP_CLIENTNR,
-      }
-      try {
-        const apisresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/api/queryall", myBody);
-        const myEmptyApi = { apiName: ""}
-        const myapis = apisresponse.data;
-        myapis.unshift(myEmptyApi);;
-        setApis(myapis);  
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-  
-    fetchApis();
-
+    
 
     // Define the API URL for fetching the product
     const apiUrl = process.env.REACT_APP_CENTRAL_BACK + '/task/query';
@@ -74,10 +54,8 @@ function Taskview({ clientNr, explorerId, workflowName, taskId, designerMode,upd
       .then((data) => {
         // Set the fetched product data to the state
         setTask(data);
-        setSelectedType(data.symbolType);
-        setSelectedApi(data.apiName)
         // set the markdown
-        const markdownContent = htmlToMd(data.description);
+        const markdownContent = htmlToMd(data.complianceDescription);
         setMarkdownContent(markdownContent);
       })
       .catch((error) => {
@@ -85,21 +63,30 @@ function Taskview({ clientNr, explorerId, workflowName, taskId, designerMode,upd
       });
   }, [workflowName,taskId]);
 
- const handleDescriptionChange = (value) => {
+ const handleComplianceDescriptionChange = (value) => {
   setTask((prevTask) => ({
     ...prevTask,
-    description: value,
+    complianceDescription: value,
   }));
   const markdownContent = htmlToMd(value);
-    setMarkdownContent(markdownContent);
+  setMarkdownContent(markdownContent);
 };
-  const handleNameChange = (event) => {
-    setTask((prevTask) => ({
-      ...prevTask,
-      name: event.target.value,
-    }));
 
-  };
+const handleTextareaChange = (e) => {
+  // Assuming e.target.value contains Markdown content
+  const markdownContent = e.target.value;
+  const htmlContent = <ReactMarkdown>{markdownContent}</ReactMarkdown>;
+  const htmlString = renderToString(htmlContent);
+  
+  console.log("HTML VALUE");
+  console.log(htmlContent);
+  setTask((prevTask) => ({
+    ...prevTask,
+    complianceDescription: htmlString,
+  }));
+  setMarkdownContent(markdownContent);
+};
+
 
   const handleUpdate = async () => {
     const apiUrl = process.env.REACT_APP_CENTRAL_BACK + '/task/update';
@@ -110,15 +97,11 @@ function Taskview({ clientNr, explorerId, workflowName, taskId, designerMode,upd
       explorerId: explorerId,
       workflowName:workflowName,
       taskId:taskId,
-      symbolType: selectedType,
-      apiName: selectedApi,
-      name:task.name,
-      description: task.description
+      complianceDescription: task.complianceDescription
     };
 
       const myResponse = await axios.post(apiUrl, requestBody);
       alert("Task was succesfully updated.");
-      updateGraphView();
 
   };
 
@@ -129,61 +112,26 @@ function Taskview({ clientNr, explorerId, workflowName, taskId, designerMode,upd
         {task ? (
           <div>
             <div>
-              <label htmlFor="workflowName">Task Name</label>
+              <label htmlFor="taskName">Task Name</label>
               <br />
               <input
                 type="text"
                 id="taskName"
                 value={task.name}
                 className="TaskViewinputname"
-                onChange={handleNameChange}
-                disabled={!designerMode }
+                disabled
               />
             </div>
             <div>
-            <label htmlFor="nodeType">node Type</label>
-              <br/>
-              <select
-                id="nodeType"
-                value={selectedType}
-                className="LinkTViewType"
-                onChange={(e) => setSelectedType(e.target.value)}
-                disabled={!designerMode }
-              >
-                {typeOptions.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-            <label htmlFor="api">Implements API:</label>
-              <br/>
-              <select
-                id="api"
-                value={selectedApi}
-                className="LinkTViewType"
-                onChange={(e) => setSelectedApi(e.target.value)}
-                disabled={!designerMode }
-              >
-                {apis.map((api) => (
-                  <option key={api.name} value={api.name}>
-                    {api.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="workflowDescription">Description</label>
+              <label htmlFor="workflowDescription">Compliance Description</label>
               <br />
               {isRichTextMode ? (
-                 <div style={{ height: "150px", overflowY: "auto", width: "800px", marginTop: "10px" , marginBottom: "14px", border: "1px solid white" }}>
+                 <div style={{ height: "150px", overflowY: "auto", width: "780px", marginTop: "10px" , marginBottom: "14px", border: "1px solid white" }}>
                 <ReactQuill
-                  value={task.description}
+                  value={task.complianceDescription}
                   modules={{
                     toolbar: [
-                      [{ header: [1, 2, false] }],
+                      [{ header: [1, 2, 3, false] }],
                       ['bold', 'italic', 'underline', 'strike', 'blockquote'],
                       [{ list: 'ordered' }, { list: 'bullet' }],
                       ['link', 'image'],
@@ -192,8 +140,10 @@ function Taskview({ clientNr, explorerId, workflowName, taskId, designerMode,upd
                   }}
                   theme = "snow"
                   className="Taskviewinput"
-                  onChange={handleDescriptionChange}
-                  disabled = {!designerMode}         
+                  onChange={handleComplianceDescriptionChange}
+                  readOnly =  {!designerMode}  
+                  disabled = {!designerMode}
+                  
                 />
                 </div>
               ) : (
@@ -202,6 +152,7 @@ function Taskview({ clientNr, explorerId, workflowName, taskId, designerMode,upd
               className="Markdowninput"
               disabled = {!designerMode}
               style={{ height: "150px", overflowY: "auto", width: "800px" }}
+              onChange={handleTextareaChange}
             />
               )}
             </div>
@@ -210,11 +161,11 @@ function Taskview({ clientNr, explorerId, workflowName, taskId, designerMode,upd
           <p>Loading Task information...</p>
         )}
       </div>
-      <div>
+      {designerMode && (<div>
         <button className='editorButton' onClick={toggleDisplayMode}>
-          {isRichTextMode ? 'Display Markdown' : 'Rich Text Editor'}
+          {isRichTextMode ? 'Use Markdown Editor' : 'Use Rich Text Editor'}
         </button>
-      </div>
+      </div>)}
       {designerMode && (
               <div>
                 <button className = 'editorButton' onClick={handleUpdate}>Update</button>
@@ -224,4 +175,4 @@ function Taskview({ clientNr, explorerId, workflowName, taskId, designerMode,upd
   );
 }
 
-export default Taskview;
+export default Taskcomplianceview;

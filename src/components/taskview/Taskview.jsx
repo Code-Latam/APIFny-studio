@@ -199,7 +199,7 @@ const handleTextareaChange = (e) => {
                   value={task.description}
                   modules={{
                     toolbar: [
-                      [{ header: [1, 2, false] }],
+                      [{ header: [1, 2, 3, false] }],
                       ['bold', 'italic', 'underline', 'strike', 'blockquote'],
                       [{ list: 'ordered' }, { list: 'bullet' }],
                       ['link', 'image'],
@@ -209,7 +209,8 @@ const handleTextareaChange = (e) => {
                   theme = "snow"
                   className="Taskviewinput"
                   onChange={handleDescriptionChange}
-                  
+                  readOnly =  {!designerMode}  
+                  disabled = {!designerMode}
                   
                 />
                 </div>
