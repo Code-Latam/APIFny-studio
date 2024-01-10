@@ -9,6 +9,7 @@ import Productview from "../productview/Productview";
 import Productcomplianceview from "../productcomplianceview/Productcomplianceview";
 import Workflowview from '../workflowview/Workflowview';
 import Workflowcomplianceview from '../workflowcomplianceview/Workflowcomplianceview';
+import Workflowterminal from '../workflowterminal/Workflowterminal';
 import Taskview from '../taskview/Taskview';
 import Taskcomplianceview from '../taskcomplianceview/Taskcomplianceview';
 import Linkview from '../linkview/Linkview';
@@ -22,8 +23,7 @@ import { FiMoreVertical } from 'react-icons/fi'
 import {convertToOpenAPI} from "../../utils/utils.js";
 import jsYaml from 'js-yaml';
 import { saveAs } from 'file-saver';
-import { Resizable } from 'react-resizable';
-import 'react-resizable/css/styles.css';
+import { TerminalContextProvider } from "react-terminal";
 
 const clientNr = process.env.REACT_APP_CLIENTNR;
 const explorerId = process.env.REACT_APP_EXPLORERID;
@@ -222,7 +222,7 @@ const ProductTree = ({designerMode}) => {
         setMenu('code');
         if (selectedItemType === 'api'|| selectedItemType === 'taskapi' || selectedItemType === 'apicompliance') {
           setSelectedItemType("apicode");
-        } else if (selectedItemType === 'workflow' || selectedItemType === 'workflowcompliance') {
+        } else if (selectedItemType === 'workflow' || selectedItemType === 'workflowcompliance'|| selectedItemType === 'workflowterminal') {
           setSelectedItemType("workflowcode");
         }
         setCodeType(menuItem);
@@ -243,7 +243,7 @@ const ProductTree = ({designerMode}) => {
             setSelectedItemType("task");
             break;  
           } 
-          if (selectedItemType === 'workflow' || selectedItemType === 'workflowcode'  || selectedItemType === 'workflowcompliance') {
+          if (selectedItemType === 'workflow' || selectedItemType === 'workflowcode'  || selectedItemType === 'workflowcompliance' || selectedItemType === 'workflowterminal') {
             setSelectedItemType("workflow");
             break;
           }
@@ -262,7 +262,7 @@ const ProductTree = ({designerMode}) => {
               setSelectedItemType("taskcompliance");
               break;  
             } 
-            if (selectedItemType === 'workflow' || selectedItemType === 'workflowcode' ) {
+            if (selectedItemType === 'workflow' || selectedItemType === 'workflowcode' || selectedItemType === 'workflowterminal') {
               setSelectedItemType("workflowcompliance");
               break;
             }
@@ -271,12 +271,19 @@ const ProductTree = ({designerMode}) => {
               break;
             }
             break;
+            case 'workflowterminal':
+              setMenu('workflowterminal');
+              if (selectedItemType === 'workflow' || selectedItemType === 'workflowcode' || selectedItemType === 'workflowterminal' || selectedItemType === 'workflowcompliance') {
+                setSelectedItemType("workflowterminal");
+                break;
+              }
+              break;  
       case 'export-openapi':
         setMenu('export-openapi');
         if (selectedItemType === 'api'|| selectedItemType === 'apicode' || selectedItemType === 'taskapi' || selectedItemType === 'apicompliance') {
           exportApiOpenApi(selectedApi);
           break; } 
-          if (selectedItemType === 'workflow' || selectedItemType === 'workflowcode'  || selectedItemType === 'workflowcompliance' ) {
+          if (selectedItemType === 'workflow' || selectedItemType === 'workflowcode'  || selectedItemType === 'workflowcompliance' || selectedItemType === 'workflowterminal' ) {
           exportWorkflowOpenApi(selectedWork);
           break;}
           if (selectedItemType === 'product' || selectedItemType === 'productcompliance' ) {
@@ -424,7 +431,7 @@ const ProductTree = ({designerMode}) => {
 
           {renderTree(products, false)}
         </div>
-      <div className = "right-container">
+        <div className = "middle-panel">
         <div className="graph-view">
           <Graphview
             selectedProduct={selectedProduct}
@@ -435,8 +442,7 @@ const ProductTree = ({designerMode}) => {
             designerMode={designerMode}
           />
         </div>
-        <div className='lower-panel'>
-        <div className="lower-left-panel">
+        <div className="lower-middle-panel">
         <div className="icon-right-align">
           <FiMoreVertical className="context-menu-icon" onClick={handleContextMenuClick} />
         </div>
@@ -480,8 +486,6 @@ const ProductTree = ({designerMode}) => {
               position={contextMenuPosition}
             />
           )}
-
-
         {selectedItemType === 'product' ? 
         <Productview
         clientNr = {clientNr}
@@ -528,7 +532,17 @@ const ProductTree = ({designerMode}) => {
         }}
        /> 
          : null} 
-
+        {selectedItemType === 'workflowterminal' ?
+        <TerminalContextProvider>
+         <Workflowterminal
+         clientNr = {clientNr}
+         explorerId = {explorerId}
+         productName = {selectedProduct}
+         name = {selectedWork}
+         designerMode = {designerMode}
+       /> 
+       </TerminalContextProvider>
+         : null} 
         {selectedItemType === 'task' || selectedItemType === 'taskapi' ?
          <Taskview
          clientNr = {clientNr}
@@ -598,7 +612,9 @@ const ProductTree = ({designerMode}) => {
        /> 
          : null} 
         </div>
-        <div classname= "lower-right-panel">
+        
+      </div>
+      <div classname= "right-panel">
           <div className = "title-wrap">
           <div className= "title-bot"> AI Podium</div>
           </div>
@@ -606,9 +622,6 @@ const ProductTree = ({designerMode}) => {
            clientNr = {clientNr}
           />
         </div>
-      </div>
-      </div>
-      
       </div>
   );
   
