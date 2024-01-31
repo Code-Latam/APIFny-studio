@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./modallink.css";
 
-function Modallink({ graph, onClose }) {
+function Modallink({ clientNr, explorerId, graph, onClose }) {
 
   const [sources, setSources] = useState([]);
   const [targets, setTargets] = useState([]);
@@ -14,8 +14,8 @@ function Modallink({ graph, onClose }) {
   useEffect(() => {
     const fetchData = async () => {
       const myBody = {
-        clientNr: process.env.REACT_APP_CLIENTNR,
-        explorerId: process.env.REACT_APP_EXPLORERID,
+        clientNr: clientNr,
+        explorerId: explorerId,
         workflowName: graph.name,
       }
       try {
@@ -66,8 +66,8 @@ function Modallink({ graph, onClose }) {
     currentLinks.push(MyNewLinkObject);
 
     const mypayload = {
-      clientNr: process.env.REACT_APP_CLIENTNR,
-      explorerId: process.env.REACT_APP_EXPLORERID,
+      clientNr: clientNr,
+      explorerId: explorerId,
       workflowName: graph.name,
       links: currentLinks
     };

@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './chatbot.css';
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
+
 
 const Chatbot = ({clientNr}) => {
+  const { user } = useContext(AuthContext);
   const [inputValue, setInputValue] = useState('');
   const [response, setResponse] = useState('');
   const [showResponse, setShowResponse] = useState(false);
@@ -15,12 +19,14 @@ const Chatbot = ({clientNr}) => {
       event.preventDefault(); // Prevent the default form submission behavior
 
       const prompt = inputValue.trim();
+      console.log("USER CONTEXT");
+      console.log(user);
 
       if (prompt !== '') {
         const requestData = {
           clientNr: '111111',
           gwoken: 'saasasasas',
-          chatbotKey: 'apifny1',
+          chatbotKey: user.chatbotKey,
           prompt: prompt,
         };
 
@@ -65,6 +71,7 @@ const Chatbot = ({clientNr}) => {
     document.addEventListener('click', () => {
       // Focus the input field when the document is clicked
       // document.getElementById('input-field').focus();
+    
     });
   }, []);
 

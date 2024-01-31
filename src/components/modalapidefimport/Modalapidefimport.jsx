@@ -18,8 +18,8 @@ function Modalapidefimport({ onClose }) {
 
 
       const myProductsPayload = {
-        clientNr: process.env.REACT_APP_CLIENTNR,
-        explorerId: process.env.REACT_APP_EXPLORERID,
+        clientNr: clientNr,
+        explorerId: explorerId,
       }
       try {
         const productresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/product/queryall", myProductsPayload);
@@ -63,8 +63,8 @@ function Modalapidefimport({ onClose }) {
   async function handleCreateProduct(productName, workflowName, workflowDescription) {
     try {
       const mypayload = {
-        clientNr: process.env.REACT_APP_CLIENTNR,
-        explorerId: process.env.REACT_APP_EXPLORERID,
+        clientNr: clientNr,
+        explorerId: explorerId,
         productName: productName,
         name: workflowName,
         description: workflowDescription
@@ -103,7 +103,10 @@ function Modalapidefimport({ onClose }) {
         </div>
 
         <div className="switch-container">
-          <FileUpload />
+          <FileUpload
+          clientNr = {clientNr}
+          explorerId = {explorerId}
+          />
         </div>
 
         <div className="modalDialog-buttons">

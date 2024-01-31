@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./modalworkflow.css";
 
-function Modalworkflow({ onClose }) {
+function Modalworkflow({ clientNr, explorerId, onClose }) {
 
   const [products, setProducts] = useState([]);
 
@@ -17,8 +17,8 @@ function Modalworkflow({ onClose }) {
 
 
       const myProductsPayload = {
-        clientNr: process.env.REACT_APP_CLIENTNR,
-        explorerId: process.env.REACT_APP_EXPLORERID,
+        clientNr: clientNr,
+        explorerId: explorerId,
       }
       try {
         const productresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/product/queryall", myProductsPayload);
@@ -73,8 +73,8 @@ function Modalworkflow({ onClose }) {
   async function handleCreateProduct(productName, workflowName, workflowDescription, sequence) {
     try {
       const mypayload = {
-        clientNr: process.env.REACT_APP_CLIENTNR,
-        explorerId: process.env.REACT_APP_EXPLORERID,
+        clientNr: clientNr,
+        explorerId: explorerId,
         productName: productName,
         name: workflowName,
         sequence: sequence,

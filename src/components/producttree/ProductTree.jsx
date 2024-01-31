@@ -25,9 +25,6 @@ import jsYaml from 'js-yaml';
 import { saveAs } from 'file-saver';
 import { TerminalContextProvider } from "react-terminal";
 
-const clientNr = process.env.REACT_APP_CLIENTNR;
-const explorerId = process.env.REACT_APP_EXPLORERID;
-
 const TreeNode = ({ label, children, isChild, topLevelClick }) => {
   const [collapsed, setCollapsed] = useState(false);
 
@@ -48,7 +45,11 @@ const TreeNode = ({ label, children, isChild, topLevelClick }) => {
   );
 };
 
-const ProductTree = ({designerMode}) => {
+const ProductTree = ({designerMode, clientNr, explorerId}) => {
+  console.log("USERDATA");
+  console.log(clientNr);
+  console.log(explorerId);
+  console.log(designerMode);
   const [selectedItemType, setSelectedItemType] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedWork, setSelectedWorkflow] = useState(null);
@@ -352,6 +353,11 @@ const ProductTree = ({designerMode}) => {
         explorerId: explorerId,
         status: designerMode ? "All" : "Public",
       };
+
+      console.log("MYBODY");
+      console.log(mybody);
+      console.log ("DESIGN");
+      console.log(designerMode);
       // Make the API call using axios and parse the response as JSON
       const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/product/gettree", mybody);
       const json = response.data;
@@ -436,6 +442,8 @@ const ProductTree = ({designerMode}) => {
         <div className="graph-view">
         {(selectedProduct || selectedWork) && (
           <Graphview
+            clientNr = {clientNr}
+            explorerId = {explorerId}
             selectedProduct={selectedProduct}
             selectedWork={selectedWork}
             onTaskChange = {handleSelectedItemChange}
@@ -453,6 +461,8 @@ const ProductTree = ({designerMode}) => {
 
         {isWorkflowModalOpen && (
         <Modalworkflow
+          clientNr = {clientNr}
+          explorerId = {explorerId}
           onClose={() => {
             setIsWorkflowModalOpen(false);
             setNewTreeItem(newTreeItem+1);
@@ -461,6 +471,8 @@ const ProductTree = ({designerMode}) => {
       )}
        {isProductModalOpen && (
         <Modalproduct
+          clientNr = {clientNr}
+          explorerId = {explorerId}
           onClose={() => {
             setIsProductModalOpen(false);
             setNewTreeItem(newTreeItem+1);
@@ -469,6 +481,8 @@ const ProductTree = ({designerMode}) => {
       )}
       {isConfigurationModalOpen && (
         <Modalconfiguration
+          clientNr = {clientNr}
+          explorerId = {explorerId}
           onClose={() => {
             setIsConfigurationModalOpen(false);
           }}
@@ -477,6 +491,8 @@ const ProductTree = ({designerMode}) => {
 
         {isApiDefImportModalOpen && (
                 <Modalapidefimport
+                  clientNr = {clientNr}
+                  explorerId = {explorerId}
                   onClose={() => {
                     setIsApiDefImportModalOpen(false);
                   }}

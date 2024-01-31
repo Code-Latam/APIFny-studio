@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./modalproduct.css";
 
-function Modalproduct({ onClose }) {
+function Modalproduct({ clientNr, explorerId, onClose }) {
 
   const [products, setProducts] = useState([]);
 
@@ -48,8 +48,8 @@ function Modalproduct({ onClose }) {
   async function handleCreateProduct(productName, productDescription, sequence) {
     try {
       const mypayload = {
-        clientNr: process.env.REACT_APP_CLIENTNR,
-        explorerId: process.env.REACT_APP_EXPLORERID,
+        clientNr: clientNr,
+        explorerId: explorerId,
         productName: productName,
         sequence: sequence,
         description: productDescription,

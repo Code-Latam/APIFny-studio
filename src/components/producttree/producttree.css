@@ -74,7 +74,7 @@
 }
 
 .graph-view {
-
+  border: 1px solid #03A062;
   width: 100%;
   flex:3;
   /*height: 300px; */

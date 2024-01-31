@@ -7,7 +7,7 @@ import Modallink from "../modallink/Modallink";
 
 
 
-const Graphview = ({ selectedProduct, selectedWork,onTaskChange,onLinkChange,graphChange, designerMode }) => {
+const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskChange,onLinkChange,graphChange, designerMode }) => {
   console.log("SUPERDESIGNERMODE");
   console.log(designerMode);
 
@@ -97,8 +97,8 @@ const Graphview = ({ selectedProduct, selectedWork,onTaskChange,onLinkChange,gra
 
 
       const mybody = {
-        clientNr: process.env.REACT_APP_CLIENTNR,
-        explorerId: process.env.REACT_APP_EXPLORERID,
+        clientNr: clientNr,
+        explorerId: explorerId,
         workflowName: selectedWorkflow.name,
         taskId: newNodeId,
         name: newNodeId,
@@ -155,8 +155,8 @@ const Graphview = ({ selectedProduct, selectedWork,onTaskChange,onLinkChange,gra
       const myNewLinkList = removeFromLinkList(selectedLink, myCurrentLinkList)
     
       const myPayload = {
-        clientNr: process.env.REACT_APP_CLIENTNR,
-        explorerId: process.env.REACT_APP_EXPLORERID,
+        clientNr: clientNr,
+        explorerId: explorerId,
         workflowName: selectedWorkflow.name,
         links: myNewLinkList, // You might need to adjust this based on your data structure
       };
@@ -186,8 +186,8 @@ const Graphview = ({ selectedProduct, selectedWork,onTaskChange,onLinkChange,gra
       }
     
       const nodeToDelete = {
-        clientNr: process.env.REACT_APP_CLIENTNR,
-        explorerId: process.env.REACT_APP_EXPLORERID,
+        clientNr: clientNr,
+        explorerId: explorerId,
         workflowName: selectedWorkflow.name,
         taskId: selectedTask.id, 
       };
@@ -209,8 +209,8 @@ const Graphview = ({ selectedProduct, selectedWork,onTaskChange,onLinkChange,gra
     function updateNodePosition(nodeId, x, y, workflowName) {
       // Use the axios.post method to send a POST request with the node id, x, and y as the request body
       const myPositionPayload = {
-        clientNr: process.env.REACT_APP_CLIENTNR,
-        explorerId: process.env.REACT_APP_EXPLORERID,
+        clientNr: clientNr,
+        explorerId: explorerId,
         workflowName: workflowName,
         taskId: nodeId,
         x: x,
@@ -301,8 +301,8 @@ const Graphview = ({ selectedProduct, selectedWork,onTaskChange,onLinkChange,gra
     const fetchData = async () => {
       try {
         const mybody = {
-          clientNr: process.env.REACT_APP_CLIENTNR,
-          explorerId: process.env.REACT_APP_EXPLORERID,
+          clientNr: clientNr,
+          explorerId: explorerId,
           status: designerMode ? "All" : "Public",
         }
 
@@ -402,6 +402,8 @@ const Graphview = ({ selectedProduct, selectedWork,onTaskChange,onLinkChange,gra
         
         {showModallink && (
         <Modallink
+          clientNr = {clientNr}
+          explorerId = {explorerId}
           graph={selectedWorkflow}
           onClose={() => {
             setShowModallink(false);

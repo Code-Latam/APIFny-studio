@@ -32,7 +32,7 @@ function Taskview({ clientNr, explorerId, workflowName, taskId, designerMode,upd
 
     const fetchApis = async () => {
       const myBody = {
-        clientNr: process.env.REACT_APP_CLIENTNR,
+        clientNr: clientNr,
       }
       try {
         const apisresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/api/queryall", myBody);

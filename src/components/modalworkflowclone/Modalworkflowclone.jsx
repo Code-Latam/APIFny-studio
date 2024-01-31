@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./modalworkflowclone.css";
 
-function Modalworkflowclone({ onClose, sourceWorkflowName,SourceProductName }) {
+function Modalworkflowclone({ clientNr, explorerId, onClose, sourceWorkflowName,SourceProductName }) {
 
   const [products, setProducts] = useState([]);
 
@@ -16,8 +16,8 @@ function Modalworkflowclone({ onClose, sourceWorkflowName,SourceProductName }) {
 
 
       const myProductsPayload = {
-        clientNr: process.env.REACT_APP_CLIENTNR,
-        explorerId: process.env.REACT_APP_EXPLORERID,
+        clientNr: clientNr,
+        explorerId: explorerId,
       }
       try {
         const productresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/product/queryall", myProductsPayload);
@@ -60,8 +60,8 @@ function Modalworkflowclone({ onClose, sourceWorkflowName,SourceProductName }) {
   async function handleCloneWorkflow(DestinationProductName, workflowCloneName) {
     try {
       const mypayload = {
-        clientNr: process.env.REACT_APP_CLIENTNR,
-        explorerId: process.env.REACT_APP_EXPLORERID,
+        clientNr: clientNr,
+        explorerId: explorerId,
         productName: SourceProductName,
         destinationProductName: DestinationProductName,
         name: sourceWorkflowName,

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./modalconfiguration.css";
 
-function Modalconfiguration({ onClose }) {
+function Modalconfiguration({ clientNr, explorerId, onClose }) {
 
   
   
@@ -15,8 +15,8 @@ function Modalconfiguration({ onClose }) {
 
     // Define the request body
     const requestBody = {
-      clientNr: process.env.REACT_APP_CLIENTNR,
-      explorerId: process.env.REACT_APP_EXPLORERID,
+      clientNr: clientNr,
+      explorerId: explorerId,
     };
 
     // Make a POST request to fetch the configuration
@@ -57,8 +57,8 @@ function Modalconfiguration({ onClose }) {
   async function handleSaveYaml(configuration) {
     try {
       const mypayload = {
-        clientNr: process.env.REACT_APP_CLIENTNR,
-        explorerId: process.env.REACT_APP_EXPLORERID,
+        clientNr: clientNr,
+        explorerId: explorerId,
         yaml: configuration
       };
 

@@ -161,6 +161,8 @@ function Workflowview({ clientNr, explorerId, productName, name, designerMode, u
             )}
       {isWorkflowCloneModalOpen && (
         <Modalworkflowclone
+          clientNr = {clientNr}
+          explorerId = {explorerId}
           SourceProductName = {productName}
           sourceWorkflowName = {name}
           onClose={() => {

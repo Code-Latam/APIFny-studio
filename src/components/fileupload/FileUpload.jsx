@@ -6,7 +6,7 @@ import { encodebody, getDecodedBody } from "../../utils/utils.js";
 
 const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
-function FileUpload(props) {
+function FileUpload({clientNr, explorerId}) {
   const { user } = useContext(AuthContext);
   const fileInputRef = React.createRef();
   const file2InputRef = React.createRef();
@@ -78,8 +78,8 @@ function FileUpload(props) {
 
     const formData = new FormData();
    
-    const clientNr = process.env.REACT_APP_CLIENTNR;
-    const explorerId = process.env.REACT_APP_EXPLORERID
+    const clientNr = clientNr;
+    const explorerId = explorerId
     
     formData.append("clientNr", clientNr);
     formData.append("explorerId", explorerId);
@@ -128,8 +128,8 @@ function FileUpload(props) {
 
     const formData = new FormData();
    
-    const clientNr = process.env.REACT_APP_CLIENTNR;
-    const explorerId = process.env.REACT_APP_EXPLORERID
+    const clientNr = clientNr;
+    const explorerId = explorerId
     
     formData.append("clientNr", clientNr);
     formData.append("explorerId", explorerId);
