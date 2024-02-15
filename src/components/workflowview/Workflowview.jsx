@@ -248,7 +248,7 @@ function Workflowview({ clientNr, explorerId, productName, name, designerMode, u
                     ],
                   }}
                   theme = "snow"
-                  className="Taskviewinput"
+                
                   onChange={handleDescriptionChange}
                   disabled = {!designerMode} 
                   readOnly =  {!designerMode}  

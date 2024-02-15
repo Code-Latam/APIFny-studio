@@ -66,10 +66,9 @@ h1 {
   font-family: monospace;
   background-color: #040304; /* use a dark theme for panel D */
   background-image: radial-gradient(#226248, black 100%);
-  color: #03A062; /* use matrix green for panel D */
-  /* width: 100%; */
-  /* height: 100%; */
-  flex: 3;
+  color: #03A062; 
+ 
+  flex: 2;
   overflow:hidden;
   border-left: 1px solid black; /* make the borders thicker and matrix green */
   border-top: 1px solid #83E7B2;
@@ -77,7 +76,7 @@ h1 {
 }
 
 #terminalEditor {
-  height: 120px;
+  height: 100%;
 }
 
 .mycurlinput {

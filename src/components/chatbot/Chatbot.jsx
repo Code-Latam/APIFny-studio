@@ -85,15 +85,18 @@ const Chatbot = ({clientNr}) => {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
-          style={{  width: "100%" }}
+          style={{  width: "100%", height:"50px" }}
           placeholder="Let’s discuss our product, compliance, APIs, or coding challenges. Type your query and press ‘Enter’ to engage."
         />
-      <div
-        id="response-container"
-        className={showResponse ? 'show-response' : ''}
-      >
+      <div 
+        id="response-container" 
+        className="show-response"
+        style={{  width: "100%", height:"70%" }}
+        >
         {response}
       </div>
+     
+
     </div>
   );
 };

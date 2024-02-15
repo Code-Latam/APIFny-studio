@@ -179,14 +179,14 @@ const handleTextareaChange = (e) => {
             )}
       </div>     
             <div>
-              <label htmlFor="workflowName">Task Name</label>
+              <label htmlFor="taskName">Task Name</label>
               <input
                 type="text"
                 id="taskName"
                 value={task.name}
-                className="TaskViewinputname"
                 onChange={handleNameChange}
                 disabled={!designerMode }
+                className="LinkTViewType"
               />
             </div>
             <div className = "taskcontainer"> 
@@ -223,7 +223,7 @@ const handleTextareaChange = (e) => {
                 ))}
               </select>
             </div>      
-
+            </div>
             <div className='taskcontaineritem'>
             <label htmlFor="thirdparty">Third Party</label>
      
@@ -240,9 +240,7 @@ const handleTextareaChange = (e) => {
                   </option>
                 ))}
               </select>
-            </div>        
-            
-            </div>
+            </div>     
             <div>
             <label htmlFor="nodeType">node Type</label>
               <select

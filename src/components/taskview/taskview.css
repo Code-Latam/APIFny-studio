@@ -1,6 +1,8 @@
 .Taskview {
     background-color: black;
     color: #03A062;
+    padding-left: 20px;
+    padding-right: 20px;
    
   }
 
@@ -13,12 +15,12 @@
   }
   
 
-  .TaskViewinputname
+  .TTaskViewinputname
   {
     margin-bottom: 2px;
     margin-top: 2px;
     margin-right: 5px;
-    width:500px;
+    width:150px;
   }
  
 
@@ -40,6 +42,7 @@
   .taskcontainer{
     display: flex;
     align-items:flex-start;
+    margin-top: 10px;
   }
 
   .taskcontaineritem {

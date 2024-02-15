@@ -130,7 +130,7 @@ const handleTextareaChange = (e) => {
                 type="text"
                 id="taskName"
                 value={task.name}
-                className="TaskViewinputname"
+                className="ComplianceTaskViewinputname"
                 disabled
               />
             </div>
@@ -151,7 +151,7 @@ const handleTextareaChange = (e) => {
                     ],
                   }}
                   theme = "snow"
-                  className="Taskviewinput"
+                 
                   onChange={handleComplianceDescriptionChange}
                   readOnly =  {!designerMode}  
                   disabled = {!designerMode}
