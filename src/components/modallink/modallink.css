@@ -1,9 +1,9 @@
-.modalDialog {
+.LinkmodalDialog {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #ccc;
+    background-color: black;
     border: 1px solid #03A062;
     padding: 5px;
    
@@ -13,7 +13,7 @@
     width: 350px;
   }
 
-  .modalDialog div {
+  .LinkmodalDialog div {
     margin-bottom: 10px; /* Adjust the margin to control the vertical spacing */
   }
   
@@ -106,11 +106,13 @@
     border-radius: 5px;
   }
 
-  .switch-container {
+  .link-switch-container {
     display: flex;
     flex-direction: column;
     align-items:normal; 
     gap: 10px;
+    background: black;
+    border: 2px solid green; 
   }
   
   

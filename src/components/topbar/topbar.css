@@ -1,12 +1,14 @@
 .topbarContainer {
-  height: 50px;
-  width: 100%;
-  background-color: #98FF98;
+  height: 40px;
+  width: calc(100vw - 40px);
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   position: sticky;
   top: 0;
   z-index: 999;
+  background-color: rgb(66, 65, 65);
+  border-bottom: 1px green;
 }
 
 .topbarLeft {
@@ -28,7 +30,6 @@
   font-size: 150%;
   margin-left: 20px;
   cursor: pointer;
-  color:black;
   width: 100%
   
 }
@@ -65,14 +66,14 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
-  color: white;
+  
 }
 
 .topbarLink {
   margin-right: 10px;
   font-size: 14px;
   cursor: pointer;
-  color: darkgray
+ 
 }
 
 .topbarIcons {

@@ -1,20 +1,22 @@
 import "./topbar.css";
 import { Search, Person, Chat, Notifications } from "@material-ui/icons";
-import { Link } from "react-router-dom";
+import { Link, useHistory  } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
 export default function Topbar() {
+  const history = useHistory();
 
   function handleClick() {
-
     const confirmed = window.confirm(
       `Are you sure you want to sign out. Please make sure you have your credentials at hand in case you want to sign in again!`
     );
     if (confirmed) {
       localStorage.removeItem("user");
       localStorage.removeItem("gwocu-setting");
-      history.go(0);
+      history.push('/');
+      window.location.reload(true);
+      //history.go(0);
       }
   }
 
@@ -27,8 +29,6 @@ export default function Topbar() {
   return (
     <div className="topbarContainer">
       <div className="topbarLeft">
-      <img src= {process.env.REACT_APP_HOST_CENTRAL_BACK + '/upload/images' + gwocuSettings.logo} className="logo">
-      </img>
       <a href={gwocuSettings.url} target="_blank" style={{ textDecoration: "none" }}>
       <div className="logotext">{gwocuSettings.clientname} ApiFny Studio</div>
       </a>

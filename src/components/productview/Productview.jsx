@@ -187,7 +187,7 @@ function Productview({ clientNr, explorerId, productName, designerMode, updateTr
               <label htmlFor="productDescription">Description:</label>
               <br />
               {isRichTextMode ? (
-                 <div style={{  overflowY: "auto", marginTop: "10px" , marginBottom: "14px", border: "1px solid white" }}>
+                 <div>
                 <ReactQuill
                   value={product.description}
                   modules={{
@@ -204,7 +204,7 @@ function Productview({ clientNr, explorerId, productName, designerMode, updateTr
                   onChange={handleDescriptionChange}
                   disabled = {!designerMode} 
                   readOnly =  {!designerMode}   
-                  style={{ minHeight: '550px' }}      
+                  style={{ height: '400px', width:'400px' }}       
                 />
                 </div>
               ) : (

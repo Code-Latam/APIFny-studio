@@ -92,6 +92,18 @@ h1 {
   animation: blink2 2s infinite;
 }
 
+.myroute {
+  background-color: #040304;
+  color: #03A062;
+  height: 18px;
+  width: 500px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid green;
+  animation: blink2 2s infinite;
+}
+
 @keyframes blink2 {
   50% {
     border-color: transparent;

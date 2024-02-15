@@ -9,8 +9,9 @@ export default function Explorer({clientNr,explorerId, designerMode}) {
   console.log(clientNr);
   return (
     <>
-      <Topbar />
+      
       <div className="explorerContainer">
+        <Topbar />
         <ProductTree 
         designerMode={designerMode}
         clientNr = {clientNr}

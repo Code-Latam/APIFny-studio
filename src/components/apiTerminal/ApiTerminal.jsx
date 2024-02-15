@@ -11,6 +11,7 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
   const [chatbotKey, setChatbotKey] = useState('chatbot199');
   const [username, setUsername] = useState('Rodolfo Dominguez');
   const [response, setResponse] = useState('');
+  const [route, setRoute] = useState('');
   const [api, setApi] = useState([]);
   const [explorer, setExplorer] = useState([]);
   const [requestBodyFields, setRequestBodyFields] = useState({});
@@ -50,6 +51,13 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
     }));
   };
 
+  const handleRouteChange = (value) => {
+    // Update the state with the new value for the specified field
+    setRoute(value)
+  };
+
+  handleRouteChange
+
   useEffect( () => {
     // Fetch the initial products using an API call
     // Replace this with your actual API endpoint
@@ -67,6 +75,7 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
       const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/api/query", myApibody);
       const myApi = await response.data;
       setApi(myApi);
+      setRoute(myApi.urlRoute)
 
       const myExplorerbody = 
       {
@@ -121,7 +130,8 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
     const finalRequestBody = addAuthToRequestBody(requestBodyFields,yamlObject,crypto);
     // we are using the relay function of our backen to get to the clients API so:
 
-    finalRequestBody.destination = api.urlRoute ;
+    // finalRequestBody.destination = api.urlRoute ;
+    finalRequestBody.destination = route ;
 
     //  Determine the three mayor parameters of API call based on the authentication case
 
@@ -159,10 +169,22 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
               <div>1  // API EXPLORER. NOTE, FIELDS ARE EDITABLE!!</div>
               <div>2  //</div>
               <div>3  // {api.description}.</div>
-              <div>4  // The URL is {api.urlRoute} </div>
-              <div>5  //</div>
+              <div>4  //</div>
               <div>
-                6  curl -X {api.method} {api.urlRoute} {api.headers && api.headers.map((header) => `-H "${header}"`).join(' ')} -d {' '}
+                5  curl -X {api.method} {api.headers && api.headers.map((header) => `-H "${header}"`).join(' ')} -d {' '}
+              </div>
+              <div>
+              <input
+                      title={`Curl`}
+                      className="myroute"
+                      type="text"
+                      name="route"
+                      value= {route}
+                      onChange={(e) => handleRouteChange(e.target.value)}
+                    />
+              </div>
+              <div>
+                {api.headers && api.headers.map((header) => `-H "${header}"`).join(' ')} -d {' '}
               </div>
 
               {api.requestBody &&
@@ -181,7 +203,7 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
                 ))}
 
               
-              <div>11 } </div>
+              <div>6 } </div>
             </div>
           </form>
         </div>

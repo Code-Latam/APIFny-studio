@@ -1,4 +1,4 @@
-.modalDialog {
+.AddWorkflowModalDialog {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -11,6 +11,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
     width: 400px;
+    background: black;
   }
 
   .modalDialog div {
@@ -104,13 +105,17 @@
     margin-top: 10px;
     width:350px;
     border-radius: 5px;
+    background: black;
+    border: 2px solid green;
   }
 
-  .switch-container {
+  .workflow-switch-container {
     display: flex;
     flex-direction: column;
     align-items:normal; 
     gap: 10px;
+    border: 2px solid green;
+    background: black;
   }
   
   

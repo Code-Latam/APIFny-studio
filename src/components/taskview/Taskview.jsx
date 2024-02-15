@@ -13,11 +13,14 @@ function Taskview({ clientNr, explorerId, workflowName, taskId, designerMode,upd
   console.log(designerMode);
   const [task, setTask] = useState(null);
   const [selectedType, setSelectedType] = useState("circle");
+  const [selectedTaskType, setSelectedTaskType] = useState("normal");
   const [selectedApi, setSelectedApi] = useState("");
   const [apis, setApis] = useState([]);
+  const [selectedThirdParty, setSelectedThirdParty] = useState("");
+  const [thirdparties, setThirdparties] = useState([]);
 
   const typeOptions = ["circle","cross","diamond","square","star","triangle","wye"];
-
+  const taskTypeOptions = ["normal", "compliance"];
   const [isRichTextMode, setIsRichTextMode] = useState(true);
 
   const [markdownContent, setMarkdownContent] = useState('');
@@ -44,8 +47,24 @@ function Taskview({ clientNr, explorerId, workflowName, taskId, designerMode,upd
         console.error("Error fetching data:", error);
       }
     };
+
+    const fetchThirdParties = async () => {
+      const myBody = {
+        clientNr: clientNr,
+      }
+      try {
+        const thirdpartiesresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/thirdparties/queryall", myBody);
+        const myEmptyThirdParty = { name: "none"}
+        const mythirdparties = thirdpartiesresponse.data;
+        mythirdparties.unshift(myEmptyThirdParty);;
+        setThirdparties(mythirdparties);  
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
   
     fetchApis();
+    fetchThirdParties();
 
 
     // Define the API URL for fetching the product
@@ -75,6 +94,8 @@ function Taskview({ clientNr, explorerId, workflowName, taskId, designerMode,upd
         // Set the fetched product data to the state
         setTask(data);
         setSelectedType(data.symbolType);
+        setSelectedTaskType(data.taskType);
+        setSelectedThirdParty(data.thirdparty)
         setSelectedApi(data.apiName)
         // set the markdown
         const markdownContent = htmlToMd(data.description);
@@ -126,6 +147,8 @@ const handleTextareaChange = (e) => {
       explorerId: explorerId,
       workflowName:workflowName,
       taskId:taskId,
+      taskType: selectedTaskType,
+      thirdparty: selectedThirdParty,
       symbolType: selectedType,
       apiName: selectedApi,
       name:task.name,
@@ -157,7 +180,6 @@ const handleTextareaChange = (e) => {
       </div>     
             <div>
               <label htmlFor="workflowName">Task Name</label>
-              <br />
               <input
                 type="text"
                 id="taskName"
@@ -167,9 +189,62 @@ const handleTextareaChange = (e) => {
                 disabled={!designerMode }
               />
             </div>
+            <div className = "taskcontainer"> 
+            <div className='taskcontaineritem'>
+            <label htmlFor="taskType">Task Type</label>
+              <select
+                id="taskType"
+                value={selectedTaskType}
+                className="LinkTViewType"
+                onChange={(e) => setSelectedTaskType(e.target.value)}
+                disabled={!designerMode }
+              >
+                {taskTypeOptions.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className='taskcontaineritem'>
+            <label htmlFor="api">Implements API:</label>
+              <select
+                id="api"
+                value={selectedApi}
+                className="LinkTViewType"
+                onChange={(e) => setSelectedApi(e.target.value)}
+                disabled={!designerMode }
+              >
+                {apis.map((api) => (
+                  <option key={api.name} value={api.name}>
+                    {api.name}
+                  </option>
+                ))}
+              </select>
+            </div>      
+
+            <div className='taskcontaineritem'>
+            <label htmlFor="thirdparty">Third Party</label>
+     
+              <select
+                id="thirdparty"
+                value={selectedThirdParty}
+                className="LinkTViewType"
+                onChange={(e) => setSelectedThirdParty(e.target.value)}
+                disabled={!designerMode }
+              >
+                {thirdparties.map((thirdparty) => (
+                  <option key={thirdparty.name} value={thirdparty.name}>
+                    {thirdparty.name}
+                  </option>
+                ))}
+              </select>
+            </div>        
+            
+            </div>
             <div>
             <label htmlFor="nodeType">node Type</label>
-              <br/>
               <select
                 id="nodeType"
                 value={selectedType}
@@ -184,28 +259,11 @@ const handleTextareaChange = (e) => {
                 ))}
               </select>
             </div>
-            <div>
-            <label htmlFor="api">Implements API:</label>
-              <br/>
-              <select
-                id="api"
-                value={selectedApi}
-                className="LinkTViewType"
-                onChange={(e) => setSelectedApi(e.target.value)}
-                disabled={!designerMode }
-              >
-                {apis.map((api) => (
-                  <option key={api.name} value={api.name}>
-                    {api.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            
             <div>
               <label htmlFor="workflowDescription">Description</label>
-              <br />
               {isRichTextMode ? (
-                 <div style={{ overflowY: "auto", marginTop: "10px" , marginBottom: "14px", border: "1px solid white" }}>
+                 <div>
                 <ReactQuill
                   value={task.description}
                   modules={{
@@ -222,7 +280,7 @@ const handleTextareaChange = (e) => {
                   onChange={handleDescriptionChange}
                   readOnly =  {!designerMode}  
                   disabled = {!designerMode}
-                  style={{ minHeight: '550px' }} 
+                  style={{ height: '400px', width:'400px' }}   
                   
                 />
                 </div>

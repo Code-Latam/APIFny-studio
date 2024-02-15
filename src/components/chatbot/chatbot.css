@@ -1,11 +1,11 @@
 .chat-container {
     background-color: black;
-    margin: 0;
+    margin-left: 15px;
     display: flex;
     flex-direction: column;
     
-    align-items: center;
-    height: 100vh;
+    align-items: left;
+    height: calc(30vh - 60px);
     font-family: 'Fira Code', monospace;
     overflow-x:auto;
     overflow-y:auto;
@@ -16,7 +16,7 @@
   .input-container {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: Left;
     margin-bottom: 10px;
     width: 90%;
   }
@@ -28,7 +28,7 @@
     caret-color: #03A062;
     outline: none;
     margin-right: 10px;
-    width: 340px;
+    width: 650px;
   }
   
   #response-container {
@@ -39,8 +39,9 @@
     
     text-align: left;
     white-space: normal;
-    width: 310px;
-    overflow: hidden;
+    width: 650px;
+    max-height: 200px;
+    overflow-y: auto;
     
   }
   

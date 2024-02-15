@@ -138,6 +138,24 @@ function Workflowview({ clientNr, explorerId, productName, name, designerMode, u
 
   };
 
+  const handleCopy = () => {
+    const selectedText = quillRef.current.getEditor().getSelection();
+    if (selectedText) {
+      // document.execCommand('copy');
+    }
+  };
+
+  const handleCut = () => {
+    const selectedText = quillRef.current.getEditor().getSelection();
+    if (selectedText) {
+      // document.execCommand('cut');
+    }
+  };
+
+  const handlePaste = () => {
+    // document.execCommand('paste');
+  };
+
   return (
     <div className="Workflowview">
       <div>
@@ -221,10 +239,12 @@ function Workflowview({ clientNr, explorerId, productName, name, designerMode, u
                   modules={{
                     toolbar: [
                       [{ header: [1, 2, 3, false] }],
-                      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                      ['bold', 'italic', 'underline', 'strike'],
+                      ['blockquote', 'code-block'],
                       [{ list: 'ordered' }, { list: 'bullet' }],
-                      ['link', 'image'],
-                      ['clean'],
+                      ['link' ],
+                      ['clean','image'],
+                    
                     ],
                   }}
                   theme = "snow"

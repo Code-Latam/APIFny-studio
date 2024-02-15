@@ -105,7 +105,7 @@ function Modalworkflow({ clientNr, explorerId, onClose }) {
   
 
   return (
-    <div className="modalDialog">
+    <div className="AddWorkflowModalDialog">
       <div>
         <div className="top">
           <div className="left">Add new Workflow</div>
@@ -114,12 +114,13 @@ function Modalworkflow({ clientNr, explorerId, onClose }) {
           </div>
         </div>
 
-        <div className="switch-container">
+        <div className="workflow-switch-container">
           <label htmlFor="products">Product</label>
           <select
             id="products"
             value={selectedProduct}
             onChange={(e) => setSelectedProduct(e.target.value)}
+            className = "workflow-switch-container"
           >
             {products.map((product) => (
               <option key={product.productName} value={product.productName}>

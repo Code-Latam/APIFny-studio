@@ -113,7 +113,7 @@ function Modallink({ clientNr, explorerId, graph, onClose }) {
 
 
   return (
-    <div className="modalDialog">
+    <div className="LinkmodalDialog">
       <div>
         <div className="top">
           <div className="left">Add new Link</div>
@@ -122,12 +122,13 @@ function Modallink({ clientNr, explorerId, graph, onClose }) {
           </div>
         </div>
 
-        <div className="switch-container">
+        <div className="link-switch-container">
           <label htmlFor="sources">Source</label>
           <select
             id="sources"
             defaultValue={selectedSource}
             onChange={(e) => setSelectedSource(e.target.value)}
+            className = "link-switch-container"
           >
             {sources.map((source) => (
               <option key={source.taskId} value={source.taskId}>
@@ -141,6 +142,7 @@ function Modallink({ clientNr, explorerId, graph, onClose }) {
             id="targets"
             defaultValue={selectedTarget}
             onChange={(e) => setSelectedTarget(e.target.value)}
+            className = "link-switch-container"
           >
             {targets.map((target) => (
               <option key={target.taskId} value={target.taskId}>
@@ -153,6 +155,7 @@ function Modallink({ clientNr, explorerId, graph, onClose }) {
             id="linkType"
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
+            className = "link-switch-container"
           >
             {typeOptions.map((type) => (
               <option key={type} value={type}>

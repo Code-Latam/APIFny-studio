@@ -17,6 +17,7 @@ import ContextMenu from "../contextmenu/ContextMenu";
 import Modalworkflow from "../modalworkflow/Modalworkflow"; 
 import Modalproduct from "../modalproduct/Modalproduct";
 import Modalconfiguration from "../modalconfiguration/Modalconfiguration";
+import Thirdparties from "../thirdparties/Thirdparties";
 import Modalapidefimport from "../modalapidefimport/Modalapidefimport";  
 import Chatbot from "../chatbot/Chatbot"; 
 import { FiMoreVertical } from 'react-icons/fi'
@@ -68,6 +69,7 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
   const [isApiDefImportModalOpen, setIsApiDefImportModalOpen] = useState(false);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [isConfigurationModalOpen, setIsConfigurationModalOpen] = useState(false);
+  const [isThirdpartiesOpen, setIsThirdpartiesOpen] = useState(false);
 
   const openWorkflowModal = () => {
     setIsWorkflowModalOpen(true);
@@ -85,6 +87,10 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
 
   const openConfigurationModal = () => {
     setIsConfigurationModalOpen(true);
+  };
+
+  const openThirdparties = () => {
+    setIsThirdpartiesOpen(true);
   };
 
 
@@ -406,7 +412,11 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
   const handleContextMenuClick = (e) => {
     e.preventDefault();
     // Calculate the position of the context menu based on the click event
-    setContextMenuPosition({ x: (e.clientX - 550), y: e.clientY - 275});
+    setContextMenuPosition({ x: (e.pageX - 1175), y: e.pageY - 45});
+    console.log(" client position values");
+    console.log(e.pageX);
+    console.log(e.pageY);
+    // setContextMenuPosition({ x: (100), y: (100)});
     setContextMenuVisible(true);
   };
 
@@ -429,7 +439,10 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
           Add Workflow
           </button>
           <button className="open-modal-button" onClick={openApiDefImportModal}>
-          Import Api definitions
+          Import Api Definitions
+          </button>
+          <button className="open-modal-button" onClick={openThirdparties}>
+          Third Party API providers
           </button>
           <br></br>
           <br></br>
@@ -455,10 +468,17 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
         </div>
         
         <div className="lower-middle-panel">
-        <div className="icon-right-align">
+        <div classname = "botpanel">
+            <Chatbot
+            clientNr = {clientNr}
+            />
+          </div>
+        </div>     
+      </div>
+          <div className= "view-panel">
+          <div className="icon-right-align">
           <FiMoreVertical className="context-menu-icon" onClick={handleContextMenuClick} />
         </div>
-
         {isWorkflowModalOpen && (
         <Modalworkflow
           clientNr = {clientNr}
@@ -488,6 +508,16 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
           }}
         />
       )}
+
+      {isThirdpartiesOpen && (
+              <Thirdparties
+                clientNr = {clientNr}
+                explorerId = {explorerId}
+                onClose={() => {
+                  setIsThirdpartiesOpen(false);
+                }}
+              />
+            )}
 
         {isApiDefImportModalOpen && (
                 <Modalapidefimport
@@ -633,18 +663,10 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
          codeType = {selectedCodeType}
        /> 
          : null} 
-        </div>
-        
-      </div>
-      <div classname= "right-panel">
-          <div className = "title-wrap">
-          <div className= "title-bot"> AI Podium</div>
           </div>
-          <Chatbot
-           clientNr = {clientNr}
-          />
-        </div>
+          
       </div>
+   
   );
   
 };

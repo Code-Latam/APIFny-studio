@@ -138,8 +138,8 @@ margin-top: 18px;
 
   .my-custom-file-label {
     display: block;
-    color:black;
-    background-color: #ccc;
+    color:green;
+    background-color: black;
     border: 10px green;
     cursor: pointer;
     margin:5px;

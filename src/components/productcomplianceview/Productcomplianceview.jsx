@@ -96,7 +96,7 @@ function Productcomplianceview({ clientNr, explorerId, productName, designerMode
   }, [clientNr, explorerId, productName]);
 
   return (
-    <div className="Productview">
+    <div className="Productcomplianceview">
       <div>
         {product ? (
           <div>
@@ -123,7 +123,7 @@ function Productcomplianceview({ clientNr, explorerId, productName, designerMode
               <label htmlFor="productDescription">Compliance Description</label>
               <br />
               {isRichTextMode ? (
-                 <div style={{ overflowY: "auto", marginTop: "10px" , marginBottom: "14px", border: "1px solid white" }}>
+                 <div>
                 <ReactQuill
                   value={product.complianceDescription}
                   modules={{
@@ -140,7 +140,7 @@ function Productcomplianceview({ clientNr, explorerId, productName, designerMode
                   onChange={handleComplianceDescriptionChange}
                   disabled = {!designerMode} 
                   readOnly =  {!designerMode}    
-                  style={{ minHeight: '550px' }}     
+                  style={{ height: '400px', width:'400px' }}     
                 />
                 </div>
               ) : (

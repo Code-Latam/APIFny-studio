@@ -1,8 +1,17 @@
+a {
+    color: #03A062;
+  }
+
 .explorerContainer
 {
     color:#03A062;
     background: black;
-    height: 100hv;
+    
+    border: 1px solid green;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    
 }
 
 

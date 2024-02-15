@@ -3,7 +3,7 @@ import axios from "axios";
 import "./modalapidefimport.css";
 import FileUpload from '../fileupload/FileUpload';
 
-function Modalapidefimport({ onClose }) {
+function Modalapidefimport({ clientNr, explorerId,onClose }) {
 
   const [products, setProducts] = useState([]);
 

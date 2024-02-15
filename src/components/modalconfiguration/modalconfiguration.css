@@ -3,7 +3,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #ccc;
+    background-color: black;
     border: 1px solid #03A062;
     padding: 5px;
    
@@ -104,6 +104,9 @@
     margin-top: 10px;
     width:350px;
     border-radius: 5px;
+    background: black;
+    border: 2px solid green; 
+  
   }
 
   .switch-container {

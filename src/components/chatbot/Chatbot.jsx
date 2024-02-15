@@ -85,6 +85,7 @@ const Chatbot = ({clientNr}) => {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
+          placeholder="AI Podium. Ask any question relevant to your project or this tool!"
         />
       </div>
       <div

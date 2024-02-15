@@ -28,7 +28,7 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
       
       highlightStrokeColor: "red",
       labelProperty: "label",
-      fontSize: 10,
+      fontSize: 12,
       fontColor:"#03A062",
       draggable: true,
     },
@@ -37,8 +37,9 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
       renderArrow: true,
       strokeWidth: 2,
     },
-    width: 700, // Set the width of the graph (adjust as needed)
-    height: 200, // Set the height of the graph (adjust as needed)
+    width: 650, // Set the width of the graph (adjust as needed)
+    height: 400, // Set the height of the graph (adjust as needed)
+    initialZoom: 1.2, 
     "freezeAllDragEvents": !designerMode,
     "staticGraph": !designerMode,
   };
@@ -351,8 +352,8 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
     },[selectedProduct,selectedWork,nodesAdded, graphChange]);
 
     return (
-      <div className= "App">
-        {designerMode &&(
+    <div>
+      {designerMode &&(
         <div className="buttons">
         <button className = "actionButton" onClick={() => handleAddNode()}>Add Task</button>
         <button className = "actionButton" onClick={() => handleDeleteNode()}>Remove Task</button>
@@ -360,6 +361,8 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
         <button className = "actionButton" onClick={() => handleDeleteLink()}>Remove Link</button>  
         </div>
         )}
+      <div className= "App">
+        
         <div className="top-part">
           {data.map((graph, index) => (
             <div key={index}>
@@ -384,6 +387,7 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
                     node.apiName !== ""
                       ? "blue"
                       : "#03A062",
+                    strokeColor: node.taskType === "compliance" ? "red" : undefined,
                 })),
               }}
               config={config}
@@ -410,6 +414,7 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
           }}
         />
       )}
+      </div>
       </div>
     );
           }   

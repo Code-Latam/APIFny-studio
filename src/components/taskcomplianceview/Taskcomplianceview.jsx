@@ -138,7 +138,7 @@ const handleTextareaChange = (e) => {
               <label htmlFor="workflowDescription">Compliance Description</label>
               <br />
               {isRichTextMode ? (
-                 <div style={{ overflowY: "auto", marginTop: "10px" , marginBottom: "14px", border: "1px solid white" }}>
+                 <div>
                 <ReactQuill
                   value={task.complianceDescription}
                   modules={{
@@ -155,7 +155,7 @@ const handleTextareaChange = (e) => {
                   onChange={handleComplianceDescriptionChange}
                   readOnly =  {!designerMode}  
                   disabled = {!designerMode}
-                  style={{ minHeight: '550px' }} 
+                  style={{ height: '400px', width:'400px' }}   
                   
                 />
                 </div>

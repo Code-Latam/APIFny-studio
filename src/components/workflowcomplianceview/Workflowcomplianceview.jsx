@@ -96,7 +96,7 @@ function Workflowcomplianceview({ clientNr, explorerId, productName, name, desig
 
 
   return (
-    <div className="Workflowview">
+    <div className="Workflowcomplianceview">
       <div>
         
         {workflow ? (

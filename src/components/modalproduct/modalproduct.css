@@ -11,6 +11,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
     width: 400px;
+    background: black;
   }
 
   .modalDialog div {
@@ -104,6 +105,15 @@
     margin-top: 10px;
     width:350px;
     border-radius: 5px;
+    background: black;
+    border: 2px solid green;
+  }
+
+  .WorkflowSequenceViewinput
+
+  {
+    background: black;
+    border: 2px solid green;
   }
 
   .switch-container {
