@@ -263,7 +263,7 @@ const handleTextareaChange = (e) => {
             <div>
               <label htmlFor="workflowDescription">Description</label>
               {isRichTextMode ? (
-                 <div>
+                 <div style={{ overflowY: "auto", marginTop: "10px" , marginBottom: "14px", border: "1px solid white" }}>
                 <ReactQuill
                   value={task.description}
                   modules={{
@@ -280,7 +280,7 @@ const handleTextareaChange = (e) => {
                   onChange={handleDescriptionChange}
                   readOnly =  {!designerMode}  
                   disabled = {!designerMode}
-                  style={{ height: '400px', width:'400px' }}   
+                  style={{ minHeight: '550px' }}   
                   
                 />
                 </div>

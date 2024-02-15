@@ -77,17 +77,17 @@ const Chatbot = ({clientNr}) => {
 
   return (
     <div className="chat-container">
-      <div className="input-container">
+      
         <textarea 
-          id="input-field"
+          id="chatbot-input-field"
           rows="3"
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="AI Podium. Ask any question relevant to your project or this tool!"
+          style={{  width: "100%" }}
+          placeholder="Let’s discuss our product, compliance, APIs, or coding challenges. Type your query and press ‘Enter’ to engage."
         />
-      </div>
       <div
         id="response-container"
         className={showResponse ? 'show-response' : ''}

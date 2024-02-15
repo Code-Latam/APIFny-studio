@@ -1,3 +1,9 @@
-.index_editor__JoDSg {
-    overflow-y: hidden;
+.workflow-terminal{
+    min-height: 800px;
+}
+
+.index_terminal__teubZ
+{
+    background: black;
+    height: 100px;
 }

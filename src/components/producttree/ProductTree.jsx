@@ -412,7 +412,7 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
   const handleContextMenuClick = (e) => {
     e.preventDefault();
     // Calculate the position of the context menu based on the click event
-    setContextMenuPosition({ x: (e.pageX - 1175), y: e.pageY - 45});
+    setContextMenuPosition({ x: (e.pageX - 1250), y: e.pageY - 50});
     console.log(" client position values");
     console.log(e.pageX);
     console.log(e.pageY);
@@ -467,12 +467,10 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
         )}
         </div>
         
-        <div className="lower-middle-panel">
         <div classname = "botpanel">
             <Chatbot
             clientNr = {clientNr}
             />
-          </div>
         </div>     
       </div>
           <div className= "view-panel">
