@@ -36,7 +36,7 @@ import {
       selectedItemType === "apicompliance";
   
     return (
-      <div className="context-menu" style={{ top: position.y, left: position.x }}>
+      <div className="context-menu" style={{ postion: "absolute", top: position.y, left: position.x }}>
         {(isCodeItem || selectedItemType === "workflow" || selectedItemType === "workflowcompliance" || selectedItemType === "workflowterminal") && (
           <>
             {isCodeItem  && selectedItemType !== "workflowcode" && (

@@ -411,12 +411,20 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
 
   const handleContextMenuClick = (e) => {
     e.preventDefault();
-    // Calculate the position of the context menu based on the click event
-    setContextMenuPosition({ x: (e.pageX - 1250), y: e.pageY - 50});
-    console.log(" client position values");
-    console.log(e.pageX);
-    console.log(e.pageY);
-    // setContextMenuPosition({ x: (100), y: (100)});
+    const windowWidth = window.innerWidth;
+    console.log("clientX:", e.clientX);
+    console.log("clientY:", e.clientY);
+    console.log("window.innerWidth:", window.innerWidth);
+
+    // Define percentage values for positioning
+    const xPercentage = 0.1; // Adjust this value based on your needs
+    const yPercentage = 0.05; // Adjust this value based on your needs
+
+    // Calculate the position of the context menu based on the window size and click event
+    const contextMenuX = e.clientX - 60 - (windowWidth * xPercentage);
+    const contextMenuY = e.clientY + 90 - (windowWidth * yPercentage);
+
+    setContextMenuPosition({ x: contextMenuX, y: contextMenuY });
     setContextMenuVisible(true);
   };
 

@@ -85,7 +85,7 @@ const Chatbot = ({clientNr}) => {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
-          style={{  width: "100%", height:"50px" }}
+          style={{  width: "100%", height:"55px" }}
           placeholder="Let’s discuss our product, compliance, APIs, or coding challenges. Type your query and press ‘Enter’ to engage."
         />
       <div 

@@ -84,12 +84,13 @@
 }
 
 .view-panel {
-  display: flex;
-  max-width: 35%;
+ 
+  width: 35%;
+  
   overflow: auto;
   z-index: 1;
   height: 100%;
-  position: relative;
+ 
   margin-left: 10px;
   margin-top: 10px;
   margin-right: 20px;
@@ -124,8 +125,8 @@
 
 .icon-right-align {
   position: absolute;
-  top: 0px;
-  right: 20px;
+  top: 48px;
+  right: 52px;
   z-index: 2; 
   /* Add other styling for the icon */
 }
