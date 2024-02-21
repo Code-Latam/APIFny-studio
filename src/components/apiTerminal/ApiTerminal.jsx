@@ -3,8 +3,9 @@ import React, { useState, useEffect } from "react"
 import './apiTerminal.css'; // Import your CSS file here
 import axios from "axios";
 import crypto from 'crypto-js';
-import {HeadersGlobalAdd, requestBodyGlobalAdd, addAuthToHeaders, addAuthToRequestBody, parseApiHeaders, getConfiguration, isValidConfiguration} from "../../utils/api-spec-util.js";
+import {HeadersGlobalAdd, requestBodyGlobalAdd, addAuthToHeaders, addAuthToRequestBody, parseApiHeaders, getConfiguration, isValidConfiguration, isObject} from "../../utils/api-spec-util.js";
 import { ReactTerminal } from "react-terminal";
+import ReactJson from 'react-json-view';
 
 const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,apiName }) => {
   const [gwoken, setGwoken] = useState('saasasasas');
@@ -29,9 +30,11 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
       try {
         // Execute the handleSubmit logic when "run" is entered in the terminal
         const myResponse = await handleSubmit();
-        console.log("API call executed successfully.");
-        console.log(response);
-        return myResponse;
+        console.log("JASON");
+        console.log(myResponse);
+        return (
+          <ReactJson src={myResponse} theme="apathy" />
+        );
       } catch (error) {
         console.error('Error during API execution:', error);
         return <div style={{ color: '#006400' }}> {'An error occurred during API execution'}</div>;
@@ -43,13 +46,24 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
   console.log(clientNr);
   console.log(apiName);
 
+
   const handleRequestBodyChange = (field, value) => {
+    // Try to parse the value as JSON
+    let parsedValue;
+    try {
+      parsedValue = JSON.parse(value);
+    } catch (error) {
+      // If parsing fails, use the raw value
+      parsedValue = value;
+    }
+  
     // Update the state with the new value for the specified field
     setRequestBodyFields((prevFields) => ({
       ...prevFields,
-      [field]: value,
+      [field]: parsedValue,
     }));
   };
+
 
   const handleRouteChange = (value) => {
     // Update the state with the new value for the specified field
@@ -127,11 +141,12 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
     // const myRequestBodyWithGlobals = requestBodyGlobalAdd( requestBodyFields,yamlObject)
     
     const finalHeaders = addAuthToHeaders(myheadersWithGlobals,yamlObject );
+    console.log("FINAL HEADERS");
+    console.log(finalHeaders);
     const finalRequestBody = addAuthToRequestBody(requestBodyFields,yamlObject,crypto);
     // we are using the relay function of our backen to get to the clients API so:
 
-    // finalRequestBody.destination = api.urlRoute ;
-    finalRequestBody.destination = route ;
+    finalHeaders["destination"] = route;
 
     //  Determine the three mayor parameters of API call based on the authentication case
 
@@ -140,19 +155,24 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
     console.log("FINAL RequestBody");
     console.log(finalRequestBody);
 
-
-    const fetchResponse = await fetch(process.env.REACT_APP_CENTRAL_BACK + "/relay", {
+    const allowedMethodsForBody = ["POST", "PUT", "PATCH"]; 
+    const fetchOptions = {
       method: api.method,
       headers: {
         ...finalHeaders,
       },
-      body: JSON.stringify(finalRequestBody),
-    })
+    };
+    // Check if the current API method allows a body
+    if (allowedMethodsForBody.includes(api.method.toUpperCase())) {
+      fetchOptions.body = JSON.stringify(finalRequestBody);
+    }
+    
+    const fetchResponse = await fetch(process.env.REACT_APP_CENTRAL_BACK + "/relay", fetchOptions);
       
     const responseData = await fetchResponse.json();
     setResponse(JSON.stringify(responseData, null, 2));
-    
-    return JSON.stringify(responseData, null, 2); // Return the response data
+    return responseData; 
+    // return JSON.stringify(responseData, null, 2); // Return the response data
   } catch (error) {
     console.error('Error during API execution:', error);
     setResponse(JSON.stringify(error, null, 2));
@@ -170,40 +190,41 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
               <div>2  //</div>
               <div>3  // {api.description}.</div>
               <div>4  //</div>
+              <div>5  curl -X {api.method}</div>
               <div>
-                5  curl -X {api.method} {api.headers && api.headers.map((header) => `-H "${header}"`).join(' ')} -d {' '}
+              <textarea
+                title={`Curl`}
+                className="myroute"
+                name="route"
+                value={route}
+                onChange={(e) => handleRouteChange(e.target.value)}
+                rows = "auto"
+              />  
+              
               </div>
               <div>
-              <input
-                      title={`Curl`}
-                      className="myroute"
-                      type="text"
-                      name="route"
-                      value= {route}
-                      onChange={(e) => handleRouteChange(e.target.value)}
-                    />
+               {api.headers && api.headers.map((header) => `-H "${header}"`).join(' ')} -d {' '}
               </div>
-              <div>
-                {api.headers && api.headers.map((header) => `-H "${header}"`).join(' ')} -d {' '}
-              </div>
+              
+              <div>{`{`}</div>
 
               {api.requestBody &&
                 Object.keys(api.requestBody).map((field, index) => (
-                  <div key={index}>
-                    {`"${field}": `}
-                    <input
+                  <div key={index} style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '10px' }}>
+                    <label style={{ marginRight: '8px' }}>{`"${field}": `}</label>
+                    <textarea
                       title={`The ${field} is a...`}
                       className="mycurlinput"
-                      type="text"
                       name={field}
-                      value={requestBodyFields[field]}
+                      rows={isObject(requestBodyFields[field]) ? 5 : 1} // Set rows to a higher value only if it's an object
+                      value={isObject(requestBodyFields[field]) ? JSON.stringify(requestBodyFields[field], null, 2) : requestBodyFields[field]}
                       onChange={(e) => handleRequestBodyChange(field, e.target.value)}
-                    />,
+                    />
                   </div>
                 ))}
-
+            <div>{`}`}</div>
               
-              <div>6 } </div>
+          
             </div>
           </form>
         </div>

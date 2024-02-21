@@ -29,6 +29,15 @@ export function HeadersGlobalAdd(apiHeaders, yamlObject) {
   return apiHeaders;
 }
 
+function calculateBasicAuth(username, password) {
+  const credentials = `${username}:${password}`;
+  console.log("CREDENTIALS SPECIAL");
+  console.log(credentials);
+  const encodedCredentials = btoa(credentials);
+
+  return `Basic ${encodedCredentials}`;
+}
+
 export function addAuthToHeaders(myheadersWithGlobals,yamlObject )
   {
     const authenticationType =  yamlObject['Authentication-Type'];
@@ -39,7 +48,16 @@ export function addAuthToHeaders(myheadersWithGlobals,yamlObject )
       case "Digital-Signature":
         return myheadersWithGlobals;
       case "Basic-Authentication":
-        return myheadersWithGlobals;
+         // get properties for the basic authentication
+         const basicAuthentication = yamlObject['Basic-Authentication'] ;
+         if (basicAuthentication.overwrite == "yes")
+         {
+          const param = "Authorization"
+          myheadersWithGlobals[param] = calculateBasicAuth( basicAuthentication.username, basicAuthentication.password);
+          return myheadersWithGlobals
+        }
+         else
+          {return myheadersWithGlobals;}
       case "ApiKey":
         return myheadersWithGlobals;
       default:
@@ -183,9 +201,10 @@ export function addAuthToHeaders(myheadersWithGlobals,yamlObject )
     const globalRequestBody = requestBodyGlobalAdd(api.requestBody,yamlObject );
     const requestBody = addAuthToRequestBody(globalRequestBody,yamlObject);
 
-    const stringifiedHeaders = JSON.stringify(headers).replace(/"/g, "'"); // Adjust as needed
-    const stringifiedRequestBody = JSON.stringify(requestBody).replace(/"/g, "'"); // Adjust as needed
 
+
+   let stringifiedHeaders = headers ? JSON.stringify(headers).replace(/"/g, "'") : {};
+  let stringifiedRequestBody = requestBody ? JSON.stringify(requestBody).replace(/"/g, "'") : {};
 
     const curlStatement = `curl -X ${apiType.toUpperCase()} ${endpoint} -H '${stringifiedHeaders}' -d '${stringifiedRequestBody}'`;
     console.log("CURL COMPONENT C");
@@ -217,6 +236,11 @@ export function addAuthToHeaders(myheadersWithGlobals,yamlObject )
         <pre>{curlStatement}</pre>
       </div>
     );
+  };
+
+  export function isObject(value)
+  {
+    return value !== null && typeof value === 'object';
   };
 
   

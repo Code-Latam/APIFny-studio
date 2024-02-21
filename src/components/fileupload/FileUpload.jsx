@@ -78,8 +78,6 @@ function FileUpload({clientNr, explorerId}) {
 
     const formData = new FormData();
    
-    const clientNr = clientNr;
-    const explorerId = explorerId
     
     formData.append("clientNr", clientNr);
     formData.append("explorerId", explorerId);

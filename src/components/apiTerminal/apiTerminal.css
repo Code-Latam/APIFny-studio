@@ -82,8 +82,7 @@ h1 {
 .mycurlinput {
   background-color: #040304;
   color: #03A062;
-  height: 18px;
-  width: 100px;
+  width: 200px;
   border-top: none;
   border-left: none;
   border-right: none;
@@ -93,9 +92,9 @@ h1 {
 
 .myroute {
   background-color: #040304;
-  color: #03A062;
-  height: 18px;
-  width: 500px;
+  color: blue;
+ 
+  width: 100%;
   border-top: none;
   border-left: none;
   border-right: none;
