@@ -26,6 +26,7 @@ import jsYaml from 'js-yaml';
 import { saveAs } from 'file-saver';
 import { TerminalContextProvider } from "react-terminal";
 import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const TreeNode = ({ label, children, isChild, topLevelClick }) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -71,6 +72,7 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [isConfigurationModalOpen, setIsConfigurationModalOpen] = useState(false);
   const [isThirdpartiesOpen, setIsThirdpartiesOpen] = useState(false);
+  const history = useHistory();
 
   const openWorkflowModal = () => {
     setIsWorkflowModalOpen(true);
@@ -434,9 +436,8 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
   };
 
   const handleApiEditorClick = () => {
-    // Use the full URL if it's an external link, or prepend your app's base URL if it's an internal link
-    const url = '/apiseditor'; // Adjust the URL as needed
-    window.open(url, '_blank');
+    
+    history.push('/apiseditor');
   };
 
   return (
