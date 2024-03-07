@@ -1,0 +1,19 @@
+
+.apiEditor {
+    display: flex; /* This turns on flexbox layout */
+    justify-content:left; /* This centers the children horizontally */
+    align-items:flex-start; /* This centers the children vertically */
+}
+
+.myFolder {
+    margin-top: 10px;
+    flex: 2;
+}
+
+.APIDetails
+{
+    margin-top: 10px;
+    border: 2px solid green;
+    flex: 3;
+    background: black;
+}

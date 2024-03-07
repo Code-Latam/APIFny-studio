@@ -136,6 +136,10 @@ input[type=submit]:hover {
   flex-direction: column;
 }
 
+.terminalbuttons {
+  margin-top: 25px;
+}
+
 .submit-button {
   display: flex;
   justify-content: flex-end; /* align the button to the right */

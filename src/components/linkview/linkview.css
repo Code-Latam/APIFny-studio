@@ -36,3 +36,12 @@
     margin-top: 10px;
   }
   
+  .checkboxContainer {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+  }
+
+  .passLinkParametersCheckbox {
+    margin-right: 5px;
+  }

@@ -236,7 +236,58 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
       }
       // Return null or any default value if the combination is not found
       return null;
-  }
+   }
+   
+   function findPathParameters(arr, source, target) {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].source === source && arr[i].target === target) {
+        return arr[i].pathParameters;
+      }
+    }
+    // Return null or any default value if the combination is not found
+    return "";
+    }
+
+  function findQueryParameters(arr, source, target) {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].source === source && arr[i].target === target) {
+        return arr[i].queryParameters;
+      }
+    }
+    // Return null or any default value if the combination is not found
+    return "";
+    }
+
+    function findRequestbodyParameters(arr, source, target) {
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].source === source && arr[i].target === target) {
+          return arr[i].requestbodyParameters;
+        }
+      }
+      // Return null or any default value if the combination is not found
+      return "";
+      }
+
+      function findPassLinkParameters(arr, source, target) {
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i].source === source && arr[i].target === target) {
+            return arr[i].passLinkParameters;
+          }
+        }
+        // Return null or any default value if the combination is not found
+        return false;
+        }
+
+        function findResourcePath(arr, source, target) {
+          for (let i = 0; i < arr.length; i++) {
+            if (arr[i].source === source && arr[i].target === target) {
+              return arr[i].resourcePath;
+            }
+          }
+          // Return null or any default value if the combination is not found
+          return "";
+          }
+
 
    const handleClickLink = function(sourceId,targetId,graph) {
     console.log("LINK CLICKED");
@@ -247,11 +298,23 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
     // graph.links[..]
 
     const myType = findType(graph.links, sourceId, targetId)
+    const myPassLinkParameters = findPassLinkParameters(graph.links, sourceId, targetId)
+    const myResourcePath = findResourcePath(graph.links, sourceId, targetId)
+
+    const myPathParameters = findPathParameters(graph.links, sourceId, targetId)
+    const myQueryParameters = findQueryParameters(graph.links, sourceId, targetId)
+    const myRequestbodyParameters = findRequestbodyParameters(graph.links, sourceId, targetId)
+
     const myLinkObject =
     {
       source: sourceId,
       target: targetId,
-      type: myType
+      type: myType,
+      passLinkParameters: myPassLinkParameters,
+      resourcePath: myResourcePath,
+      pathParameters:myPathParameters,
+      queryParameters: myQueryParameters,
+      requestbodyParameters: myRequestbodyParameters
     };
     setSelectedLink(myLinkObject);
     onLinkChange("link",selectedProduct, graph.name,myLinkObject);

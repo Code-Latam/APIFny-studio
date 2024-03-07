@@ -16,6 +16,7 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
   const [api, setApi] = useState([]);
   const [explorer, setExplorer] = useState([]);
   const [requestBodyFields, setRequestBodyFields] = useState({});
+  const [reload, setReload] = useState(false);
 
   const commands = {
     whoami: () => {
@@ -42,9 +43,53 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
     },
   };
 
-  console.log("in api terminal");
-  console.log(clientNr);
-  console.log(apiName);
+
+  const handleSave = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const endpoint = `${process.env.REACT_APP_CENTRAL_BACK}/api/registercustom`;
+
+      const requestBody = {
+        ...requestBodyFields,
+        clientNr: clientNr,
+        name: apiName,
+        email: user.email,
+        chatbotKey: user.chatbotKey,
+        collectionTag: api.collectionTag,
+        description: api.description,
+        method: api.method,
+        requestBodyType:api.requestBodyType,
+        responseBodyType: api.responseBodyType
+      };
+
+      const response = await axios.post(endpoint, requestBody);
+      alert("Custom API values saved!");
+      setReload(true);
+    } catch (error) {
+      alert("Error during save operation: " + (error.response ? JSON.stringify(error.response.data) : error.message));
+    }
+  };
+
+
+  const handleRestoreDefault = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const endpoint = `${process.env.REACT_APP_CENTRAL_BACK}/api/deletecustom`;
+
+      const query = {
+        clientNr,
+        name: apiName,
+        email: user.email,
+        chatbotKey: user.chatbotKey
+      };
+
+      const response = await axios.post(endpoint, query);
+      alert("Default API values restored!");
+      setReload(true);
+    } catch (error) {
+      alert((error.response ? JSON.stringify(error.response.data) : error.message));
+    }
+  };
 
 
   const handleRequestBodyChange = (field, value) => {
@@ -75,8 +120,12 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
   useEffect( () => {
     // Fetch the initial products using an API call
     // Replace this with your actual API endpoint
+    if (reload) {
+      setReload(false); 
+     }
+
     fetchApi();
-  }, [clientNr,explorerId,apiName]);
+  }, [reload, clientNr,explorerId,apiName]);
 
   const fetchApi = async () => {
     
@@ -182,6 +231,10 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
 
   return (
     <div className="container">
+      <div className="terminalbuttons">
+        <button className="save-button" onClick={handleSave}>Save</button>
+        <button className="restore-button" onClick={handleRestoreDefault}>Restore Default</button>
+      </div>
       <div className="page">
         <div className="curl-panel">
           <form id="form" onSubmit={handleSubmit}>

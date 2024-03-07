@@ -12,6 +12,7 @@ import { AuthContext } from "./context/AuthContext";
 import React, { useState, useEffect } from 'react';
 import Login from "./pages/login/Login";
 import Updateuser from "./pages/updateuser/Updateuser";
+import ApisEditor from './components/apisEditor/ApisEditor';
 
 function App() {
   const { user } = useContext(AuthContext);
@@ -46,6 +47,14 @@ function App() {
         </Route>
         <Route path="/updateuser">
           <Updateuser />
+        </Route>
+        <Route path="/apiseditor">
+        {user ? <ApisEditor 
+          clientNr = {user.clientNr}
+          explorerId = {"1"}
+          designerMode = {designerMode}
+          />
+          : <Login />}
         </Route>
       </Switch>
     </Router>

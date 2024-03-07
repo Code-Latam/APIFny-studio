@@ -16,8 +16,6 @@ function Taskview({ clientNr, explorerId, workflowName, taskId, designerMode,upd
   const [selectedTaskType, setSelectedTaskType] = useState("normal");
   const [selectedApi, setSelectedApi] = useState("");
   const [apis, setApis] = useState([]);
-  const [selectedThirdParty, setSelectedThirdParty] = useState("");
-  const [thirdparties, setThirdparties] = useState([]);
 
   const typeOptions = ["circle","cross","diamond","square","star","triangle","wye"];
   const taskTypeOptions = ["normal", "compliance"];
@@ -48,23 +46,9 @@ function Taskview({ clientNr, explorerId, workflowName, taskId, designerMode,upd
       }
     };
 
-    const fetchThirdParties = async () => {
-      const myBody = {
-        clientNr: clientNr,
-      }
-      try {
-        const thirdpartiesresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/thirdparties/queryall", myBody);
-        const myEmptyThirdParty = { name: "none"}
-        const mythirdparties = thirdpartiesresponse.data;
-        mythirdparties.unshift(myEmptyThirdParty);;
-        setThirdparties(mythirdparties);  
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  
   
     fetchApis();
-    fetchThirdParties();
 
 
     // Define the API URL for fetching the product
@@ -95,7 +79,6 @@ function Taskview({ clientNr, explorerId, workflowName, taskId, designerMode,upd
         setTask(data);
         setSelectedType(data.symbolType);
         setSelectedTaskType(data.taskType);
-        setSelectedThirdParty(data.thirdparty)
         setSelectedApi(data.apiName)
         // set the markdown
         const markdownContent = htmlToMd(data.description);
@@ -148,7 +131,6 @@ const handleTextareaChange = (e) => {
       workflowName:workflowName,
       taskId:taskId,
       taskType: selectedTaskType,
-      thirdparty: selectedThirdParty,
       symbolType: selectedType,
       apiName: selectedApi,
       name:task.name,
@@ -224,23 +206,7 @@ const handleTextareaChange = (e) => {
               </select>
             </div>      
             </div>
-            <div className='taskcontaineritem'>
-            <label htmlFor="thirdparty">Third Party</label>
-     
-              <select
-                id="thirdparty"
-                value={selectedThirdParty}
-                className="LinkTViewType"
-                onChange={(e) => setSelectedThirdParty(e.target.value)}
-                disabled={!designerMode }
-              >
-                {thirdparties.map((thirdparty) => (
-                  <option key={thirdparty.name} value={thirdparty.name}>
-                    {thirdparty.name}
-                  </option>
-                ))}
-              </select>
-            </div>     
+               
             <div>
             <label htmlFor="nodeType">node Type</label>
               <select

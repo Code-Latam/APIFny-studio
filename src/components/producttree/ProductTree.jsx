@@ -25,6 +25,7 @@ import {convertToOpenAPI} from "../../utils/utils.js";
 import jsYaml from 'js-yaml';
 import { saveAs } from 'file-saver';
 import { TerminalContextProvider } from "react-terminal";
+import { Link } from 'react-router-dom';
 
 const TreeNode = ({ label, children, isChild, topLevelClick }) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -432,6 +433,12 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
     setContextMenuVisible(false);
   };
 
+  const handleApiEditorClick = () => {
+    // Use the full URL if it's an external link, or prepend your app's base URL if it's an internal link
+    const url = '/apiseditor'; // Adjust the URL as needed
+    window.open(url, '_blank');
+  };
+
   return (
     <div className="main-container">
         <div className="left-container">
@@ -449,6 +456,7 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
           <button className="open-modal-button" onClick={openApiDefImportModal}>
           Import Api Definitions
           </button>
+          <button className="open-modal-button" onClick={handleApiEditorClick}>Api Editor</button>
           <button className="open-modal-button" onClick={openThirdparties}>
           Third Party API providers
           </button>
