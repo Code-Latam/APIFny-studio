@@ -57,8 +57,8 @@ const theme = createTheme({
         styleOverrides: {
           root: {
             backgroundColor: '#3A3B3C',
-            height: '30px',
-            margin: '8px 0',
+            height: '25px',
+            margin: '4px 0',
             '& .MuiOutlinedInput-notchedOutline': {
               borderColor: 'green',
             },
@@ -204,8 +204,16 @@ const theme = createTheme({
         const myResponse = await handleSubmit();
         console.log("JASON");
         console.log(myResponse);
+        let jsonResponse;
+        if (typeof myResponse === 'string') {
+          // Convert string to a valid JSON object
+          jsonResponse = { data: myResponse };
+        } else {
+          // myResponse is already an object, use it directly
+          jsonResponse = myResponse;
+        }
         return (
-          <ReactJson src={myResponse} theme="apathy" />
+          <ReactJson src={jsonResponse} theme="apathy" />
         );
       } catch (error) {
         console.error('Error during API execution:', error);
@@ -281,7 +289,19 @@ const theme = createTheme({
         <Tab label="Response" />
       </Tabs>
       <TabPanel value={value} index={0}>
-        <TextField label="API Name" value={apiData.name} variant="outlined" fullWidth margin="normal" onChange={(e) => handleApiDataChange('name', e.target.value)} />
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 0 }}>
+          <Button onClick={updateApi} variant="contained" color="primary" sx={{ mr: 1 }}>Save</Button>
+        </Box>
+        <TextField
+         InputProps={{
+            readOnly: true, // This makes the TextField non-editable without the disabled appearance.
+          }}
+         label="API Name" 
+         value={apiData.name} 
+         variant="outlined" 
+         fullWidth 
+         margin="normal" 
+         onChange={(e) => handleApiDataChange('name', e.target.value)} />
         
         <label className = "thirdParty" htmlFor="thirdparty">Third Party</label>
               <select
@@ -295,11 +315,10 @@ const theme = createTheme({
                     {thirdparty.name}
                   </option>
                 ))}
-              </select>
+              </select> 
+              <div></div>
         
-        
-        
-        <FormControl fullWidth margin="normal">
+        <FormControl  margin="normal">
           <InputLabel id="method-select-label">Method</InputLabel>
           <Select 
           labelId="method-select-label" 
@@ -314,7 +333,7 @@ const theme = createTheme({
           </Select>
         </FormControl>
         <TextField label="URL Route Example" value={apiData.urlRoute} variant="outlined" fullWidth margin="normal" onChange={(e) => handleApiDataChange('urlRoute', e.target.value)} />
-        <TextField label="Resource Path" value={apiData.resourcePath} variant="outlined" fullWidth margin="normal" onChange={(e) => handleApiDataChange('resourcePath', e.target.value)} />
+        <TextField label="Resource Path" value={apiData.resourcePath ? apiData.resourcePath : ""} variant="outlined" fullWidth margin="normal" onChange={(e) => handleApiDataChange('resourcePath', e.target.value)} />
         <br></br>
         <label className = "apidescription" >Description:
          </label>
@@ -346,10 +365,7 @@ const theme = createTheme({
         <Button onClick={addHeader} startIcon={<AddBox />} sx={{ mt: 1 }}>
           New Header
         </Button>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-          <Button onClick={updateApi} variant="contained" color="primary" sx={{ mr: 1 }}>Save</Button>
-
-        </Box>
+        
       </TabPanel>
       <TabPanel value={value} index={1}>
 

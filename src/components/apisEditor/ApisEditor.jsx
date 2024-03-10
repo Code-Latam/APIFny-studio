@@ -117,7 +117,7 @@ const ApisEditor = ({clientNr, explorerId, designerMode}) => {
 
 
   return (
-    <div>
+    <div className = "apiEditorTopLevel">
   <Topbar />      
   {folders.items && (
     <div className = "apiEditor">

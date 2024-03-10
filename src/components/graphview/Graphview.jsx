@@ -56,6 +56,30 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
     const [selectedTask, setSelectedTask] = useState(null);
     const [selectedLink, setSelectedLink] = useState(null);
     const [nodesAdded, setNodesAdded] = useState(0);
+
+    const saveSvgAsFile = () => {
+      console.log("hello svg");
+      const svg = document.querySelector('#graph-0-graph-container-zoomable').closest('svg');
+      if (!svg)
+      {
+        alert("please select a workflow first")
+      }
+      console.log("SVG");
+      console.log(svg);
+      if (svg) {
+        const serializer = new XMLSerializer();
+        const svgStr = serializer.serializeToString(svg);
+        const blob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+    
+        const downloadLink = document.createElement('a');
+        downloadLink.href = url;
+        downloadLink.download = 'graph-0.svg'; // Name of the file to be downloaded
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+      }
+    };
   
     const onClickGraph = function(graph) {
       setSelectedTask(null);
@@ -422,6 +446,7 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
         <button className = "actionButton" onClick={() => handleDeleteNode()}>Remove Task</button>
         <button className = "actionButton" onClick={() => handleAddLink()}>Add Link</button>
         <button className = "actionButton" onClick={() => handleDeleteLink()}>Remove Link</button>  
+        <button className="actionButton" onClick={saveSvgAsFile}>Save Image</button> {/* Button for saving SVG */}
         </div>
         )}
       <div className= "App">

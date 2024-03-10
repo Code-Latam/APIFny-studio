@@ -194,7 +194,7 @@ const handleTextareaChange = (e) => {
               <select
                 id="api"
                 value={selectedApi}
-                className="LinkTViewType"
+                className="apilist"
                 onChange={(e) => setSelectedApi(e.target.value)}
                 disabled={!designerMode }
               >

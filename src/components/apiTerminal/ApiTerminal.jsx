@@ -33,8 +33,19 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
         const myResponse = await handleSubmit();
         console.log("JASON");
         console.log(myResponse);
+
+        let jsonResponse;
+        if (typeof myResponse === 'string') {
+          // Convert string to a valid JSON object
+          jsonResponse = { data: myResponse };
+        } else {
+          // myResponse is already an object, use it directly
+          jsonResponse = myResponse;
+        }
+      
+
         return (
-          <ReactJson src={myResponse} theme="apathy" />
+          <ReactJson src={jsonResponse} theme="apathy" />
         );
       } catch (error) {
         console.error('Error during API execution:', error);
@@ -215,6 +226,9 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
     if (allowedMethodsForBody.includes(api.method.toUpperCase())) {
       fetchOptions.body = JSON.stringify(finalRequestBody);
     }
+
+    console.log("FETCHOPTIONS");
+    console.log(fetchOptions);
     
     const fetchResponse = await fetch(process.env.REACT_APP_CENTRAL_BACK + "/relay", fetchOptions);
       

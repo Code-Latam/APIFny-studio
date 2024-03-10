@@ -88,7 +88,7 @@ export default function Login() {
         <div className="loginLeft">
           <div className="loginLogo">ApiFny Studio</div>
           <div className="loginDesc">
-            Part of the Gwocu suite of products.
+            Part of the ApiFny suite of products.
           </div>
         </div>
         <div className="loginRight">

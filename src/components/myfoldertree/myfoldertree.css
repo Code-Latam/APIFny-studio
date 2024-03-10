@@ -1,6 +1,6 @@
 .my-folder-tree
 {
-    
+   
     color: #03A062;
     --rct-color-tree-bg: black;
     --rct-item-height: 28px;
@@ -48,3 +48,11 @@
     --rct-color-renaming-input-submitbutton-text-hover: #ffffff;
     --rct-color-renaming-input-submitbutton-text-active: #ffffff;
 }
+
+.buttons-container {
+    background-color: black; 
+    position: sticky;
+    top: 0; /* Adjust if you have a top bar or any other element you want the buttons to be below */
+    
+    z-index: 2000; /* Ensure it sits above other content */
+  }

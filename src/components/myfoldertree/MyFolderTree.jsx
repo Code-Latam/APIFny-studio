@@ -142,6 +142,14 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr }) => {
     const rand = `${Math.random()}`;
     items[rand] = { data:'New Folder', index: rand, isFolder: true, children: []};
     items[parent].children.push(rand);
+
+    const saveFolderPayload = {
+        clientNr: clientNr,
+        items: items
+    }
+   
+    axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/update', saveFolderPayload); //
+
     dataProvider.onDidChangeTreeDataEmitter.emit([parent]);
   };
 
@@ -258,6 +266,12 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr }) => {
         
             // Remove the child from the items object
             delete items[focusedItem]; 
+            const saveFolderPayload = {
+                clientNr: clientNr,
+                items: items
+            }   
+            axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/update', saveFolderPayload); //
+
             dataProvider.onDidChangeTreeDataEmitter.emit([parentFocusedIndex]);
          }
         return;
@@ -275,7 +289,13 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr }) => {
                 dataProvider.onDidChangeTreeDataEmitter.emit([parentFocusedIndex]);
                 // move item to unassigned
                 items["Unassigned"].children.push(focusedItem);
-               
+
+                const saveFolderPayload = {
+                    clientNr: clientNr,
+                    items: items
+                }
+                axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/update', saveFolderPayload);       
+                
                 dataProvider.onDidChangeTreeDataEmitter.emit(["Unassigned"]);
                 alert('API was moved to unasigned directory')
                 }
@@ -341,19 +361,26 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr }) => {
     return null; // Return null if the parent is not found
 }
 
-function handleDrag(items)
+function handleDrag(myitems)
 {
-    if (items.some(item => item.index === "Unassigned" || item.index === "MyFolders"))
+    //prohibit dragging of Unassigned and MyFolders
+    if (myitems.some(item => item.index === "Unassigned" || item.index === "MyFolders"))
     {
     return false;
     }
-    else
-    {
-        return true;
-    }
+    // prohibit dragging of more than one item
+
+    if (Object.keys(myitems).length !== 1)
+        {
+            return false;  
+        }
+
+
+    return true;
+    
 }
 
-function handleDrop(items, target)
+function handleDrop(myitems, target)
 {
    
     if (target.targetItem === "Unassigned")
@@ -362,6 +389,7 @@ function handleDrop(items, target)
     }
     else
     {
+
         return true;
     }
 }
@@ -369,6 +397,20 @@ function handleDrop(items, target)
 
   return (
     <div className= "my-folder-tree">
+    <div className="buttons-container">
+      <button type="button" onClick={injectItem}>
+        New Folder
+      </button>
+      <button type="button" onClick={injectApi}>
+        New Api
+      </button>
+      <button type="button" onClick={copyApi}>
+        Copy Api
+      </button>
+      <button type="button" onClick={removeItem}>
+        Remove item
+      </button>
+    </div>
     <UncontrolledTreeEnvironment
       dataProvider={dataProvider}
       getItemTitle={item => item.data}
@@ -385,18 +427,7 @@ function handleDrop(items, target)
       canDrag= {handleDrag }
       canDropAt = {handleDrop}
     >
-      <button type="button" onClick={injectItem}>
-        New Folder
-      </button>
-      <button type="button" onClick={injectApi}>
-        New Api
-      </button>
-      <button type="button" onClick={copyApi}>
-        Copy Api
-      </button>
-      <button type="button" onClick={removeItem}>
-        Remove item
-      </button>  
+     
       <Tree 
       treeId="tree-1" 
       rootItem="root" 
