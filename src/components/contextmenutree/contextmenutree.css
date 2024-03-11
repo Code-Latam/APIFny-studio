@@ -1,6 +1,6 @@
 /* ContextMenu.css */
 
-.context-menu {
+.context-menu-tree {
     position: absolute;
    
     left: -1000px;
@@ -22,7 +22,7 @@
 
   .menu-icon {
     margin-right: 10px; /* Add space between the icon and text */
-    font-size: 18px; /* Adjust the font size of the icon */
+    font-size: 24px; /* Adjust the font size of the icon */
     color: rgb(104, 103, 103); 
   }
 
@@ -43,19 +43,14 @@
   }
 
   
-  
-  
-  
-  
-  
 
-  .context-menu div {
+  .context-menu-tree div {
     padding: 6px 8px;
     cursor: pointer;
     transition: background-color 0.2s;
   }
   
-  .context-menu div:hover {
+  .context-menu-tree div:hover {
     background-color: #f0f0f0;
   }
   

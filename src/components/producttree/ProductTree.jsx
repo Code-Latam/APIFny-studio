@@ -13,7 +13,10 @@ import Workflowterminal from '../workflowterminal/Workflowterminal';
 import Taskview from '../taskview/Taskview';
 import Taskcomplianceview from '../taskcomplianceview/Taskcomplianceview';
 import Linkview from '../linkview/Linkview';
+
 import ContextMenu from "../contextmenu/ContextMenu"; 
+import ContextMenuTree from "../contextmenutree/ContextMenuTree"; 
+
 import Modalworkflow from "../modalworkflow/Modalworkflow"; 
 import Modalproduct from "../modalproduct/Modalproduct";
 import Modalconfiguration from "../modalconfiguration/Modalconfiguration";
@@ -61,9 +64,16 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
   const [selectedApi, setSelectedApi] = useState(null);
   const [selectedCodeType, setCodeType] = useState(null);
   const [products, setProducts] = useState([]);
+
   const [selectedMenu,setMenu ] = useState(null);
+  const [selectedTreeMenu,setTreeMenu ] = useState(null);
+
   const [contextMenuVisible, setContextMenuVisible] = useState(false); 
+  const [treeContextMenuVisible, setTreeContextMenuVisible] = useState(false); 
+
   const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
+  const [treeContextMenuPosition, setTreeContextMenuPosition] = useState({ x: 0, y: 0 });
+
   const [newTreeItem, setNewTreeItem] = useState(0);
   const [newGraphItem, setNewGraphItem] = useState(0);
 
@@ -223,6 +233,33 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
       console.error(error);
     }
   }
+
+
+  const handleSelectTreeMenuItem = (menuItem) => {
+
+    // isThirdpartiesOpen
+    switch (menuItem) {
+  
+      case 'configuration':
+        setTreeMenu('configuration');
+        setIsConfigurationModalOpen(true);
+        break;
+      case 'thirdparty':
+        setTreeMenu('thirdparty');
+        setIsThirdpartiesOpen(true);
+        break;
+      case 'importapidefinitions':
+          setTreeMenu('importapidefinitions');
+          setIsApiDefImportModalOpen(true)
+          break;
+      default:
+        if (menuItem !== 'close') {
+          setTreeMenu(menuItem);
+        }
+        break;
+    }
+    hideTreeContextMenu();
+  };
 
 
   const handleSelectMenuItem = (menuItem) => {
@@ -412,6 +449,26 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
     ));
   };
 
+  const handleTreeContextMenuClick = (e) => {
+    e.preventDefault();
+    const windowWidth = window.innerWidth;
+    console.log("clientX:", e.clientX);
+    console.log("clientY:", e.clientY);
+    console.log("window.innerWidth:", window.innerWidth);
+
+    // Define percentage values for positioning
+    const xPercentage = 0.1; // Adjust this value based on your needs
+    const yPercentage = 0.05; // Adjust this value based on your needs
+
+    // Calculate the position of the context menu based on the window size and click event
+    const contextMenuX = e.clientX - 60 - (windowWidth * xPercentage);
+    const contextMenuY = e.clientY + 90 - (windowWidth * yPercentage);
+
+
+    setTreeContextMenuPosition({ x: contextMenuX, y: contextMenuY });
+    setTreeContextMenuVisible(true);
+  };
+
   const handleContextMenuClick = (e) => {
     e.preventDefault();
     const windowWidth = window.innerWidth;
@@ -435,6 +492,10 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
     setContextMenuVisible(false);
   };
 
+  const hideTreeContextMenu = () => {
+    setTreeContextMenuVisible(false);
+  };
+
   const handleApiEditorClick = () => {
     
     history.push('/apiseditor');
@@ -445,22 +506,18 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
         <div className="left-container">
           {designerMode && (
           <div>
-          <button className="open-modal-button" onClick={openConfigurationModal}>
-          ...
-          </button>
           <button className="open-modal-button" onClick={openProductModal}>
           Add Product
           </button>
           <button className="open-modal-button" onClick={openWorkflowModal}>
           Add Workflow
           </button>
-          <button className="open-modal-button" onClick={openApiDefImportModal}>
-          Import Api Definitions
-          </button>
-          <button className="open-modal-button" onClick={handleApiEditorClick}>Api Editor</button>
-          <button className="open-modal-button" onClick={openThirdparties}>
-          Third Party API providers
-          </button>
+          <div className="tree-icon-right-align">
+          <FiMoreVertical className="tree-context-menu-icon" onClick={handleTreeContextMenuClick} />
+          </div>
+          <br></br>
+          <button className="open-modal-button" onClick={handleApiEditorClick}>Api Edit</button>
+      
           <br></br>
           <br></br>
           </div>
@@ -493,7 +550,7 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
           <div className= "view-panel">
           <div className="icon-right-align">
           <FiMoreVertical className="context-menu-icon" onClick={handleContextMenuClick} />
-        </div>
+          </div>
         {isWorkflowModalOpen && (
         <Modalworkflow
           clientNr = {clientNr}
@@ -543,6 +600,13 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
                   }}
                 />
               )}
+
+          {treeContextMenuVisible && (
+            <ContextMenuTree
+              onSelectTreeMenuItem={handleSelectTreeMenuItem}
+              position={treeContextMenuPosition}
+            />
+          )}    
 
           {contextMenuVisible && (
             <ContextMenu

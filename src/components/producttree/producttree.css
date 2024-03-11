@@ -117,11 +117,28 @@
   height:20px;
 }
 
+.tree-context-menu-icon {
+  
+  color: white;
+  background: #03A062;
+  cursor: pointer;
+  width: 25px;
+  height:20px;
+}
+
 /* .icon-right-align {
   display: flex;
   justify-content: flex-end;
   background-color: black;
 } */
+
+.tree-icon-right-align {
+  position: absolute;
+  top: 48px;
+  right: 1200px;
+  z-index: 2; 
+  /* Add other styling for the icon */
+}
 
 .icon-right-align {
   position: absolute;
