@@ -464,6 +464,8 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
     const contextMenuX = e.clientX - 60 - (windowWidth * xPercentage);
     const contextMenuY = e.clientY + 90 - (windowWidth * yPercentage);
 
+   
+
 
     setTreeContextMenuPosition({ x: contextMenuX, y: contextMenuY });
     setTreeContextMenuVisible(true);

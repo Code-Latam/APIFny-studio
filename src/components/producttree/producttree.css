@@ -133,9 +133,9 @@
 } */
 
 .tree-icon-right-align {
-  position: absolute;
+  position: fixed;
   top: 48px;
-  right: 1200px;
+  left: 305px;
   z-index: 2; 
   /* Add other styling for the icon */
 }
