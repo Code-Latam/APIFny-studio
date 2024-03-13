@@ -45,6 +45,16 @@ import {
                 <Folder className="menu-icon" />
                 <span className="menu-text">Import Api Definitions</span>
               </div>
+              <div className="menu-separator"></div> 
+              <div className="menu-item" onClick={() => handleMenuItemClick("exportproducts")}>
+                <Folder className="menu-icon" />
+                <span className="menu-text">Export Products</span>
+              </div>
+              <div className="menu-item" onClick={() => handleMenuItemClick("importproducts")}>
+                <Folder className="menu-icon" />
+                <span className="menu-text">Import Products</span>
+              </div>
+
               <div className="menu-separator"></div>
 
             <div className="menu-item" onClick={() => handleMenuItemClick("thirdparty")}>

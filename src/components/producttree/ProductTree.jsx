@@ -22,6 +22,9 @@ import Modalproduct from "../modalproduct/Modalproduct";
 import Modalconfiguration from "../modalconfiguration/Modalconfiguration";
 import Thirdparties from "../thirdparties/Thirdparties";
 import Modalapidefimport from "../modalapidefimport/Modalapidefimport";  
+import ExportProducts from "../exportproducts/ExportProducts";  
+import ImportProducts from "../importproducts/ImportProducts";  
+
 import Chatbot from "../chatbot/Chatbot"; 
 import { FiMoreVertical } from 'react-icons/fi'
 import {convertToOpenAPI} from "../../utils/utils.js";
@@ -79,6 +82,10 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
 
   const [isWorkflowModalOpen, setIsWorkflowModalOpen] = useState(false);
   const [isApiDefImportModalOpen, setIsApiDefImportModalOpen] = useState(false);
+
+  const [isExportProductsModalOpen, setIsExportProductsModalOpen] = useState(false);
+  const [isImportProductsModalOpen, setIsImportProductsModalOpen] = useState(false);
+
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [isConfigurationModalOpen, setIsConfigurationModalOpen] = useState(false);
   const [isThirdpartiesOpen, setIsThirdpartiesOpen] = useState(false);
@@ -239,7 +246,14 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
 
     // isThirdpartiesOpen
     switch (menuItem) {
-  
+      case 'exportproducts':
+        setTreeMenu('exportproducts');
+        setIsExportProductsModalOpen(true);
+        break;
+      case 'importproducts':
+          setTreeMenu('importproducts');
+          setIsImportProductsModalOpen(true);
+          break;  
       case 'configuration':
         setTreeMenu('configuration');
         setIsConfigurationModalOpen(true);
@@ -599,6 +613,25 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
                   explorerId = {explorerId}
                   onClose={() => {
                     setIsApiDefImportModalOpen(false);
+                  }}
+                />
+              )}
+
+        {isExportProductsModalOpen && (
+                <ExportProducts
+                  clientNr = {clientNr}
+                  explorerId = {explorerId}
+                  onClose={() => {
+                  setIsExportProductsModalOpen(false);
+                  }}
+                />
+              )}
+        {isImportProductsModalOpen && (
+                <ImportProducts
+                  clientNr = {clientNr}
+                  explorerId = {explorerId}
+                  onClose={() => {
+                  setIsImportProductsModalOpen(false);
                   }}
                 />
               )}
