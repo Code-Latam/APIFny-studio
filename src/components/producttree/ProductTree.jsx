@@ -628,8 +628,8 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
               )}
         {isImportProductsModalOpen && (
                 <ImportProducts
-                  clientNr = {clientNr}
-                  explorerId = {explorerId}
+                  targetClientNr = {clientNr}
+                  targetExplorerId = {explorerId}
                   onClose={() => {
                   setIsImportProductsModalOpen(false);
                   }}

@@ -7,7 +7,7 @@ import "./importproducts.css";
   const ImportProduct = ({ targetClientNr, targetExplorerId,onClose }) => {
 
     const existingProducts = new Set();
-    const existingworkflows = new Set();
+    const workflowsSet = new Set();
 
     const [file, setFile] = useState(null);
   
@@ -25,6 +25,15 @@ import "./importproducts.css";
       newObj.explorerId = targetExplorerId;
       return newObj;
     };
+
+    const cleanLink = (obj) => {
+      const newObj = { ...obj };
+      delete newObj._id;
+      delete newObj.__v;
+      delete newObj.createdAt;
+      delete newObj.updatedAt;
+      return newObj;
+    };
   
     const handleImport = async () => {
       if (!file) return;
@@ -36,29 +45,30 @@ import "./importproducts.css";
   
         // Process and register products
         for (const product of data.products) {
+
           const cleanedProduct = cleanObject(product);
-          try {
+        
             // Check if the product already exists before attempting to register
             // This pseudocode assumes an endpoint for checking product existence
-            const product = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/product/query', { clientNr: targetClientNr, explorerId: targetExplorerId,productName: cleanedProduct.productName });
-            if (product) 
-            { existingProducts.add(cleanedProduct.productName);
+            try
+            { 
+              await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/product/query', { clientNr: targetClientNr, explorerId: targetExplorerId, productName: cleanedProduct.productName });
+              existingProducts.add(cleanedProduct.productName);
               continue;
-            }   
-            await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/product/register', cleanedProduct);
-
-          } catch (error) {
-            console.error(`Error registering product ${cleanedProduct.productName}:`, error);
-          }
+            }
+            catch (error)
+            {
+              await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/product/register', cleanedProduct);
+            }           
         }
         // Process and register workflows
-
+        // NOTE WORKFLOW CREATION WITH THE REGISTER API WILL AUTOMATICALLY CREATE A LINK OBJECT FOR THAT WORKFLOW
         for (const workflow of data.workflows) {
-          if (existingProducts.has(workflow.productName)) {
+          if (!existingProducts.has(workflow.productName)) {
             const cleanedWorkflow = cleanObject(workflow);
             try {
               await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/workflow/register', cleanedWorkflow);
-              existingworkflows.add(cleanedWorkflow.name);
+              workflowsSet.add(cleanedWorkflow.name);
             } catch (error) {
               console.error(`Error registering workflow `);
             }
@@ -66,7 +76,7 @@ import "./importproducts.css";
         }
 
         for (const task of data.tasks) {
-          if (existingworkflows.has(task.workflowName)) {
+          if (workflowsSet.has(task.workflowName)) {
             const cleanedtask = cleanObject(task);
             try {
 
@@ -77,30 +87,51 @@ import "./importproducts.css";
           }
         }
 
+        console.log("DATALINKS LENGTH");
+        console.log(data.links.length);
         for (const link of data.links) {
-          if (existingworkflows.has(link.workflowName)) {
-            const cleanedlink = cleanObject(link);
+          if (workflowsSet.has(link.workflowName)) 
+          {
+           
+            if (link.links && Array.isArray(link.links)) {
+              for (let i = 0; i < link.links.length; i++) {
+                // Clean each object in the links array
+                link.links[i] = cleanLink(link.links[i]);
+              }
+            }
+        
+            const cleanedLink = cleanObject(link);
+        
             try {
-              await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/link/register', cleanedlink);
+              // NOTE WORKFLOW CREATION WITH THE WORKFLOW REGISTER API HAS ALREADY CREATEd A LINK OBJECT FOR THAT WORKFLOW
+              // SO WE NEED TO UPDATE IT!
+              await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/link/update', cleanedLink);
             } catch (error) {
-              console.error(`Error registering link`);
+              
+              console.error(`Error registering link:`, error);
             }
           }
         }
 
+
+
+        if (workflowsSet.size > 0)
+        {
         for (const api of data.apis) {
           
             const cleanedapi = cleanObject(api);
             try {
               const apiquery = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/query', { clientNr: targetClientNr, name: cleanedapi.name });
-              if (apiquery) continue; 
+              continue; 
+              
+            } 
+            catch (error) {
               await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/register', cleanedapi);
-            } catch (error) {
-              console.error(`Error registering api`);
             }
         }
-
+        }
         
+        alert("Products imported!")
   
         // Similar loops for workflows, tasks, links, and APIs
         // Ensure to use the cleaned objects and correct endpoints
@@ -116,7 +147,7 @@ import "./importproducts.css";
             &times;
           </div>
         </div>
-      <label>Important notice. Existing Product with the same name will not be overwritten!</label>
+      <label>Important notice. Existing Products with the same name will NOT be overwritten!</label>
       <br></br>
       <input type="file" onChange={handleFileChange} />
       <br></br>
