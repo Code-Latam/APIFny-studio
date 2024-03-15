@@ -532,7 +532,7 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
           <FiMoreVertical className="tree-context-menu-icon" onClick={handleTreeContextMenuClick} />
           </div>
           <br></br>
-          <button className="open-modal-button" onClick={handleApiEditorClick}>Api Edit</button>
+          <button className="open-modal-button" onClick={handleApiEditorClick}>All API's</button>
       
           <br></br>
           <br></br>
