@@ -58,15 +58,15 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
     const [nodesAdded, setNodesAdded] = useState(0);
 
     const saveSvgAsFile = () => {
-      console.log("hello svg");
+      const format = prompt("Enter the format you want to save the file in (svg/png):").toLowerCase();
       const svg = document.querySelector('#graph-0-graph-container-zoomable').closest('svg');
-      if (!svg)
-      {
-        alert("please select a workflow first")
+    
+      if (!svg) {
+        alert("Please select a workflow first");
+        return;
       }
-      console.log("SVG");
-      console.log(svg);
-      if (svg) {
+    
+      if (format === 'svg') {
         const serializer = new XMLSerializer();
         const svgStr = serializer.serializeToString(svg);
         const blob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
@@ -74,23 +74,45 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
     
         const downloadLink = document.createElement('a');
         downloadLink.href = url;
-        downloadLink.download = 'graph-0.svg'; // Name of the file to be downloaded
+        downloadLink.download = 'graph-0.svg';
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
+      } else if (format === 'png') {
+        const serializer = new XMLSerializer();
+        const svgStr = serializer.serializeToString(svg);
+        const svgBlob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+        const svgUrl = URL.createObjectURL(svgBlob);
+    
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const viewBox = svg.getAttribute('viewBox');
+          const svgWidth = viewBox ? parseFloat(viewBox.split(' ')[2]) : svg.width.baseVal.value;
+          const svgHeight = viewBox ? parseFloat(viewBox.split(' ')[3]) : svg.height.baseVal.value;
+    
+          canvas.width = svgWidth;
+          canvas.height = svgHeight;
+    
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, svgWidth, svgHeight);
+          canvas.toBlob((blob) => {
+            const pngUrl = URL.createObjectURL(blob);
+            const downloadLink = document.createElement('a');
+            downloadLink.href = pngUrl;
+            downloadLink.download = 'graph-0.png';
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            URL.revokeObjectURL(pngUrl);
+          }, 'image/png');
+        };
+        img.src = svgUrl;
+      } else {
+        alert("Invalid format. Please enter 'svg' or 'png'.");
       }
     };
-  
-    const onClickGraph = function(graph) {
-      setSelectedTask(null);
-      setSelectedLink(null);
-      setSelectedWorkflow(graph);
-      setNodesAdded(0);
-      console.log("graph");
-      console.log(graph);
-      onTaskChange("workflow",selectedProduct, graph.name,null,null);
     
-    };
 
     const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
