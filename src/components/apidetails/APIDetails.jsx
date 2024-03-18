@@ -84,7 +84,7 @@ const theme = createTheme({
   const [apiData, setApiData] = useState(api);
   const [headers, setHeaders] = useState([]);
   const [explorer, setExplorer] = useState([]);
-  const [selectedThirdParty, setSelectedThirdParty] = useState("");
+  const [selectedThirdParty, setSelectedThirdParty] = useState("none");
   const [thirdparties, setThirdparties] = useState([]);
 
   async function  fetchExplorer()
@@ -233,7 +233,7 @@ const theme = createTheme({
       alert("The APIFny configuration file is not a valid yaml file.");
       return;
     }
-    const yamlObject = getConfiguration(explorer)
+    const yamlObject = await getConfiguration(explorer,apiData.thirdparty)
     //build the headers as found in the API dynamically
     const apiHeaders = parseApiHeaders(apiData);
     // add or replace the global parameters (found in the config) to the headers
@@ -306,9 +306,9 @@ const theme = createTheme({
         <label className = "thirdParty" htmlFor="thirdparty">Third Party</label>
               <select
                 id="thirdparty"
-                value={selectedThirdParty}
+                value={apiData.thirdparty} 
                 className="thirdPartyViewType"
-                onChange={(e) => setSelectedThirdParty(e.target.value)}
+                onChange={(e) => handleApiDataChange('thirdparty', e.target.value)}
               >
                 {thirdparties.map((thirdparty) => (
                   <option key={thirdparty.name} value={thirdparty.name}>

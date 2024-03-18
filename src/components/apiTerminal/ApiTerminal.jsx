@@ -161,7 +161,7 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
       setExplorer(myExplorer);
 
       if (myApi.requestBody) {
-        const yamlObject = getConfiguration(myExplorer);
+        const yamlObject = await getConfiguration(myExplorer,myApi.thirdparty);
         console.log("YAML");
         console.log(yamlObject);
         const initialRequestBodyFields = { ...myApi.requestBody };
@@ -192,7 +192,9 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
       alert("The APIFny configuration file is not a valid yaml file.");
       return;
     }
-    const yamlObject = getConfiguration(explorer)
+    const yamlObject = await getConfiguration(explorer, api.thirdparty)
+    console.log("YAML");
+    console.log(yamlObject);
     //build the headers as found in the API dynamically
     const apiHeaders = parseApiHeaders(api);
     // add or replace the global parameters (found in the config) to the headers

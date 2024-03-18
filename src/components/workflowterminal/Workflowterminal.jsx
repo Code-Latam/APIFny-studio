@@ -76,10 +76,10 @@ const Workflowterminal = ({ clientNr, explorerId, productName, name, designerMod
   const constructOutputAPIExecution = async (index) => {
     if (index < apiList.length) 
     {
-      const curlComponent = makeCurlComponentFromApi(apiList[index],explorer)
+      const curlComponent = await makeCurlComponentFromApi(apiList[index],explorer)
       console.log("CURL COMPONENT B");
       console.log({curlComponent});
-      // const executionResultComponent = makeCurlComponentFromApiExecutionResult(index,explorer)
+      // const executionResultComponent = await makeCurlComponentFromApiExecutionResult(index,explorer)
       return curlComponent
     } else {
       setWorkflowStarted(false);

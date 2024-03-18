@@ -1,6 +1,7 @@
 const crypto = require('crypto-js');
 const forge = require('node-forge');
 import yaml from 'js-yaml';
+import axios from 'axios';
 
 export function HeadersGlobalAdd(apiHeaders, yamlObject) {
   const globalParameters = yamlObject['Global-Parameters-Header'];
@@ -170,9 +171,36 @@ export function addAuthToHeaders(myheadersWithGlobals,yamlObject )
     }, {});
   }
 
-  export function getConfiguration(explorerObject) {
-    return yaml.load(explorerObject.yaml); 
+  export async function getConfiguration(explorerObject, thirdPartyName) {
+    if (thirdPartyName) {
+      const myPayload = {
+        clientNr: explorerObject.clientNr,
+        name: thirdPartyName
+      };
+      console.log("MY THIRD PARTY PAYLOAD");
+      console.log(myPayload);
+  
+      try {
+        const myThirdPartyResponse = await axios({
+          method: 'post',
+          url: process.env.REACT_APP_CENTRAL_BACK + '/thirdparties/query',
+          data: myPayload
+        });
+  
+        const thirdParty = myThirdPartyResponse.data;
+        if (thirdParty.yaml) {
+          return yaml.load(thirdParty.yaml);
+        }
+      } catch (error) {
+        console.error("Axios call failed:", error);
+        // If the axios call fails, the catch block catches the error and the function will return this:
+        return yaml.load(explorerObject.yaml);
+      }
+    }
+    // This return statement will execute if thirdPartyName is falsy
+    return yaml.load(explorerObject.yaml);
   }
+  
 
   export function isValidConfiguration(explorerObject) {
     try {
@@ -187,10 +215,10 @@ export function addAuthToHeaders(myheadersWithGlobals,yamlObject )
     }
   };
 
-  export function makeCurlComponentFromApi(api,explorer) 
+  export async function makeCurlComponentFromApi(api,explorer) 
   {
     // Construct the curl statement
-    const yamlObject = getConfiguration(explorer)
+    const yamlObject = await getConfiguration(explorer, api.thirdparty)
     const apiType = api.method;
     const endpoint = api.urlRoute;
 
@@ -216,10 +244,10 @@ export function addAuthToHeaders(myheadersWithGlobals,yamlObject )
     );
   };
 
-  export function makeCurlComponentFromApiExecutionResult(api,explorer) 
+  export async function makeCurlComponentFromApiExecutionResult(api,explorer) 
   {
     // Construct the curl statement
-    const yamlObject = getConfiguration(explorer)
+    const yamlObject = await  getConfiguration(explorer, api.thirdparty)
     const apiType = api.method;
     const endpoint = api.urlRoute;
 
