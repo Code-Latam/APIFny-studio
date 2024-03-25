@@ -60,20 +60,15 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
       const user = JSON.parse(localStorage.getItem("user"));
       const endpoint = `${process.env.REACT_APP_CENTRAL_BACK}/api/registercustom`;
 
-      const requestBody = {
+      const registerCustomPayload = {
+        ...api,
         ...requestBodyFields,
-        clientNr: clientNr,
-        name: apiName,
+        urlRoute: route,
         email: user.email,
         chatbotKey: user.chatbotKey,
-        collectionTag: api.collectionTag,
-        description: api.description,
-        method: api.method,
-        requestBodyType:api.requestBodyType,
-        responseBodyType: api.responseBodyType
       };
 
-      const response = await axios.post(endpoint, requestBody);
+      const response = await axios.post(endpoint, registerCustomPayload);
       alert("Custom API values saved!");
       setReload(true);
     } catch (error) {
@@ -139,12 +134,16 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
   }, [reload, clientNr,explorerId,apiName]);
 
   const fetchApi = async () => {
+    const user = JSON.parse(localStorage.getItem("user"));
     
     try {
       const myApibody = 
       {
         clientNr: clientNr,
-        name: apiName
+        name: apiName,
+        custom: true,
+        email: user.email,
+        chatbotKey: user.chatbotKey
       }
       const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/api/query", myApibody);
       const myApi = await response.data;
