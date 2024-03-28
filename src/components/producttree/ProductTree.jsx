@@ -382,6 +382,18 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
     setSelectedTaskId(null)
   };
 
+  const handleSelectedWorkflowChange = (newselectItem,newProductName,newWorkflowName,newWorkflow) => {
+    
+    setSelectedItemType(newselectItem);
+    setSelectedProduct(newProductName);
+    setSelectedWorkflow(newWorkflowName);
+    setSelectedLink(null)
+    setSelectedTaskId(null)
+  };
+
+
+  
+
 
   const handleProductClick = (product) => {
     console.log("product clicked");
@@ -550,6 +562,7 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
             selectedProduct={selectedProduct}
             selectedWork={selectedWork}
             onTaskChange = {handleSelectedItemChange}
+            onWorkflowChange = {handleSelectedWorkflowChange}
             onLinkChange = {handleSelectedLinkChange}
             graphChange = {newGraphItem}
             designerMode={designerMode}

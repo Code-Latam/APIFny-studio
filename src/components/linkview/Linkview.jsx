@@ -74,9 +74,7 @@ function Linkview({ clientNr, explorerId, workflowName, mylink,designerMode,upda
     // replace the type in the original links
     const myNewLinks =  replaceType(myLinks, mylink.source, mylink.target, selectedType, isChecked, selectedPathParameters,selectedQueryParameters,selectedRequestbodyParameters) 
     
-    console.log("LINKS");
-    console.log(myNewLinks);
-    console.log("test");
+   
 
     // Update the links object
     const MyPayload = {
@@ -87,7 +85,6 @@ function Linkview({ clientNr, explorerId, workflowName, mylink,designerMode,upda
     };
 
       const myResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/link/update', MyPayload);
-      alert("Link was succesfully updated.");
       updateGraphView();
   };
 

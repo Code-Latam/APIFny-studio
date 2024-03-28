@@ -86,11 +86,7 @@ function Modallink({ clientNr, explorerId, graph, onClose }) {
 
   function validNewLink(myLinkObject, myLinkList)
   {
-    console.log("We are in validation of link");
-    console.log("my link object")
-    console.log(myLinkObject);
-    console.log("my link list");
-    console.log(myLinkList);
+   
 
     if (myLinkObject.source === myLinkObject.target )
     {
@@ -100,10 +96,10 @@ function Modallink({ clientNr, explorerId, graph, onClose }) {
 
     if (isObjectInList(myLinkObject,myLinkList))
     {
-    console.log("hello3");
+   
     return false
     }
-    console.log("hello4");
+   
     return true;
   }
 

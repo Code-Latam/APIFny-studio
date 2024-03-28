@@ -7,7 +7,7 @@ import Modallink from "../modallink/Modallink";
 
 
 
-const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskChange,onLinkChange,graphChange, designerMode }) => {
+const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskChange,onLinkChange,onWorkflowChange, graphChange, designerMode }) => {
   console.log("SUPERDESIGNERMODE");
   console.log(designerMode);
 
@@ -382,6 +382,15 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
       setSelectedLink(null);
     };
 
+
+    const onClickGraph = function(graph, graphName) {
+      
+      onWorkflowChange("workflow",selectedProduct,graphName,graph);
+      setSelectedTask(null);
+      setSelectedWorkflow(graph);
+      setSelectedLink(null);
+    };
+
     const onDoubleClickNode = function(nodeId, node,graphName,graph) {
       if ( node.apiName && node.apiName !=="")
       {
@@ -446,7 +455,7 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
         setData(json);
         console.log(json);
         if ((json.length > 0) && selectedProduct && selectedWork) {
-          onClickGraph(json[0]);
+          onClickGraph(json[0],json[0].name );
         }
       } catch (error) {
         // Handle any errors
@@ -502,7 +511,7 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
               }}
               config={config}
               d3 = {d3Config}
-              onClickGraph={() => onClickGraph(graph)}
+              onClickGraph={() => onClickGraph(graph, graph.name)}
               onClickNode={(nodeId,node) => onClickNode(nodeId,node, graph.name,graph)}
               onClickLink = {(source,target) => handleClickLink(source,target,graph)}
               onDoubleClickNode={(nodeId,node) => onDoubleClickNode(nodeId,node, graph.name,graph)}
