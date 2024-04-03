@@ -1,0 +1,46 @@
+.apidescription{
+    color: #03A062;
+
+}
+
+.requestbodylabel{
+    color: #03A062;
+
+}
+
+.apitextarea{
+    width: 100%;
+}
+
+.requestbodytextarea{
+    width: 100%;
+}
+
+.formControlWidth {
+    width: 200px;
+    color: blue; /* Your desired text color */
+  }
+
+  .thirdParty{
+    color: #03A062;
+    margin-bottom: 5px;
+  }
+
+  .apidescription{
+    margin-bottom: 5px;
+  }
+
+  .thirdPartyViewType{
+    height: 30px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  
+   
+    
+
+
+  #terminalEditor {
+   
+    max-height: calc(100vh - 150px);
+  }

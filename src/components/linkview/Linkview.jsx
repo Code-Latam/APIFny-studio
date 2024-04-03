@@ -3,6 +3,7 @@ import "./linkview.css";
 import axios from "axios";
 import JSONInput from 'react-json-editor-ajrm';
 import locale from 'react-json-editor-ajrm/locale/en';
+import Editor from '@monaco-editor/react';
 
 function Linkview({ clientNr, explorerId, workflowName, mylink,designerMode,updateGraphView }) {
 
@@ -128,23 +129,82 @@ function Linkview({ clientNr, explorerId, workflowName, mylink,designerMode,upda
 
   }
 
-  const handlePathParametersChange = (data) => {
-    if (data.jsObject) {
-      setSelectedPathParameters(data.jsObject);  
+
+
+  const handlePathParametersChange = (value, event) => {
+    console.log("change");
+    
+    let parsedValue;
+  
+    // Check if the value is an empty string and set it to an empty object
+    if (value === '') {
+      parsedValue = {};
+    } else {
+      try {
+        // Attempt to parse the value as JSON
+        parsedValue = JSON.parse(value);
+      } catch (error) {
+        console.error("Invalid JSON:", error);
+        // If the value is not valid JSON, you might want to handle this case, 
+        // e.g., by not calling setApiData, showing an error message, etc.
+        return; // Exit the function if the JSON is invalid
+      }
     }
+  
+    // Update the state with the parsed value, which is now guaranteed to be an object
+    setSelectedPathParameters(parsedValue);
   };
 
-  const handleQueryParametersChange = (data) => {
-    if (data.jsObject) {
-      setSelectedQueryParameters(data.jsObject);  
+  const handleQueryParametersChange = (value, event) => {
+    console.log("change");
+    
+    let parsedValue;
+  
+    // Check if the value is an empty string and set it to an empty object
+    if (value === '') {
+      parsedValue = {};
+    } else {
+      try {
+        // Attempt to parse the value as JSON
+        parsedValue = JSON.parse(value);
+      } catch (error) {
+        console.error("Invalid JSON:", error);
+        // If the value is not valid JSON, you might want to handle this case, 
+        // e.g., by not calling setApiData, showing an error message, etc.
+        return; // Exit the function if the JSON is invalid
+      }
     }
+  
+    // Update the state with the parsed value, which is now guaranteed to be an object
+    setSelectedQueryParameters(parsedValue);
   };
 
-  const handleRequestBodyParametersChange = (data) => {
-    if (data.jsObject) {
-      setSelectedRequestBodyParameter(data.jsObject);  
+
+  const handleRequestBodyParametersChange = (value, event) => {
+    console.log("change");
+    
+    let parsedValue;
+  
+    // Check if the value is an empty string and set it to an empty object
+    if (value === '') {
+      parsedValue = {};
+    } else {
+      try {
+        // Attempt to parse the value as JSON
+        parsedValue = JSON.parse(value);
+      } catch (error) {
+        console.error("Invalid JSON:", error);
+        // If the value is not valid JSON, you might want to handle this case, 
+        // e.g., by not calling setApiData, showing an error message, etc.
+        return; // Exit the function if the JSON is invalid
+      }
     }
+  
+    // Update the state with the parsed value, which is now guaranteed to be an object
+    setSelectedRequestBodyParameter(parsedValue);
   };
+
+ 
 
   return (
     <div className="Taskview">
@@ -152,6 +212,12 @@ function Linkview({ clientNr, explorerId, workflowName, mylink,designerMode,upda
         
         {link ? (
           <div>
+            {designerMode && (
+              <div>
+                <button onClick={handleUpdate}>Update</button>
+              </div>
+            )}
+            <br></br>
             <div>
               <label htmlFor="source">Source</label>
               <input
@@ -184,37 +250,40 @@ function Linkview({ clientNr, explorerId, workflowName, mylink,designerMode,upda
             </div>
             
             <label htmlFor="pathParameter">Path Parameters</label>
-              <JSONInput
+
+              <Editor
               id='json-editor1'
-              placeholder={selectedPathParameters} // data to display
-              locale={locale}
+              defaultLanguage="json"
+              defaultValue= {JSON.stringify(selectedPathParameters, null, 2)}
               height='100px'
               onChange={handlePathParametersChange}
-              />  
+              theme="vs-dark"
+              />
+
               <br></br>           
               <label htmlFor="queryParameter">Query Parameters</label>
-              <JSONInput
+              <Editor
               id='json-editor2'
-              placeholder={selectedQueryParameters} // data to display
-              locale={locale}
+              defaultLanguage="json"
+              defaultValue= {JSON.stringify(selectedQueryParameters, null, 2)}
               height='100px'
               onChange={handleQueryParametersChange}
-              
-              />   
+              theme="vs-dark"
+              /> 
                <br></br>
               <label htmlFor="requestbodyParameter">Requestbody Parameters</label>
-              <JSONInput
+
+              <Editor
               id='json-editor3'
-              placeholder={selectedRequestbodyParameters} // data to display
-              locale={locale}
+              defaultLanguage="json"
+              defaultValue= {JSON.stringify(selectedRequestbodyParameters, null, 2)}
               height='100px'
               onChange={handleRequestBodyParametersChange}
-              
-              />   
+              theme="vs-dark"
+              /> 
 
               <br/>
               <label htmlFor="linkType">Link Type</label>
-              <br/>
               <select
                 id="linkType"
                 value={selectedType}
@@ -230,12 +299,8 @@ function Linkview({ clientNr, explorerId, workflowName, mylink,designerMode,upda
                 ))}
               </select>
             </div>
-            <br />
-            {designerMode && (
-              <div>
-                <button onClick={handleUpdate}>Update</button>
-              </div>
-            )}
+           
+            
           </div>
         ) : (
           <p>Loading Link information...</p>

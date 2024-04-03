@@ -45,7 +45,7 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
       
 
         return (
-          <ReactJson src={jsonResponse} theme="apathy" />
+          <ReactJson src={jsonResponse} theme="apathy"   name={null} collapsed={1} />
         );
       } catch (error) {
         console.error('Error during API execution:', error);
@@ -62,7 +62,9 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
 
       const registerCustomPayload = {
         ...api,
-        ...requestBodyFields,
+        requestBody: requestBodyFields,
+        clientNr: clientNr,
+        userClientNr:user.clientNr,
         urlRoute: route,
         email: user.email,
         chatbotKey: user.chatbotKey,
@@ -83,7 +85,7 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
       const endpoint = `${process.env.REACT_APP_CENTRAL_BACK}/api/deletecustom`;
 
       const query = {
-        clientNr,
+        userClientNr: user.clientNr,
         name: apiName,
         email: user.email,
         chatbotKey: user.chatbotKey
@@ -113,6 +115,8 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
       ...prevFields,
       [field]: parsedValue,
     }));
+    console.log("REQUEST BODY FIELDS");
+    console.log(requestBodyFields);
   };
 
 
@@ -140,6 +144,7 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
       const myApibody = 
       {
         clientNr: clientNr,
+        userClientNr: user.clientNr,
         name: apiName,
         custom: true,
         email: user.email,
@@ -147,6 +152,8 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
       }
       const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/api/query", myApibody);
       const myApi = await response.data;
+      console.log("MY API");
+      console.log(myApi)
       setApi(myApi);
       setRoute(myApi.urlRoute)
 
@@ -235,7 +242,15 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
       
     const responseData = await fetchResponse.json();
     setResponse(JSON.stringify(responseData, null, 2));
-    return responseData; 
+
+    const resultWithStatus = {
+      status: fetchResponse.status,
+      resultBody: responseData
+    };
+
+  return resultWithStatus;
+
+   
     // return JSON.stringify(responseData, null, 2); // Return the response data
   } catch (error) {
     console.error('Error during API execution:', error);

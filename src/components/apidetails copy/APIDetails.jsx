@@ -5,8 +5,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 import './apidetails.css'; // Import your CSS file here
 import JSONInput from 'react-json-editor-ajrm';
-import ReactDOM from 'react-dom';
-import Editor from '@monaco-editor/react';
 import locale from 'react-json-editor-ajrm/locale/en';
 
 import { ReactTerminal } from "react-terminal";
@@ -138,54 +136,16 @@ const theme = createTheme({
     setApiData({ ...apiData, [field]: value });
   };
 
-
-  const handleRequestBodyChange = (value, event) => {
-    console.log("change");
-    
-    let parsedValue;
-  
-    // Check if the value is an empty string and set it to an empty object
-    if (value === '') {
-      parsedValue = {};
-    } else {
-      try {
-        // Attempt to parse the value as JSON
-        parsedValue = JSON.parse(value);
-      } catch (error) {
-        console.error("Invalid JSON:", error);
-        // If the value is not valid JSON, you might want to handle this case, 
-        // e.g., by not calling setApiData, showing an error message, etc.
-        return; // Exit the function if the JSON is invalid
-      }
+  const handleRequestBodyChange = (data) => {
+    if (data.jsObject) {
+      setApiData({ ...apiData, ["requestBody"]: data.jsObject });  
     }
-  
-    // Update the state with the parsed value, which is now guaranteed to be an object
-    setApiData({ ...apiData, ["requestBody"]: parsedValue });
   };
 
-
-  const handleParametersDescriptionChange = (value, event) => {
-    console.log("change");
-    
-    let parsedValue;
-  
-    // Check if the value is an empty string and set it to an empty object
-    if (value === '') {
-      parsedValue = {};
-    } else {
-      try {
-        // Attempt to parse the value as JSON
-        parsedValue = JSON.parse(value);
-      } catch (error) {
-        console.error("Invalid JSON:", error);
-        // If the value is not valid JSON, you might want to handle this case, 
-        // e.g., by not calling setApiData, showing an error message, etc.
-        return; // Exit the function if the JSON is invalid
-      }
+  const handleParametersDescriptionChange = (data) => {
+    if (data.jsObject) {
+      setApiData({ ...apiData, ["parametersDescription"]: data.jsObject });  
     }
-  
-    // Update the state with the parsed value, which is now guaranteed to be an object
-    setApiData({ ...apiData, ["parametersDescription"]: parsedValue });
   };
 
   const handleHeaderChange = (index, field, value) => {
@@ -417,13 +377,12 @@ const theme = createTheme({
 
         <label className = "requestbodylabel" >Request Body:</label>
 
-        <Editor
+        <JSONInput
         id='json-editor'
-        defaultLanguage="json"
-        defaultValue= {JSON.stringify(apiData.requestBody, null, 2)}
+        placeholder={apiData.requestBody} // data to display
+        locale={locale}
         height='300px'
         onChange={handleRequestBodyChange}
-        theme="vs-dark"
         />
         
         <FormControl className="formControlWidth" margin="normal">
@@ -452,12 +411,11 @@ const theme = createTheme({
 
         <label className = "requestbodylabel" >Parameters Descriptions:</label>
 
-        <Editor
+        <JSONInput
         id='json-editor2'
-        defaultLanguage="json"
-        defaultValue= {JSON.stringify(apiData.parametersDescription, null, 2)}
+        placeholder={apiData.parametersDescription} // data to display
+        locale={locale}
         height='300px'
-        theme="vs-dark"
         onChange={handleParametersDescriptionChange}
         />        
       </TabPanel>
