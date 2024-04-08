@@ -125,6 +125,7 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
       const myApibody = 
       {
         clientNr: clientNr,
+        explorerId:explorerId,
         name: ExportApiName
       }
       const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/api/query", myApibody);

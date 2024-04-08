@@ -23,6 +23,7 @@ const ApisEditor = ({clientNr, explorerId, designerMode}) => {
     try {
         const myApiPayload = {
           clientNr: clientNr,
+          explorerId: explorerId,
           name: apiName
         }  
         const apiResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/query', myApiPayload)
@@ -42,7 +43,8 @@ const ApisEditor = ({clientNr, explorerId, designerMode}) => {
   const fetchFoldersAndAPIs = async () => {
     try {
       const myFolderPayload = {
-        clientNr: clientNr
+        clientNr: clientNr,
+        explorerId: explorerId
       }  
       const foldersResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/query', myFolderPayload)
       setFolders(foldersResponse.data)
@@ -126,6 +128,7 @@ const ApisEditor = ({clientNr, explorerId, designerMode}) => {
           myItems={folders.items}
           onSelectApi={handleSelectApi}
           clientNr= {clientNr}
+          explorerId={explorerId}
         />
       </div>
       {selectedApi && ( // This line ensures APIDetails is rendered only if selectedApi has a value

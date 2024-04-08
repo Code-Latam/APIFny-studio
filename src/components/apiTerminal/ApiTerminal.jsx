@@ -64,6 +64,7 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
         ...api,
         requestBody: requestBodyFields,
         clientNr: clientNr,
+        explorerId: explorerId,
         userClientNr:user.clientNr,
         urlRoute: route,
         email: user.email,
@@ -86,6 +87,7 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
 
       const query = {
         userClientNr: user.clientNr,
+        explorerId: user.explorerId,
         name: apiName,
         email: user.email,
         chatbotKey: user.chatbotKey
@@ -144,6 +146,7 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
       const myApibody = 
       {
         clientNr: clientNr,
+        explorerId: explorerId,
         userClientNr: user.clientNr,
         name: apiName,
         custom: true,

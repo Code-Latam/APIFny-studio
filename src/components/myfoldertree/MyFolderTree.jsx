@@ -4,7 +4,7 @@ import 'react-complex-tree/lib/style-modern.css';
 import './myfoldertree.css'; 
 import axios from "axios";
 
-const MyFolderTree = ({myItems, onSelectApi, clientNr }) => {
+const MyFolderTree = ({myItems, onSelectApi, clientNr, explorerId }) => {
 
     <style>{`
         :root {
@@ -61,6 +61,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr }) => {
 
                 const saveFolderPayload = {
                     clientNr: clientNr,
+                    explorerId: explorerId,
                     items: items
                 }
                
@@ -87,6 +88,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr }) => {
 
                 const saveFolderPayload = {
                     clientNr: clientNr,
+                    explorerId: explorerId,
                     items: items
                 }
                
@@ -94,6 +96,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr }) => {
 
                 const saveApiPayload = {
                     clientNr: clientNr,
+                    explorerId: explorerId,
                     oldName: item.index,
                     newName: newName
                 }
@@ -145,6 +148,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr }) => {
 
     const saveFolderPayload = {
         clientNr: clientNr,
+        explorerId: explorerId,
         items: items
     }
    
@@ -160,6 +164,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr }) => {
     const rand ="New Api " + `${Math.random()}`;
     const myNewAPiPayload = {
         clientNr: clientNr,
+        explorerId: explorerId,
         name: rand,
         description: "none",
         urlRoute: "https://",
@@ -181,6 +186,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr }) => {
 
     const saveFolderPayload = {
         clientNr: clientNr,
+        explorerId: explorerId,
         items: items
     }
    
@@ -203,6 +209,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr }) => {
     const newApiName ="Copy of " + focusedItem + " " + `${Math.random()}`;
     const copyAPiPayload = {
         clientNr: clientNr,
+        explorerId: explorerId,
         apiToCopy: focusedItem,
         newApiName: newApiName
     }
@@ -217,6 +224,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr }) => {
 
     const saveFolderPayload = {
         clientNr: clientNr,
+        explorerId: explorerId,
         items: items
     }
    
@@ -268,6 +276,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr }) => {
             delete items[focusedItem]; 
             const saveFolderPayload = {
                 clientNr: clientNr,
+                explorerId: explorerId,
                 items: items
             }   
             axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/update', saveFolderPayload); //
@@ -292,6 +301,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr }) => {
 
                 const saveFolderPayload = {
                     clientNr: clientNr,
+                    explorerId: explorerId,
                     items: items
                 }
                 axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/update', saveFolderPayload);       
@@ -308,6 +318,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr }) => {
 
                     const deletePayload = {
                         clientNr: clientNr,
+                        explorerId: explorerId,
                         name: focusedItem
                     }
 
@@ -315,6 +326,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr }) => {
                     
                     const saveFolderPayload = {
                         clientNr: clientNr,
+                        explorerId: explorerId,
                         items: items
                     }
                    

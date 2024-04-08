@@ -103,7 +103,7 @@ const ExportProduct = ({ clientNr, explorerId, onClose }) => {
 
   try {
     const apiResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/queryall', {
-      clientNr: clientNr, // Use the clientNr provided to the component
+      clientNr: clientNr, explorerId: explorerId // Use the clientNr provided to the component
     });
     const apis = apiResponse.data;
   

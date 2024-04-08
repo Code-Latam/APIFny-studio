@@ -212,7 +212,7 @@ const theme = createTheme({
     try {
     console.log("API VALUE");
     console.log(updatedApi);  
-    const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/update', updatedApi); // Change '/api/update' to your actual API endpoint
+    const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/update', updatedApi); //  to your actual API endpoint
     alert("Api was succesfully updated!")
     // setApiData(response.data);
     console.log("RESPONSE VALUE");

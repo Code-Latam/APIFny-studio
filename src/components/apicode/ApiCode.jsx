@@ -45,6 +45,7 @@ const ApiCode = ({ clientNr, explorerId, productName, workflowName, taskId,apiNa
       const myApibody = 
       {
         clientNr: clientNr,
+        explorerId: explorerId,
         name: apiName
       }
       const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/api/query", myApibody);

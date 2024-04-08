@@ -32,7 +32,7 @@ const Chatbot = ({clientNr}) => {
 
         try {
           const response = await fetch(
-            'https://base-configuration.azurewebsites.net/api/chat/ask',
+            'http://localhost:10000/api/chat/ask',
             {
               method: 'POST',
               headers: {

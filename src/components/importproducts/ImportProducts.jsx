@@ -121,7 +121,8 @@ import "./importproducts.css";
           
             const cleanedapi = cleanObject(api);
             try {
-              const apiquery = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/query', { clientNr: targetClientNr, name: cleanedapi.name });
+              // try to find the API. if it exists, skip!
+              const apiquery = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/query', { clientNr: targetClientNr, explorerId: targetExplorerId ,name: cleanedapi.name });
               continue; 
               
             } 
