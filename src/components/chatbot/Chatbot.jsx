@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import './chatbot.css';
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import axios from 'axios';
 
 
-const Chatbot = ({clientNr}) => {
+const Chatbot = ({clientNr, explorerId}) => {
   const { user } = useContext(AuthContext);
   const [inputValue, setInputValue] = useState('');
   const [response, setResponse] = useState('');
@@ -21,12 +22,41 @@ const Chatbot = ({clientNr}) => {
       const prompt = inputValue.trim();
       console.log("USER CONTEXT");
       console.log(user);
+      let targetChatbot;
+      // determine which chatbot to use:
+      try {
+          const chatbotexplorerrel = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/chatbotexplorerrel/query", 
+          {
+            clientNr:user.clientNr, explorerId: explorerId
+          });
+        
+          
+          if (user.groups.includes('apiFnyDesigners') || user.groups.includes('apiOwners')) 
+          {
+            targetChatbot = chatbotexplorerrel.data.chatbotKeyDesigner
+          }
+          else if (user.groups.includes('apiFnyDesigners'))
+          {
+            targetChatbot = chatbotexplorerrel.data.chatbotKeyReader
+          }
+          else
+          { 
+            alert("user does not have rights to access to any chatbot.")
+            return;
+          }
+    }
+    catch(err)
+    {
+      alert("No chatbot related to this workspace.")
+      return;
+    }
+
 
       if (prompt !== '') {
         const requestData = {
           clientNr: '111111',
           gwoken: 'saasasasas',
-          chatbotKey: user.chatbotKey,
+          chatbotKey: targetChatbot,
           prompt: prompt,
         };
 

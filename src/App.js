@@ -32,7 +32,7 @@ function App() {
         <Route exact path="/">
         {user ? <Explorer 
         clientNr = {user.clientNr}
-        explorerId = {"1"}
+        explorerId = {user.explorerId || "1"}
         designerMode = {designerMode} 
         />
         : <Login />}  
@@ -40,7 +40,7 @@ function App() {
         <Route path="/explorer">
         {user ? <Explorer 
           clientNr = {user.clientNr}
-          explorerId = {"1"}
+          explorerId = {user.explorerId || "1"}
           designerMode = {designerMode}
           />
           : <Login />}
@@ -51,7 +51,7 @@ function App() {
         <Route path="/apiseditor">
         {user ? <ApisEditor 
           clientNr = {user.clientNr}
-          explorerId = {"1"}
+          explorerId = {user.explorerId || "1"}
           designerMode = {designerMode}
           />
           : <Login />}

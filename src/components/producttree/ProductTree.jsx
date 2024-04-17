@@ -33,6 +33,8 @@ import { saveAs } from 'file-saver';
 import { TerminalContextProvider } from "react-terminal";
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 const TreeNode = ({ label, children, isChild, topLevelClick }) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -55,6 +57,7 @@ const TreeNode = ({ label, children, isChild, topLevelClick }) => {
 };
 
 const ProductTree = ({designerMode, clientNr, explorerId}) => {
+  const { user } = useContext(AuthContext);
   console.log("USERDATA");
   console.log(clientNr);
   console.log(explorerId);
@@ -243,10 +246,103 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
   }
 
 
-  const handleSelectTreeMenuItem = (menuItem) => {
+  const handleSelectTreeMenuItem = async  (menuItem, value) => {
+    
 
     // isThirdpartiesOpen
     switch (menuItem) {
+      case 'createWorkspace':
+        try {
+          await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/workspace/register", {clientNr: user.clientNr, explorerId: value,  chatbotKey: user.chatbotKey, email: user.email});
+        }
+        catch (err) {
+          
+          if (err.response) {
+            // The request was made and the server responded with a status code that is not in the range of 2xx
+            console.error("API Error:", err.response.data);
+            alert(`Failed to Create the workspace: ${err.response.data}`);
+            break;
+          } else if (err.request) {
+            // The request was made but no response was received
+            console.error("API Error: No response received");
+            alert("Failed to create the workspace: No response from server");
+            break
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.error("Error:", err.message);
+            alert(`Failed to create the workspace: ${err.message}`);
+            break;
+          }
+          break;
+        }
+        alert("Workspace was successfully created")
+        break;
+      case 'deleteExplorer':
+      try {
+        await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/workspace/delete", {clientNr: user.clientNr, explorerId: value,  chatbotKey: user.chatbotKey, email: user.email});
+      }
+      catch (err) {
+        if (err.response) {
+          // The request was made and the server responded with a status code that is not in the range of 2xx
+          console.error("API Error:", err.response.data);
+          alert(`Failed to delete the workspace: ${err.response.data}`);
+          break;
+        } else if (err.request) {
+          // The request was made but no response was received
+          console.error("API Error: No response received");
+          alert("Failed to delete the workspace: No response from server");
+          break
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.error("Error:", err.message);
+          alert(`Failed to delete the workspace: ${err.message}`);
+          break;
+        }
+      
+      }
+      
+        alert(`workspace was successfully deleted`);
+        window.location.reload();
+        break
+      case 'explorer':
+        // Check if workspace exists (it could have been deleted by another user)
+        let myExplorerId = value;
+        const myUser = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/query", {clientNr: user.clientNr, chatbotKey: user.chatbotKey});
+        
+        let myExplorers = myUser.data.explorers;
+        const myworkspacePayload = { clientNr: clientNr, explorerId: myExplorerId,}
+        try {
+          await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/workspace/exist", myworkspacePayload);
+        }
+        catch(err) {
+          alert("The selected workspace was deleted or your access has been revoked by a workspace admin");
+          // remove workspace from user.explorers
+          
+          let filteredExplorers = myExplorers.filter(explorer => explorer !== myExplorerId);
+          myExplorers = filteredExplorers;
+          if (myExplorers.length === 0) // the user does not have access to any other workspaces
+            {
+              localStorage.removeItem("user");
+              localStorage.removeItem("gwocu-setting");
+              alert("this was your last workspace you do not have access to other workspaces. Please contact your workspace admin. Logged out!");
+              window.location.reload();
+              break;
+            }
+         
+          
+        }
+
+        const myNewUserSetting = {
+          ...user,
+          explorers: myExplorers,
+          explorerId:myExplorerId
+        }
+        const userSettingsString = JSON.stringify(myNewUserSetting);    
+        localStorage.setItem('user', userSettingsString);
+
+        // reload the page
+        window.location.reload();
+        break;
       case 'exportproducts':
         setTreeMenu('exportproducts');
         setIsExportProductsModalOpen(true);
@@ -574,6 +670,7 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
         <div classname = "botpanel">
             <Chatbot
             clientNr = {clientNr}
+            explorerId = {explorerId}
             />
         </div>     
       </div>

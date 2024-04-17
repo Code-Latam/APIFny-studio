@@ -53,6 +53,15 @@
   .context-menu-tree div:hover {
     background-color: #f0f0f0;
   }
+
+  /* CSS */
+.menu-text-workspaces {
+  text-align: center; /* Centers the text horizontally within the div */
+  font-size: 14px; /* Adjust the font size of the text */
+  color: black;
+  font-weight: bold; 
+}
+
   
   /* You can add more styles as needed to match your design */
   

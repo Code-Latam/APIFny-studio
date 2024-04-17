@@ -87,7 +87,7 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
 
       const query = {
         userClientNr: user.clientNr,
-        explorerId: user.explorerId,
+        explorerId: explorerId,
         name: apiName,
         email: user.email,
         chatbotKey: user.chatbotKey

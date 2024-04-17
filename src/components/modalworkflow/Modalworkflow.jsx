@@ -4,6 +4,10 @@ import "./modalworkflow.css";
 
 function Modalworkflow({ clientNr, explorerId, onClose }) {
 
+  console.log("In modal workflow");
+  console.log(explorerId);
+
+
   const [products, setProducts] = useState([]);
 
   const [selectedProduct, setSelectedProduct] = useState(null);
