@@ -34,7 +34,7 @@ import {
       const fetchData = async () => {
         try {
           const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/query", {
-            clientNr:user.clientNr, chatbotKey: user.chatbotKey
+            clientNr:user.clientNr, chatbotKey: user.chatbotKey, email:user.email
           });
           setExplorers(response.data.explorers); // Adjust according to your response structure
         } catch (error) {
