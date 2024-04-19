@@ -13,6 +13,20 @@
     font-size: 14px;
     max-width: 200px;
   }
+
+  .context-menu-sub-tree {
+    position: absolute;
+   
+    left: -1000px;
+    
+    z-index: 2000; /* Ensure it's above other elements */
+    background-color: #ccc;
+    border: 1px solid rgb(104, 103, 103);
+    border-radius: 5px;
+    box-shadow: 0 4px 4px rgba(37, 2, 2, 0.1);
+    font-size: 14px;
+    max-width: 300px;
+  }
   
   .menu-item {
     display: flex;
@@ -24,6 +38,8 @@
     margin-right: 10px; /* Add space between the icon and text */
     font-size: 24px; /* Adjust the font size of the icon */
     color: rgb(104, 103, 103); 
+    display: flex;
+    align-items: center; /* Center-align the icons vertically */
   }
 
   .menu-separator {
@@ -37,9 +53,11 @@
   
   
   .menu-text {
-    margin: 0; /* Reset default margin for the text */
+  
     font-size: 14px; /* Adjust the font size of the text */
     color: black;
+    align-items: center;
+    line-height: 24px;
   }
 
   
@@ -60,6 +78,12 @@
   font-size: 14px; /* Adjust the font size of the text */
   color: black;
   font-weight: bold; 
+}
+
+.menu-text-send {
+  text-align: center; /* Centers the text horizontally within the div */
+  font-size: 14px; /* Adjust the font size of the text */
+  color: green;
 }
 
   

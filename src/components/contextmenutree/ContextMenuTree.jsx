@@ -20,7 +20,10 @@ import {
     Folder,
     Close,
     Delete,
-    CreateNewFolder
+    CreateNewFolder,
+    GroupAdd,
+    KeyboardArrowRight,
+    Email
   } from "@material-ui/icons";
 
  
@@ -28,7 +31,9 @@ import {
   const ContextMenuTree = ({onSelectTreeMenuItem, position }) => {
    
     const [explorers, setExplorers] = useState([]);
+    const [invites, setInvites] = useState([]);
     const { user } = useContext(AuthContext);
+    const [submenu, setSubmenu] = useState({ visible: false, content: null, position: {} });
 
     useEffect(() => {
       const fetchData = async () => {
@@ -37,6 +42,13 @@ import {
             clientNr:user.clientNr, chatbotKey: user.chatbotKey, email:user.email
           });
           setExplorers(response.data.explorers); // Adjust according to your response structure
+
+          const inviteResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/invitation/queryall", {
+            chatbotKey: user.chatbotKey
+
+          });
+          const emails = inviteResponse.data.map(invite => invite.email);
+                setInvites(emails);  // Set the state with the array of emails
         } catch (error) {
           console.error('Failed to fetch data:', error);
         }
@@ -44,14 +56,35 @@ import {
   
       fetchData();
     }, []); // The empty array ensures this effect runs only once after the component mounts
+
+    const openSubmenu = (item, event) => {
+      const rect = event.target.getBoundingClientRect();
+      setSubmenu({
+          visible: true,
+          content: item,
+          position: { x: rect.right, y: rect.top }
+      });
+  };
   
 
-    const handleMenuItemClick = (item, value) => {
-      console.log("clicked");
-      console.log(item);
-      console.log(value);
-      onSelectTreeMenuItem(item, value);
+    const handleMenuItemClick = (item, value, event) => {
+    // Check if the item has a submenu
+    const itemsWithSubmenu = ["invitations"];
+    if (itemsWithSubmenu.includes(item)) {
+        openSubmenu(item, event);
+    } else {
+        setSubmenu({ visible: false, content: null, position: {} }); // Close any open submenu
+        onSelectTreeMenuItem(item, value);
+    }
     };
+
+    const handleSubmenuItemClick = (submenuItem, value) => {
+        setSubmenu({ visible: false, content: null, position: {} }); // Close the submenu
+        onSelectTreeMenuItem(submenuItem, value);
+    };
+
+    const closeSubmenu = () => setSubmenu({ visible: false, content: null, position: {} });
+
 
     const handleDeleteExplorer = (item, value) => {
       if (window.confirm(`Are you sure you want to delete ${value}? Deletion of a workspace is a very destructive operation that will delete all products and workflows including associated APIS and is irreversible`))
@@ -84,31 +117,61 @@ import {
         { (
           <>    
               <>
-                <div className="menu-item" onClick={() => handleMenuItemClick("configuration", null)}>
+                <div className="menu-item" onClick={(e) => handleMenuItemClick("configuration", null, e)}>
                   <Code className="menu-icon" />
                   <span className="menu-text">Configuration</span>
                 </div>
               </>
               <>
               <div className="menu-separator"></div> 
+                <div className="menu-item" onClick={(e) => handleMenuItemClick("invitations", null, e)}>
+                  <GroupAdd  className="menu-icon" />
+                  <span className="menu-text"> Invitations  </span>
+                  <KeyboardArrowRight  className="menu-icon"/>
+                </div>
+
+                {submenu.visible && (
+                <div className="context-menu-sub-tree" style={{ position: "absolute", top: 60, left: 200 }}>
+                    {/* Content based on `submenu.content` */}
+                    <div className="menu-item" onClick={() => handleSubmenuItemClick(submenu.content, "Item 1")}>
+                    <div className="menu-text-send">Send new invitation</div>
+                    </div>
+                    <div className="menu-separator"></div> 
+                    <div className="menu-text-workspaces">Invitations Pending</div>
+                    {invites.map((invite, index) => (
+                    <React.Fragment key={index}>
+                      <div className="menu-separator"></div>
+                      <div className="menu-item">
+                        <Email className="menu-icon" />
+                        <div className="menu-text" >{invite}</div>
+                        <Delete className="menu-icon" onClick={(e) => handleDeleteInvite("deleteInvite",invite, e)} style={{ cursor: 'pointer', marginLeft: '10px', fontSize: "14px", color: 'green'}} />
+                      </div>
+                    </React.Fragment>
+                  ))}
+
+                </div>
+                )}
+
+
+                <div className="menu-separator"></div> 
               </> 
-              <div className="menu-item" onClick={() => handleMenuItemClick("importapidefinitions", null)}>
+              <div className="menu-item" onClick={(e) => handleMenuItemClick("importapidefinitions", null, e)}>
                 <Folder className="menu-icon" />
                 <span className="menu-text">Import Api Definitions</span>
               </div>
               <div className="menu-separator"></div> 
-              <div className="menu-item" onClick={() => handleMenuItemClick("exportproducts", null)}>
+              <div className="menu-item" onClick={(e) => handleMenuItemClick("exportproducts", null, e)}>
                 <Folder className="menu-icon" />
                 <span className="menu-text">Export Products</span>
               </div>
-              <div className="menu-item" onClick={() => handleMenuItemClick("importproducts",null)}>
+              <div className="menu-item" onClick={(e) => handleMenuItemClick("importproducts",null,e)}>
                 <Folder className="menu-icon" />
                 <span className="menu-text">Import Products</span>
               </div>
 
               <div className="menu-separator"></div>
 
-            <div className="menu-item" onClick={() => handleMenuItemClick("thirdparty", null)}>
+            <div className="menu-item" onClick={(e) => handleMenuItemClick("thirdparty", null,e)}>
               <Description className="menu-icon" />
               <span className="menu-text">Third Party Api Providers</span>
             </div>
@@ -129,14 +192,14 @@ import {
           <div className="menu-separator"></div>
           <div className="menu-item">
             <Bookmark className="menu-icon" />
-            <span className="menu-text" onClick={() => handleMenuItemClick("explorer", explorer)}>{explorer}</span>
-            <Delete className="menu-icon" onClick={() => handleDeleteExplorer("deleteExplorer",explorer)} style={{ cursor: 'pointer', marginLeft: '10px', fontSize: "14px", color: 'green'}} />
+            <span className="menu-text" onClick={(e) => handleMenuItemClick("explorer", explorer, e)}>{explorer}</span>
+            <Delete className="menu-icon" onClick={(e) => handleDeleteExplorer("deleteExplorer",explorer, e)} style={{ cursor: 'pointer', marginLeft: '10px', fontSize: "14px", color: 'green'}} />
           </div>
         </React.Fragment>
       ))}
         
         <div className="menu-separator"></div>
-        <div className="menu-item" onClick={() => handleMenuItemClick("Close",null)}>
+        <div className="menu-item" onClick={(e) => handleMenuItemClick("Close",null,e)}>
           <Close className="menu-icon" />
           <span className="menu-text">Close</span>
         </div>

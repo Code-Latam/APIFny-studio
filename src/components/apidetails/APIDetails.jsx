@@ -267,10 +267,10 @@ const theme = createTheme({
   const handleSubmit = async (e) => {
     try {
     // setResponse(''); 
-    // get the YAML configuration of ApiFny for this explorer 
+    // get the YAML configuration of GWOCU Studio for this explorer 
     if (!isValidConfiguration(explorer ))
     {
-      alert("The APIFny configuration file is not a valid yaml file.");
+      alert("The GWOCU Studio configuration file is not a valid yaml file.");
       return;
     }
     const yamlObject = await getConfiguration(explorer,apiData.thirdparty)
@@ -479,7 +479,7 @@ const theme = createTheme({
       prompt = '>>'
       welcomeMessage ={
         <div>
-          Welcome to the ApiFny API execution terminal.
+          Welcome to the API execution terminal.
           <br />
           Please type in "run" to submit the API Request. Type "clear" to clear the terminal.
           <br />

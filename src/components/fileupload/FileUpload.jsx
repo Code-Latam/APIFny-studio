@@ -90,16 +90,17 @@ function FileUpload({clientNr, explorerId}) {
         console.log(myfilename);
         // Set progress to 25% before calling API
         setProgress(50);
-        callAPI(clientNr, process.env.REACT_APP_HOST_CENTRAL_BACK + "/upload/postmandef/"+clientNr+ "/" + explorerId + "/" + myfilename);
+        callAPI(clientNr, explorerId, process.env.REACT_APP_HOST_CENTRAL_BACK + "/upload/postmandef/"+clientNr+ "/" + explorerId + "/" + myfilename);
       })
       .catch((error) => {
         alert(error.response.data);
       });
   };
 
-  function callAPI(clientNr,url) {
+  function callAPI(clientNr,explorerId,url) {
     const originalbody = {
       clientNr: clientNr,
+      explorerId: explorerId,
       url: url
     };
     const body = originalbody;
@@ -140,16 +141,17 @@ function FileUpload({clientNr, explorerId}) {
         console.log(myfilename);
         // Set progress to 25% before calling API
         setProgress(50);
-        callAPI2(clientNr, process.env.REACT_APP_HOST_CENTRAL_BACK + "/upload/swaggerdef/"+clientNr+ "/" + explorerId + "/" + myfilename);
+        callAPI2(clientNr, explorerId, process.env.REACT_APP_HOST_CENTRAL_BACK + "/upload/swaggerdef/"+clientNr+ "/" + explorerId + "/" + myfilename);
       })
       .catch((error) => {
         alert(error.response.data);
       });
   };
 
-  function callAPI2(clientNr,url) {
+  function callAPI2(clientNr,explorerId, url) {
     const originalbody = {
       clientNr: clientNr,
+      explorerId: explorerId,
       url: url
     };
     const body = originalbody;

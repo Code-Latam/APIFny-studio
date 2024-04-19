@@ -195,10 +195,10 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
     // e.preventDefault();
     setResponse(''); // Clear the response
 
-    // get the YAML configuration of ApiFny for this explorer 
+    // get the YAML configuration of GWOCU Studio for this explorer 
     if (!isValidConfiguration(explorer ))
     {
-      alert("The APIFny configuration file is not a valid yaml file.");
+      alert("The GWOCU STudio configuration file is not a valid yaml file.");
       return;
     }
     const yamlObject = await getConfiguration(explorer, api.thirdparty)
@@ -331,7 +331,7 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
       prompt = '>>'
       welcomeMessage ={
         <div>
-          Welcome to the ApiFny API execution terminal.
+          Welcome to the API execution terminal.
           <br />
           Please type in "run" to submit the Curl.
           <br />

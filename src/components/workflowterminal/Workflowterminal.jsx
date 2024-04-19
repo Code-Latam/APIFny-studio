@@ -136,7 +136,7 @@ const Workflowterminal = ({ clientNr, explorerId, productName, name, designerMod
       prompt = '>>'
       welcomeMessage ={
         <div>
-          Welcome to the ApiFny workflow execution terminal.
+          Welcome to the workflow execution terminal.
           <br />
           Please type in "run" to start the workflow.
           <br />

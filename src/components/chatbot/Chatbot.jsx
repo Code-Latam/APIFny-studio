@@ -25,6 +25,10 @@ const Chatbot = ({clientNr, explorerId}) => {
       let targetChatbot;
       // determine which chatbot to use:
       try {
+          console.log("IN CHATBOT");
+          console.log({
+            clientNr:user.clientNr, explorerId: explorerId
+          })
           const chatbotexplorerrel = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/chatbotexplorerrel/query", 
           {
             clientNr:user.clientNr, explorerId: explorerId

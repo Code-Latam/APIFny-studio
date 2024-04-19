@@ -30,7 +30,7 @@ export default function Topbar() {
     <div className="topbarContainer">
       <div className="topbarLeft">
       <a href={gwocuSettings.url} target="_blank" style={{ textDecoration: "none" }}>
-      <div className="logotext">{gwocuSettings.clientname} ApiFny Studio</div>
+      <div className="logotext">{gwocuSettings.clientname} GWOCU Studio</div>
       </a>
       </div>
       <div className="topbarCenter">
@@ -39,7 +39,7 @@ export default function Topbar() {
       <div className="topbarRight">
         <div className="topbarLinks">
         <span className="topbarLink" onClick={handleClick}>
-        Sign Out of ApiFny
+        Sign Out of the GWOCU Studio
         </span>
         </div>
         <div className="topbarIcons">

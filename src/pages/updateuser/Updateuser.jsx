@@ -53,7 +53,7 @@ export default function Updateuser() {
     <div className="updateuser">
       <div className="updateuserWrapper">
         <div className="updateuserLeft">
-          <h3 className="updateuserLogo">ApiFny Chat</h3>
+          <h3 className="updateuserLogo">GWOCU Studio Chat</h3>
           <span className="updateuserDesc">
             Change your password regularly for more security.
           </span>
