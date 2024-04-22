@@ -8,7 +8,7 @@ import htmlToMd from 'html-to-md';
 import ReactMarkdown from 'react-markdown';
 import { renderToString } from 'react-dom/server';
 
-function Productcomplianceview({ clientNr, explorerId, productName, designerMode, updateTreeView }) {
+function Productcomplianceview({ clientNr, explorerId, productName, authorization, updateTreeView }) {
   const [product, setProduct] = useState(null);
 
   const [isRichTextMode, setIsRichTextMode] = useState(true);
@@ -104,7 +104,7 @@ function Productcomplianceview({ clientNr, explorerId, productName, designerMode
         <button className='editorButton' onClick={toggleDisplayMode}>
           {isRichTextMode ? 'Use Markdown Editor' : 'Use Rich Text Editor'}
         </button>
-      {designerMode && (
+      {(authorization.designer || authorization.owner) && (
                 <button className = "actionbutton" onClick={handleUpdate}>Update</button>
             )}
       </div>
@@ -138,8 +138,8 @@ function Productcomplianceview({ clientNr, explorerId, productName, designerMode
                   theme = "snow"
                   className="ProductComplienceviewinput"
                   onChange={handleComplianceDescriptionChange}
-                  disabled = {!designerMode} 
-                  readOnly =  {!designerMode}    
+                  disabled = {!authorization.designer && !authorization.owner} 
+                  readOnly =  {!authorization.designer && !authorization.owner}
                   style={{ minHeight: '550px' }}     
                 />
                 </div>
@@ -147,7 +147,7 @@ function Productcomplianceview({ clientNr, explorerId, productName, designerMode
                 <textarea
               value={markdownContent}
               className="Markdowninput"
-              disabled = {!designerMode}
+              disabled = {!authorization.designer && !authorization.owner}
               onChange={handleTextareaChange}
             />
               )}

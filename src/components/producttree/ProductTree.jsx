@@ -56,12 +56,10 @@ const TreeNode = ({ label, children, isChild, topLevelClick }) => {
   );
 };
 
-const ProductTree = ({designerMode, clientNr, explorerId}) => {
+const ProductTree = ({authorization, clientNr, explorerId}) => {
+  console.log("AUTHORIZATION");
+  console.log(authorization);
   const { user } = useContext(AuthContext);
-  console.log("USERDATA");
-  console.log(clientNr);
-  console.log(explorerId);
-  console.log(designerMode);
   const [selectedItemType, setSelectedItemType] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedWork, setSelectedWorkflow] = useState(null);
@@ -277,6 +275,69 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
         }
         alert("Workspace was successfully created")
         break;
+
+
+        case 'SendNewInvitation':
+        try {
+          const myInvitationPayload =
+          {
+            
+          }
+          await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/invitation/invite", {clientNr: user.clientNr, chatbotKey: user.chatbotKey, fromEmail: user.email, toEmail: value});
+        }
+        catch (err) {
+          
+          if (err.response) {
+            // The request was made and the server responded with a status code that is not in the range of 2xx
+            console.error("API Error:", err.response.data);
+            alert(`Failed to send the invitation: ${err.response.data}`);
+            break;
+          } else if (err.request) {
+            // The request was made but no response was received
+            console.error("API Error: No response received");
+            alert("Failed to send the invitation: No response from server");
+            break
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.error("Error:", err.message);
+            alert(`Failed to send the invitation: ${err.message}`);
+            break;
+          }
+          break;
+        }
+        alert("Workspace was successfully created")
+        break;
+
+          
+        case 'deleteInvite':
+          try {
+            await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/invitation/delete", { chatbotKey: user.chatbotKey, email: value});
+          }
+          catch (err) {
+            if (err.response) {
+              // The request was made and the server responded with a status code that is not in the range of 2xx
+              console.error("API Error:", err.response.data);
+              alert(`Failed to delete the invite: ${err.response.data}`);
+              break;
+            } else if (err.request) {
+              // The request was made but no response was received
+              console.error("API Error: No response received");
+              alert("Failed to delete the invite: No response from server");
+              break
+            } else {
+              // Something happened in setting up the request that triggered an Error
+              console.error("Error:", err.message);
+              alert(`Failed to delete the invite: ${err.message}`);
+              break;
+            }
+          
+          }
+          
+            alert(`Invite was successfully deleted`);
+            break  
+
+
+
       case 'deleteExplorer':
       try {
         await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/workspace/delete", {clientNr: user.clientNr, explorerId: value,  chatbotKey: user.chatbotKey, email: user.email});
@@ -307,7 +368,7 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
       case 'explorer':
         // Check if workspace exists (it could have been deleted by another user)
         let myExplorerId = value;
-        const myUser = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/query", {clientNr: user.clientNr, chatbotKey: user.chatbotKey});
+        const myUser = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/query", {clientNr: user.clientNr, chatbotKey: user.chatbotKey, email: user.email});
         
         let myExplorers = myUser.data.explorers;
         const myworkspacePayload = { clientNr: clientNr, explorerId: myExplorerId,}
@@ -512,34 +573,41 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
     // Fetch the initial products using an API call
     // Replace this with your actual API endpoint
     fetchProducts();
-  }, [newTreeItem]);
+  }, [newTreeItem, authorization]);
 
   const fetchProducts = async () => {
-    
+    const myAll = authorization.designer || authorization.owner
+    console.log("MYALL");
+    console.log(myAll);
     try {
       const mybody = {
         clientNr: clientNr,
         explorerId: explorerId,
-        status: designerMode ? "All" : "Public",
+        status: myAll ? "All" : "Public"
       };
 
-      console.log("MYBODY");
+      console.log ("BODY");
       console.log(mybody);
-      console.log ("DESIGN");
-      console.log(designerMode);
+
+  
       // Make the API call using axios and parse the response as JSON
       const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/product/gettree", mybody);
       const json = response.data;
+      console.log("JSON");
+      console.log(json);
 
       // Set the data state variable with the JSON data
       setProducts(json);
       // on first fetch set the productname
+      if (json.length > 0)
+      {
       setSelectedProduct(json[0].name)
+      }
       setSelectedItemType('product');
      
     } catch (error) {
       // Handle any errors
-      console.error(error);
+      console.log(error);
     }
 
    //  const mockProducts = [
@@ -629,7 +697,7 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
   return (
     <div className="main-container">
         <div className="left-container">
-          {designerMode && (
+          {(authorization.designer || authorization.owner) && (
           <div>
           <button className="open-modal-button" onClick={openProductModal}>
           Add Product
@@ -662,7 +730,7 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
             onWorkflowChange = {handleSelectedWorkflowChange}
             onLinkChange = {handleSelectedLinkChange}
             graphChange = {newGraphItem}
-            designerMode={designerMode}
+            authorization ={authorization}
           />
         )}
         </div>
@@ -766,7 +834,7 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
         clientNr = {clientNr}
         explorerId = {explorerId}
         productName = {selectedProduct}
-        designerMode = {designerMode}
+        authorization = {authorization}
         updateTreeView = {() => {
           setNewTreeItem(newTreeItem+1);
         }}
@@ -777,7 +845,7 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
         clientNr = {clientNr}
         explorerId = {explorerId}
         productName = {selectedProduct}
-        designerMode = {designerMode}
+        authorization = {authorization}
         updateTreeView = {() => {
           setNewTreeItem(newTreeItem+1);
         }}
@@ -789,7 +857,7 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
          explorerId = {explorerId}
          productName = {selectedProduct}
          name = {selectedWork}
-         designerMode = {designerMode}
+         authorization = {authorization}
          updateTreeView = {() => {
           setNewTreeItem(newTreeItem+1);
         }}
@@ -801,7 +869,7 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
          explorerId = {explorerId}
          productName = {selectedProduct}
          name = {selectedWork}
-         designerMode = {designerMode}
+         authorization = {authorization}
          updateTreeView = {() => {
           setNewTreeItem(newTreeItem+1);
         }}
@@ -814,7 +882,7 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
          explorerId = {explorerId}
          productName = {selectedProduct}
          name = {selectedWork}
-         designerMode = {designerMode}
+         authorization = {authorization}
        /> 
        </TerminalContextProvider>
          : null} 
@@ -824,7 +892,7 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
          explorerId = {explorerId}
          workflowName = {selectedWork}
          taskId = {selectedTaskId}
-         designerMode = {designerMode}
+         authorization = {authorization}
          updateGraphView = {() => {
           setNewGraphItem(newGraphItem+1);
         }}
@@ -837,7 +905,7 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
          explorerId = {explorerId}
          workflowName = {selectedWork}
          taskId = {selectedTaskId}
-         designerMode = {designerMode}
+         authorization = {authorization}
          updateGraphView = {() => {
           setNewGraphItem(newGraphItem+1);
         }}
@@ -849,7 +917,7 @@ const ProductTree = ({designerMode, clientNr, explorerId}) => {
          explorerId = {explorerId}
          workflowName = {selectedWork}
          mylink = {selectedLink}
-         designerMode = {designerMode}
+         authorization = {authorization}
          updateGraphView = {() => {
           setNewGraphItem(newGraphItem+1);
         }}

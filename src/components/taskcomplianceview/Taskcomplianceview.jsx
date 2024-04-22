@@ -7,10 +7,9 @@ import htmlToMd from 'html-to-md';
 import ReactMarkdown from 'react-markdown';
 import { renderToString } from 'react-dom/server';
 
-function Taskcomplianceview({ clientNr, explorerId, workflowName, taskId, designerMode,updateGraphView }) {
+function Taskcomplianceview({ clientNr, explorerId, workflowName, taskId, authorization,updateGraphView }) {
 
-  console.log("TASKVIEW DESIGNERMODE");
-  console.log(designerMode);
+  
   const [task, setTask] = useState(null);
 
 
@@ -112,12 +111,12 @@ const handleTextareaChange = (e) => {
               {task ? (
                 <div>
                   <div>
-            {designerMode && (
+            {(authorization.designer || authorization.owner) && (
               <button className='editorButton' onClick={toggleDisplayMode}>
                 {isRichTextMode ? 'Use Markdown Editor' : 'Use Rich Text Editor'}
               </button>
             )}
-            {designerMode && (
+            {(authorization.designer || authorization.owner) && (
                 
                       <button className = 'editorButton' onClick={handleUpdate}>Update</button>
                   
@@ -153,8 +152,8 @@ const handleTextareaChange = (e) => {
                   theme = "snow"
                  
                   onChange={handleComplianceDescriptionChange}
-                  readOnly =  {!designerMode}  
-                  disabled = {!designerMode}
+                  readOnly =  {!authorization.designer && !authorization.owner}  
+                  disabled = {!authorization.designer && !authorization.owner}
                   style={{ minHeight: '550px' }}   
                   
                 />
@@ -163,7 +162,7 @@ const handleTextareaChange = (e) => {
                 <textarea
               value={markdownContent}
               className="Markdowninput"
-              disabled = {!designerMode}
+              disabled = {!authorization.designer && !authorization.owner}
               onChange={handleTextareaChange}
             />
               )}

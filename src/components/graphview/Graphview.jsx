@@ -7,9 +7,8 @@ import Modallink from "../modallink/Modallink";
 
 
 
-const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskChange,onLinkChange,onWorkflowChange, graphChange, designerMode }) => {
-  console.log("SUPERDESIGNERMODE");
-  console.log(designerMode);
+const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskChange,onLinkChange,onWorkflowChange, graphChange, authorization }) => {
+  
 
   const d3Config = {
     gravity: 0,
@@ -40,8 +39,8 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
     width: 650, // Set the width of the graph (adjust as needed)
     height: 400, // Set the height of the graph (adjust as needed)
     initialZoom: 1.2, 
-    "freezeAllDragEvents": !designerMode,
-    "staticGraph": !designerMode,
+    "freezeAllDragEvents": !authorization.designer && !authorization.owner,
+    "staticGraph": !authorization.designer && !authorization.owner,
   };
   
   
@@ -422,7 +421,7 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
         const mybody = {
           clientNr: clientNr,
           explorerId: explorerId,
-          status: designerMode ? "All" : "Public",
+          status: (authorization.designer || authorization.owner) ? "All" : "Public",
         }
 
         if (selectedProduct && selectedWork) {
@@ -471,7 +470,7 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
 
     return (
     <div>
-      {designerMode &&(
+      {(authorization.designer || authorization.owner )&&(
         <div className="buttons">
         <button className = "actionButton" onClick={() => handleAddNode()}>Add Task</button>
         <button className = "actionButton" onClick={() => handleDeleteNode()}>Remove Task</button>

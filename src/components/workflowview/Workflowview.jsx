@@ -8,7 +8,7 @@ import ReactMarkdown from 'react-markdown';
 import { renderToString } from 'react-dom/server';
 import Modalworkflowclone from "../modalworkflowclone/Modalworkflowclone"; 
 
-function Workflowview({ clientNr, explorerId, productName, name, designerMode, updateTreeView  }) {
+function Workflowview({ clientNr, explorerId, productName, name, authorization, updateTreeView  }) {
   const [workflow, setWorkflow] = useState(null);
   const [isRichTextMode, setIsRichTextMode] = useState(true);
 
@@ -163,18 +163,18 @@ function Workflowview({ clientNr, explorerId, productName, name, designerMode, u
         {workflow ? (
           <div>
              <div>
-      {designerMode && (
+      {(authorization.designer || authorization.owner) && (
         <button className='editorButton' onClick={toggleDisplayMode}>
           {isRichTextMode ? 'Use Markdown Editor' : 'Use Rich Text Editor'}
         </button>
       )}
-      {designerMode && (
+      {(authorization.designer || authorization.owner) && (
                 <button className = "actionbutton" onClick={handleUpdate}>Update</button>
             )}
-      {designerMode && (          
+      {(authorization.designer || authorization.owner) && (          
                 <button className = "actionbutton" onClick={handleDelete}>Remove</button>
             )}
-      {designerMode && (
+      {(authorization.designer || authorization.owner) && (
                 <button className = "actionbutton" onClick={handleClone}>Clone</button>
             )}
       {isWorkflowCloneModalOpen && (
@@ -207,7 +207,7 @@ function Workflowview({ clientNr, explorerId, productName, name, designerMode, u
                 value={selectedStatus}
                 className="ProductViewStatusinput"
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                disabled={!designerMode }
+                disabled= {!authorization.designer && !authorization.owner }
               >
                 {statusOptions.map((type) => (
                   <option key={type} value={type}>
@@ -225,7 +225,7 @@ function Workflowview({ clientNr, explorerId, productName, name, designerMode, u
                 value={workflow.sequence}
                 className="WorkflowViewSequenceinput"
                 onChange={handleSequenceChange}
-                disabled = {!designerMode} 
+                disabled = {!authorization.designer && !authorization.owner } 
           
               />
             </div>
@@ -250,8 +250,8 @@ function Workflowview({ clientNr, explorerId, productName, name, designerMode, u
                   theme = "snow"
                 
                   onChange={handleDescriptionChange}
-                  disabled = {!designerMode} 
-                  readOnly =  {!designerMode}  
+                  disabled = {!authorization.designer && !authorization.owner } 
+                  readOnly =  {!authorization.designer && !authorization.owner }  
                   style={{ minHeight: '550px' }}                  
                 />
                 </div>
@@ -259,7 +259,7 @@ function Workflowview({ clientNr, explorerId, productName, name, designerMode, u
                 <textarea
               value={markdownContent}
               className="Markdowninput"
-              disabled = {!designerMode}
+              disabled = {!authorization.designer && !authorization.owner }
               onChange={handleTextareaChange}
             />
               )}

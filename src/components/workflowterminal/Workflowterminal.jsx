@@ -5,7 +5,7 @@ import {makeCurlComponentFromApi,makeCurlComponentFromApiExecutionResult, Header
 
 
 
-const Workflowterminal = ({ clientNr, explorerId, productName, name, designerMode }) => {
+const Workflowterminal = ({ clientNr, explorerId, productName, name, authorization }) => {
   const [explorer, setExplorer] = useState([]);
   const [workflowStarted, setWorkflowStarted] = useState(false);
   const [apiList, setApiList] = useState([]);

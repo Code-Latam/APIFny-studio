@@ -3,17 +3,15 @@ import ProductTree from "../../components/producttree/ProductTree";
 import "./explorer.css" ;
 import Topbar from "../../components/topbar/Topbar";
 
-export default function Explorer({clientNr,explorerId, designerMode}) {
-  console.log("DESIGNERMODE");
-  console.log(designerMode);
-  console.log(clientNr);
+export default function Explorer({clientNr,explorerId, authorization}) {
+  
   return (
     <>
       
       <div className="explorerContainer">
         <Topbar />
         <ProductTree 
-        designerMode={designerMode}
+        authorization={authorization}
         clientNr = {clientNr}
         explorerId = {explorerId}
         />

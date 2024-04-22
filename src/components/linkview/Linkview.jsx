@@ -5,7 +5,7 @@ import JSONInput from 'react-json-editor-ajrm';
 import locale from 'react-json-editor-ajrm/locale/en';
 import Editor from '@monaco-editor/react';
 
-function Linkview({ clientNr, explorerId, workflowName, mylink,designerMode,updateGraphView }) {
+function Linkview({ clientNr, explorerId, workflowName, mylink,authorization,updateGraphView }) {
 
   const [link, setLink] = useState(mylink);
   const emptyObject = Object.create(null);
@@ -212,7 +212,7 @@ function Linkview({ clientNr, explorerId, workflowName, mylink,designerMode,upda
         
         {link ? (
           <div>
-            {designerMode && (
+            {(authorization.designer || authorization.owner) && (
               <div>
                 <button onClick={handleUpdate}>Update</button>
               </div>
@@ -289,7 +289,7 @@ function Linkview({ clientNr, explorerId, workflowName, mylink,designerMode,upda
                 value={selectedType}
                 className="LinkTViewType"
                 onChange={(e) => setSelectedType(e.target.value)}
-                disabled={!designerMode }
+                disabled={!authorization.designer && !authorization.owner }
                 
               >
                 {typeOptions.map((type) => (

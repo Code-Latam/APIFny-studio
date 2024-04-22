@@ -9,7 +9,7 @@ import APIDetails from '../apidetails/APIDetails';
 import MyFolderTree from '../myfoldertree/MyFolderTree';
 import { TerminalContextProvider } from "react-terminal";
 
-const ApisEditor = ({clientNr, explorerId, designerMode}) => {
+const ApisEditor = ({clientNr, explorerId, authorization}) => {
   const [folders, setFolders] = useState([]);
   const [apis, setAPIs] = useState([]);
   const [selectedApi, setSelectedApi] = useState(null);

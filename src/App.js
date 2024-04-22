@@ -7,6 +7,7 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
+import axios from 'axios';
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
 import React, { useState, useEffect } from 'react';
@@ -16,24 +17,51 @@ import ApisEditor from './components/apisEditor/ApisEditor';
 
 function App() {
   const { user } = useContext(AuthContext);
-  
-  var designerMode = false;
- 
-    if (user && user.groups && Array.isArray(user.groups)) {
-      // Check if "apiFnyDesigners" is in the user.groups array
-      designerMode = user.groups.includes("apiFnyDesigners");
-    } else {
-      // If user object doesn't exist or doesn't have groups array, set designerMode to false
-      designerMode = false; 
-    }
+  const [authorization, setAuthorization] = useState({ name: "1", designer: false, owner: false, reader: false });
+  console.log("IN APP");
+  useEffect(() => {
+    console.log("ENTERING USE EFFECT");
+    const getUserAuthorization = async () => {
+      if (!user) {
+        // No user is logged in, so skip making any axios calls
+        setAuthorization({name: "1", designer: false, owner: false, reader: false});
+        return;
+      }
+
+      try {
+        const userPayload = {
+          clientNr: user.clientNr,
+          chatbotKey: user.chatbotKey,
+          email: user.email,
+        };
+        console.log("Just before calling user query");
+        const res = await axios.post(`${process.env.REACT_APP_CENTRAL_BACK}/users/query`, userPayload);
+        console.log("Just after calling user query");
+        console.log(res.data);
+        const currentAuth = res.data.explorers.find(explorer => explorer.name === user.explorerId);
+        //const currentAuth = res.data.explorers[user.explorerId]
+        setAuthorization(currentAuth);
+        // Assuming the response might affect authorization somehow
+        // Process response if necessary, e.g., res.data
+
+        
+      } catch (error) {
+        console.error('Failed to fetch authorization:', error);
+        setAuthorization({name: "1", designer: false, owner: false, reader: false});
+      }
+    };
+
+    getUserAuthorization();
+  }, []); // Depend on `user` to re-run when `user` changes
+
   return (
     <Router>
       <Switch>
         <Route exact path="/">
         {user ? <Explorer 
         clientNr = {user.clientNr}
-        explorerId = {user.explorerId || "1"}
-        designerMode = {designerMode} 
+        explorerId = {user.explorerId || "1"} 
+        authorization = {authorization}    
         />
         : <Login />}  
         </Route>
@@ -41,7 +69,7 @@ function App() {
         {user ? <Explorer 
           clientNr = {user.clientNr}
           explorerId = {user.explorerId || "1"}
-          designerMode = {designerMode}
+          authorization = {authorization}
           />
           : <Login />}
         </Route>
@@ -52,7 +80,7 @@ function App() {
         {user ? <ApisEditor 
           clientNr = {user.clientNr}
           explorerId = {user.explorerId || "1"}
-          designerMode = {designerMode}
+          authorization = {authorization}
           />
           : <Login />}
         </Route>

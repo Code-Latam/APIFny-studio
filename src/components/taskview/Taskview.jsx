@@ -7,10 +7,9 @@ import htmlToMd from 'html-to-md';
 import ReactMarkdown from 'react-markdown';
 import { renderToString } from 'react-dom/server';
 
-function Taskview({ clientNr, explorerId, workflowName, taskId, designerMode,updateGraphView }) {
+function Taskview({ clientNr, explorerId, workflowName, taskId, authorization,updateGraphView }) {
 
-  console.log("TASKVIEW DESIGNERMODE");
-  console.log(designerMode);
+  
   const [task, setTask] = useState(null);
   const [selectedType, setSelectedType] = useState("circle");
   const [selectedTaskType, setSelectedTaskType] = useState("normal");
@@ -151,12 +150,12 @@ const handleTextareaChange = (e) => {
         {task ? (
           <div>
             <div>
-            {designerMode && (
+            {(authorization.designer || authorization.owner) && (
             <button className='editorButton' onClick={toggleDisplayMode}>
               {isRichTextMode ? 'Use Markdown Editor' : 'Use Rich Text Editor'}
             </button>
           )}
-      {   designerMode && (
+      {   (authorization.designer || authorization.owner) && (
                 <button className = 'editorButton' onClick={handleUpdate}>Update</button>
             
             )}
@@ -168,7 +167,7 @@ const handleTextareaChange = (e) => {
                 id="taskName"
                 value={task.name}
                 onChange={handleNameChange}
-                disabled={!designerMode }
+                disabled={!authorization.designer && !authorization.owner }
                 className="LinkTViewType"
               />
             </div>
@@ -180,7 +179,7 @@ const handleTextareaChange = (e) => {
                 value={selectedTaskType}
                 className="LinkTViewType"
                 onChange={(e) => setSelectedTaskType(e.target.value)}
-                disabled={!designerMode }
+                disabled={!authorization.designer && !authorization.owner }
               >
                 {taskTypeOptions.map((type) => (
                   <option key={type} value={type}>
@@ -197,7 +196,7 @@ const handleTextareaChange = (e) => {
                 value={selectedApi}
                 className="apilist"
                 onChange={(e) => setSelectedApi(e.target.value)}
-                disabled={!designerMode }
+                disabled= {!authorization.designer && !authorization.owner }
               >
                 {apis.map((api) => (
                   <option key={api.name} value={api.name}>
@@ -215,7 +214,7 @@ const handleTextareaChange = (e) => {
                 value={selectedType}
                 className="LinkTViewType"
                 onChange={(e) => setSelectedType(e.target.value)}
-                disabled={!designerMode }
+                disabled= {!authorization.designer && !authorization.owner }
               >
                 {typeOptions.map((type) => (
                   <option key={type} value={type}>
@@ -243,8 +242,8 @@ const handleTextareaChange = (e) => {
                   theme = "snow"
                   className="Taskviewinput"
                   onChange={handleDescriptionChange}
-                  readOnly =  {!designerMode}  
-                  disabled = {!designerMode}
+                  readOnly =  {!authorization.designer && !authorization.owner }  
+                  disabled = {!authorization.designer && !authorization.owner }
                   style={{ minHeight: '550px' }}   
                   
                 />
@@ -253,7 +252,7 @@ const handleTextareaChange = (e) => {
                 <textarea
               value={markdownContent}
               className="Markdowninput"
-              disabled = {!designerMode}
+              disabled = {!authorization.designer && !authorization.owner }
               onChange={handleTextareaChange}
             />
               )}

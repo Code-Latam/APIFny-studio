@@ -41,7 +41,10 @@ import {
           const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/query", {
             clientNr:user.clientNr, chatbotKey: user.chatbotKey, email:user.email
           });
-          setExplorers(response.data.explorers); // Adjust according to your response structure
+          //set workspaces
+          const listExplorers = response.data.explorers;
+          const names = listExplorers.map(explorer => explorer.name);
+          setExplorers(names); // Adjust according to your response structure
 
           const inviteResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/invitation/queryall", {
             chatbotKey: user.chatbotKey
@@ -100,6 +103,22 @@ import {
     };
 
     
+
+    const handleDeleteInvite = (item, value) =>
+     {
+      if (window.confirm(`Are you sure you want to delete ${value}?. The person invited will no longer be able to join.`))
+      {  
+      onSelectTreeMenuItem(item, value);
+      return
+      } 
+       else {
+        // User clicked 'Cancel', do nothing
+        console.log("Deletion cancelled.");
+        return
+        }
+    };
+
+    
     const handleCreateWorkspace = (item, value) => {
       const workspaceName = prompt("Please enter the name of the new workspace:");
       if (workspaceName) { // Checks if the user entered something and did not just cancel the dialog
@@ -109,6 +128,19 @@ import {
         console.log("Workspace creation cancelled.");
       }
     };
+
+    const handleSendNewInvitation = (item, value) => {
+      const myemail = prompt("Please enter the email for the new invitation:");
+      if (myemail) { // Checks if the user entered something and did not just cancel the dialog
+        console.log(`Creating email with name: ${myemail}`);
+        onSelectTreeMenuItem(item, myemail);
+      } else {
+        console.log("Invitation cancelled.");
+      }
+    };
+
+    
+    
     
   
   
@@ -133,7 +165,7 @@ import {
                 {submenu.visible && (
                 <div className="context-menu-sub-tree" style={{ position: "absolute", top: 60, left: 200 }}>
                     {/* Content based on `submenu.content` */}
-                    <div className="menu-item" onClick={() => handleSubmenuItemClick(submenu.content, "Item 1")}>
+                    <div className="menu-item" onClick={() => handleSendNewInvitation("SendNewInvitation", null)}>
                     <div className="menu-text-send">Send new invitation</div>
                     </div>
                     <div className="menu-separator"></div> 

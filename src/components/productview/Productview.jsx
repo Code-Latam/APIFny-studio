@@ -8,7 +8,7 @@ import htmlToMd from 'html-to-md';
 import ReactMarkdown from 'react-markdown';
 import { renderToString } from 'react-dom/server';
 
-function Productview({ clientNr, explorerId, productName, designerMode, updateTreeView }) {
+function Productview({ clientNr, explorerId, productName, authorization, updateTreeView }) {
   const [product, setProduct] = useState(null);
 
   const [isRichTextMode, setIsRichTextMode] = useState(true);
@@ -138,10 +138,10 @@ function Productview({ clientNr, explorerId, productName, designerMode, updateTr
         <button className='editorButton' onClick={toggleDisplayMode}>
           {isRichTextMode ? 'Use Markdown Editor' : 'Use Rich Text Editor'}
         </button>
-      {designerMode && (
+      {(authorization.designer || authorization.owner) && (
                 <button className = "actionbutton" onClick={handleUpdate}>Update</button>        
             )}
-      {designerMode && (
+      {(authorization.designer || authorization.owner) && (
                 <button className = "actionbutton" onClick={handleDelete}>Remove</button>
             )}
       </div>
@@ -162,7 +162,7 @@ function Productview({ clientNr, explorerId, productName, designerMode, updateTr
                 value={selectedStatus}
                 className="ProductViewStatusinput"
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                disabled={!designerMode }
+                disabled={!authorization.designer && !authorization.owner }
               >
                 {statusOptions.map((type) => (
                   <option key={type} value={type}>
@@ -179,7 +179,7 @@ function Productview({ clientNr, explorerId, productName, designerMode, updateTr
                 value={product.sequence}
                 className="ProductViewSequenceinput"
                 onChange={handleSequenceChange}
-                disabled = {!designerMode} 
+                disabled={!authorization.designer && !authorization.owner }
           
               />
             </div>
@@ -202,8 +202,8 @@ function Productview({ clientNr, explorerId, productName, designerMode, updateTr
                   theme = "snow"
                   className="Productviewinput"
                   onChange={handleDescriptionChange}
-                  disabled = {!designerMode} 
-                  readOnly =  {!designerMode}   
+                  disabled={!authorization.designer && !authorization.owner }
+                  readOnly =  {!authorization.designer && !authorization.owner }   
                   style={{ minHeight: '550px' }}       
                 />
                 </div>
@@ -211,7 +211,7 @@ function Productview({ clientNr, explorerId, productName, designerMode, updateTr
                 <textarea
               value={markdownContent}
               className="Markdowninput"
-              disabled = {!designerMode}
+              disabled = {!authorization.designer && !authorization.owner }
               onChange={handleTextareaChange}
             /> 
               ) }

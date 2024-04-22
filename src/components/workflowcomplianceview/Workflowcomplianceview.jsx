@@ -8,7 +8,7 @@ import ReactMarkdown from 'react-markdown';
 import { renderToString } from 'react-dom/server';
 import Modalworkflowclone from "../modalworkflowclone/Modalworkflowclone"; 
 
-function Workflowcomplianceview({ clientNr, explorerId, productName, name, designerMode, updateTreeView  }) {
+function Workflowcomplianceview({ clientNr, explorerId, productName, name, authorization, updateTreeView  }) {
   const [workflow, setWorkflow] = useState(null);
   const [isRichTextMode, setIsRichTextMode] = useState(true);
 
@@ -102,12 +102,12 @@ function Workflowcomplianceview({ clientNr, explorerId, productName, name, desig
         {workflow ? (
           <div>
              <div>
-      {designerMode && (
+      {(authorization.designer || authorization.owner) && (
         <button className='editorButton' onClick={toggleDisplayMode}>
           {isRichTextMode ? 'Use Markdown Editor' : 'Use Rich Text Editor'}
         </button>
       )}
-      {designerMode && (      
+      {(authorization.designer || authorization.owner) && (      
                 <button className = "actionbutton" onClick={handleUpdate}>Update</button>   
             )}
       </div>
@@ -141,8 +141,8 @@ function Workflowcomplianceview({ clientNr, explorerId, productName, name, desig
                   theme = "snow"
                   className="Taskviewinput"
                   onChange={handleComplianceDescriptionChange}
-                  disabled = {!designerMode} 
-                  readOnly =  {!designerMode}     
+                  disabled = {!authorization.designer && !authorization.owner } 
+                  readOnly =  {!authorization.designer && !authorization.owner }    
                   style={{ minHeight: '550px' }}               
                 />
                 </div>
@@ -150,7 +150,7 @@ function Workflowcomplianceview({ clientNr, explorerId, productName, name, desig
                 <textarea
               value={markdownContent}
               className="Markdowninput"
-              disabled = {!designerMode}
+              disabled = {!authorization.designer && !authorization.owner}
               onChange={handleTextareaChange}
             />
               )}

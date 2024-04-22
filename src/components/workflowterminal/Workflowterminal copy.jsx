@@ -7,7 +7,7 @@ import {
   } from 'javascript-terminal';
 import axios from 'axios';
 
-const Workflowterminal = ({ clientNr, explorerId, productName, name, designerMode }) => {
+const Workflowterminal = ({ clientNr, explorerId, productName, name, authorization }) => {
   const [explorer, setExplorer] = useState([]);
   const [workflowStarted, setWorkflowStarted] = useState(false);
   const [inputStr, setInputStr] = useState('run workflow');
