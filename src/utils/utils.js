@@ -4,8 +4,7 @@ const forge = require('node-forge');
 export function encodebody(originalbody)
 {
 
-    console.log("Original Body:");
-    console.log(originalbody);
+   
 
     const gwocuSettingsString = localStorage.getItem('gwocu-setting');
     const gwocuSettings = gwocuSettingsString ? JSON.parse(gwocuSettingsString) : null;

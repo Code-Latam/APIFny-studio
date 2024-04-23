@@ -100,7 +100,7 @@ function Productcomplianceview({ clientNr, explorerId, productName, authorizatio
       <div>
         {product ? (
           <div>
-            <div classname = "viewButtons">
+            <div className = "viewButtons">
         <button className='editorButton' onClick={toggleDisplayMode}>
           {isRichTextMode ? 'Use Markdown Editor' : 'Use Rich Text Editor'}
         </button>

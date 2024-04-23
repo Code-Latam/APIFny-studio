@@ -18,6 +18,9 @@ import ContextMenu from "../contextmenu/ContextMenu";
 import ContextMenuTree from "../contextmenutree/ContextMenuTree"; 
 
 import Modalworkflow from "../modalworkflow/Modalworkflow"; 
+
+import Modalinvite from '../modalinvite/Modalinvite';
+
 import Modalproduct from "../modalproduct/Modalproduct";
 import Modalconfiguration from "../modalconfiguration/Modalconfiguration";
 import Thirdparties from "../thirdparties/Thirdparties";
@@ -80,6 +83,8 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
 
   const [newTreeItem, setNewTreeItem] = useState(0);
   const [newGraphItem, setNewGraphItem] = useState(0);
+
+  const [showModalInvite, setShowModalInvite] = useState(false);
 
   const [isWorkflowModalOpen, setIsWorkflowModalOpen] = useState(false);
   const [isApiDefImportModalOpen, setIsApiDefImportModalOpen] = useState(false);
@@ -278,37 +283,9 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
 
 
         case 'SendNewInvitation':
-        try {
-          const myInvitationPayload =
-          {
-            
-          }
-          await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/invitation/invite", {clientNr: user.clientNr, chatbotKey: user.chatbotKey, fromEmail: user.email, toEmail: value});
-        }
-        catch (err) {
-          
-          if (err.response) {
-            // The request was made and the server responded with a status code that is not in the range of 2xx
-            console.error("API Error:", err.response.data);
-            alert(`Failed to send the invitation: ${err.response.data}`);
-            break;
-          } else if (err.request) {
-            // The request was made but no response was received
-            console.error("API Error: No response received");
-            alert("Failed to send the invitation: No response from server");
-            break
-          } else {
-            // Something happened in setting up the request that triggered an Error
-            console.error("Error:", err.message);
-            alert(`Failed to send the invitation: ${err.message}`);
-            break;
-          }
-          break;
-        }
-        alert("Workspace was successfully created")
+        setShowModalInvite(true);
         break;
 
-          
         case 'deleteInvite':
           try {
             await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/invitation/delete", { chatbotKey: user.chatbotKey, email: value});
@@ -735,7 +712,7 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
         )}
         </div>
         
-        <div classname = "botpanel">
+        <div className = "botpanel">
             <Chatbot
             clientNr = {clientNr}
             explorerId = {explorerId}
@@ -763,6 +740,15 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
           onClose={() => {
             setIsProductModalOpen(false);
             setNewTreeItem(newTreeItem+1);
+          }}
+        />
+      )}
+      {showModalInvite && (
+        <Modalinvite
+          clientNr={user.clientNr}
+          explorerId={user.explorerId}
+          onClose={() => {
+            setShowModalInvite(false);
           }}
         />
       )}

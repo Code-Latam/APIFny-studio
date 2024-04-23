@@ -23,8 +23,6 @@ export default function Topbar() {
   const { user} = useContext(AuthContext);
   const gwocuSettingsString = localStorage.getItem("gwocu-setting");
   const gwocuSettings = gwocuSettingsString ? JSON.parse(gwocuSettingsString) : null;
- console.log("gwocuSettings");
- console.log(gwocuSettings);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   return (
     <div className="topbarContainer">

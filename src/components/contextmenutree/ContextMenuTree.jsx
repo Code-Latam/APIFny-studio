@@ -130,13 +130,8 @@ import {
     };
 
     const handleSendNewInvitation = (item, value) => {
-      const myemail = prompt("Please enter the email for the new invitation:");
-      if (myemail) { // Checks if the user entered something and did not just cancel the dialog
-        console.log(`Creating email with name: ${myemail}`);
-        onSelectTreeMenuItem(item, myemail);
-      } else {
-        console.log("Invitation cancelled.");
-      }
+      
+        onSelectTreeMenuItem(item, value)
     };
 
     

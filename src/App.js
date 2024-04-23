@@ -24,7 +24,7 @@ function App() {
     const getUserAuthorization = async () => {
       if (!user) {
         // No user is logged in, so skip making any axios calls
-        setAuthorization({name: "1", designer: false, owner: false, reader: false});
+        // setAuthorization({name: "1", designer: false, owner: false, reader: false});
         return;
       }
 
@@ -47,12 +47,12 @@ function App() {
         
       } catch (error) {
         console.error('Failed to fetch authorization:', error);
-        setAuthorization({name: "1", designer: false, owner: false, reader: false});
+        // setAuthorization({name: "1", designer: false, owner: false, reader: false});
       }
     };
 
     getUserAuthorization();
-  }, []); // Depend on `user` to re-run when `user` changes
+  }, [user]); 
 
   return (
     <Router>

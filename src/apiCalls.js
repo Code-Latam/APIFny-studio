@@ -12,14 +12,12 @@ export const loginCall = async (userCredential, dispatch) => {
       clientNr: userCredential.clientNr,
       secretKey: process.env.REACT_APP_SECRET_KEY
     }
-    console.log("test 0");
     const clientRes = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/clients/query",clientPayload );
-    console.log("test 1");
+   
     const client = clientRes.data;
     const gwocuSettingsString = JSON.stringify(client);
     localStorage.setItem('gwocu-setting', gwocuSettingsString);
-    console.log("gwocuSettingsString")
-    console.log(gwocuSettingsString)
+    
 
     
     const myUserPayload = {
@@ -32,8 +30,6 @@ export const loginCall = async (userCredential, dispatch) => {
     }
    
     const userPayload = encodebody(myUserPayload);
-    console.log("MYUSERPAYLOAD");
-    console.log("userPayload");
     const res = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/auth/login", userPayload);
   
 
@@ -42,6 +38,7 @@ export const loginCall = async (userCredential, dispatch) => {
       clientNr: userCredential.clientNr,
       ...getDecodedBody(res.data)
     }
+    console.log("login success")
     dispatch({ type: "LOGIN_SUCCESS", payload: mypayload });
   } catch (err) {
     alert("login failed for unknown reasons")

@@ -36,6 +36,7 @@ export default function Login() {
   };
 
   const handleClick = (e) => {
+    console.log("CLICKED");
     e.preventDefault();
 
     loginCall(
@@ -65,6 +66,8 @@ export default function Login() {
           chatbotKey,
           email,
         };
+        console.log("BODY");
+        console.log(body);
         try {
           const response = await axios.post(
             process.env.REACT_APP_CENTRAL_BACK + "/users/explorers",
@@ -103,7 +106,7 @@ export default function Login() {
           <input
               placeholder="Gwoku Token"
               required
-              value={process.env.REACT_APP_GWOKUTOKEN}
+              
               onChange={(e) => setGwokenToken(e.target.value)}
               className="loginInput"
               type = "password"
