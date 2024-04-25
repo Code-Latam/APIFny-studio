@@ -48,7 +48,8 @@ function Modalinvite({ clientNr, explorerId, onClose }) {
         clientNr: clientNr,
         explorers: explorers,
         chatbotKey: chatbotKey,
-        toEmail: email
+        toEmail: email,
+        url: process.env.REACT_APP_FROND_END + "/acceptinvite"
       };
   
       const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/invitation/invite", mypayload);
@@ -63,7 +64,6 @@ function Modalinvite({ clientNr, explorerId, onClose }) {
       return true;
     } catch (error) {
       // Handle unexpected errors (e.g., network issues)
-      console.error("An unexpected error occurred:", error);
       alert("Invite was not succesfull. Please try again.");
       return false;
     }
@@ -84,7 +84,7 @@ function Modalinvite({ clientNr, explorerId, onClose }) {
 
         <div className="workflow-switch-container">
           <div>
-              <label htmlFor="workflowName">Email</label>
+              <label className = 'invite-label' htmlFor="workflowName">Email</label>
               <input
                 type="email"
                 id="workflowName"
@@ -94,7 +94,7 @@ function Modalinvite({ clientNr, explorerId, onClose }) {
               />
             </div>
             <div>
-            <label htmlFor="userAuth">User Authorization</label>
+            <label className = 'invite-label' htmlFor="userAuth">User Authorization</label>
             <select
               id="userAuth"
               value={selectedAuth}

@@ -4,22 +4,36 @@ import { loginCall } from "../../apiCalls";
 import { AuthContext } from "../../context/AuthContext";
 import { CircularProgress } from "@material-ui/core";
 import axios from 'axios';
+import { useLocation } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
+
 
 
 
 
 
 export default function Login() {
-  
+  const location = useLocation();  // Hook to get the location object
+  const isLoginRoute = location.pathname === '/login';
+  const params = new URLSearchParams(location.search);  // Instantiate with the current query string
 
+  const clientNrFromQuery = params.get('clientNr');
+  const chatbotKeyFromQuery = params.get('chatbotKey');
+  const emailFromQuery = params.get('email');
+
+
+  const [clientNr, setClientNr] = useState(clientNrFromQuery || "");
+  const [chatbotKey, setChatbotKey] = useState(chatbotKeyFromQuery || "");
+  const [email, setEmail] = useState("");
+
+
+  
   const [explorers, setExplorers] = useState([]);
-  const [clientNr, setClientNr] = useState("");
   const [gwokenToken, setGwokenToken] = useState("");
   const [gwokenEnabledChecked, setgwokenEnabledChecked] = useState(false);
   const [E2EEEnabledChecked, setE2EEEnabledChecked] = useState(false);
-  const [chatbotKey, setChatbotKey] = useState("");
   const [explorerSelect, setExplorerSelect] = useState("");
-  const [email, setEmail] = useState("");
+  
   const [password, setPassword] = useState("");
   const { isFetching, dispatch } = useContext(AuthContext);
 
@@ -35,11 +49,13 @@ export default function Login() {
     setE2EEEnabledChecked(e.target.checked);
   };
 
-  const handleClick = (e) => {
+  const history = useHistory();
+
+  const handleClick = async (e) => {
     console.log("CLICKED");
     e.preventDefault();
 
-    loginCall(
+    await loginCall(
       {
         clientNr,
         gwokenToken,
@@ -52,11 +68,19 @@ export default function Login() {
       },
       dispatch
     );
-    //  history.push("/updateuser");
+
+    console.log("ROUTE");
+    console.log(isLoginRoute);
+    if (isLoginRoute)
+    {
+      history.push("/");
+    }
+   
   };
 
 
   useEffect(() => {
+
     const fetchExplorerData = async () => {
       console.log("ENTERED USE EFFECT");
       // Check if all required fields have values before making the API call
@@ -102,6 +126,7 @@ export default function Login() {
                value={clientNr}
                onChange={(e) => setClientNr(e.target.value)}
                className="loginInput"
+               disabled = {false}
             />
           <input
               placeholder="Gwoku Token"

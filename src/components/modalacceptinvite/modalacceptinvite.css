@@ -1,4 +1,4 @@
-.modalinviteDialog {
+.modalacceptinviteDialog {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -12,6 +12,7 @@
     border-radius: 5px;
     width: 400px;
     background: black;
+    color: #03A062;
   }
 
   .modalinvite div {
@@ -20,7 +21,7 @@
   
   
 
-  .top-invite {
+  .top-accept-invite {
     display: flex;
     justify-content: space-between; /* Align items on the same row */
     align-items: center; /* Vertically center items */
@@ -70,29 +71,29 @@
 
   
 
-  .left-invite
+  .left-accept-invite
   {
    font-size: 20;
    font-weight: 200;
    margin-bottom: 10px;
   }
 
-  .close-invite
+  .close-accept-invite
   {
     text-align: right;
     cursor: pointer;
   }
 
-  .invite-label
+  .accept-invite-label
   {
     margin-left: 5px;
   }
 
-
-  .input-invite
+  .input-accept-invite
   {
     margin-bottom: 5px;
     margin-left: 5px;
+    
     width:350px;
     border-radius: 5px;
   }
@@ -115,4 +116,13 @@
     background: black;
   }
   
-  
+  .backgroundContainer {
+    width: 100vw; /* Full width */
+    height: 100vh; /* Full height */
+    background-image: url('/public/assets/invitation-background.svg');
+    background-size: 100% 100%; /* Cover the entire area */
+    background-position: center; /* Center the background image */
+    display: flex;
+    align-items: center; /* Center modal vertically */
+    justify-content: center; /* Center modal horizontally */
+  }

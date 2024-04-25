@@ -1,6 +1,7 @@
 
 
 import Explorer from "./pages/explorer/Explorer";
+import Modalacceptinvite from "./components/modalacceptinvite/Modalacceptinvite";
 import {
   BrowserRouter as Router,
   Switch,
@@ -75,6 +76,12 @@ function App() {
         </Route>
         <Route path="/updateuser">
           <Updateuser />
+        </Route>
+        <Route path="/login">
+          <Login />
+        </Route>
+        <Route path="/acceptinvite">
+          <Modalacceptinvite />
         </Route>
         <Route path="/apiseditor">
         {user ? <ApisEditor 
