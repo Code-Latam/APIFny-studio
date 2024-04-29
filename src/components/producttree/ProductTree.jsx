@@ -286,6 +286,19 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
         setShowModalInvite(true);
         break;
 
+        case 'editUser':
+        // fetch user
+        console.log("FETCH USER");
+        console.log({ clientNr:user.clientNr, chatbotKey: user.chatbotKey, email: value});
+        const responseTargetUser = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/query", { clientNr:user.clientNr, chatbotKey: user.chatbotKey, email: value});
+        const targetuser = responseTargetUser.data;
+
+        history.push({
+          pathname: '/edituser',
+          state: { targetuser: targetuser}
+      });
+        break;
+
         case 'deleteInvite':
           try {
             await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/invitation/delete", { chatbotKey: user.chatbotKey, email: value});
@@ -311,6 +324,34 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
           }
           
             alert(`Invite was successfully deleted`);
+            break  
+
+
+          case 'deleteUser':
+          try {
+            await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/delete", { clientNr: user.clientNr, chatbotKey: user.chatbotKey, email: value});
+          }
+          catch (err) {
+            if (err.response) {
+              // The request was made and the server responded with a status code that is not in the range of 2xx
+              console.error("API Error:", err.response.data);
+              alert(`Failed to delete the user: ${err.response.data}`);
+              break;
+            } else if (err.request) {
+              // The request was made but no response was received
+              console.error("API Error: No response received");
+              alert("Failed to delete the user: No response from server");
+              break
+            } else {
+              // Something happened in setting up the request that triggered an Error
+              console.error("Error:", err.message);
+              alert(`Failed to delete the user: ${err.message}`);
+              break;
+            }
+          
+          }
+          
+            alert(`User was successfully deleted`);
             break  
 
 

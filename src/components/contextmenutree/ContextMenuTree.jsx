@@ -23,7 +23,8 @@ import {
     CreateNewFolder,
     GroupAdd,
     KeyboardArrowRight,
-    Email
+    Email,
+    Edit
   } from "@material-ui/icons";
 
  
@@ -32,8 +33,10 @@ import {
    
     const [explorers, setExplorers] = useState([]);
     const [invites, setInvites] = useState([]);
+    const [users, setUsers] = useState([]);
     const { user } = useContext(AuthContext);
     const [submenu, setSubmenu] = useState({ visible: false, content: null, position: {} });
+    const [submenu2, setSubmenu2] = useState({ visible: false, content: null, position: {} });
 
     useEffect(() => {
       const fetchData = async () => {
@@ -45,13 +48,23 @@ import {
           const listExplorers = response.data.explorers;
           const names = listExplorers.map(explorer => explorer.name);
           setExplorers(names); // Adjust according to your response structure
-
+          // fetch invites to populate submenu
           const inviteResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/invitation/queryall", {
             chatbotKey: user.chatbotKey
 
           });
           const emails = inviteResponse.data.map(invite => invite.email);
                 setInvites(emails);  // Set the state with the array of emails
+
+          const usersResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/queryall", {
+            clientNr: user.clientNr,
+            chatbotKey: user.chatbotKey
+
+          });
+          // const myUsersEmails = usersResponse.data.map(myuser => myuser.email);
+                setUsers(usersResponse.data);  // Set the state with the array of emails
+
+          
         } catch (error) {
           console.error('Failed to fetch data:', error);
         }
@@ -68,18 +81,41 @@ import {
           position: { x: rect.right, y: rect.top }
       });
   };
+
+  const openSubmenu2 = (item, event) => {
+    const rect = event.target.getBoundingClientRect();
+    setSubmenu2({
+        visible: true,
+        content: item,
+        position: { x: rect.right, y: rect.top }
+    });
+};
   
 
     const handleMenuItemClick = (item, value, event) => {
-    // Check if the item has a submenu
-    const itemsWithSubmenu = ["invitations"];
-    if (itemsWithSubmenu.includes(item)) {
-        openSubmenu(item, event);
-    } else {
-        setSubmenu({ visible: false, content: null, position: {} }); // Close any open submenu
-        onSelectTreeMenuItem(item, value);
+      // Check if the item has a submenu
+
+      switch (item) {
+        case 'invitations':
+          // CLOSE ALL other sUBMENUS         
+          setSubmenu2({ visible: false, content: null, position: {} }); // Close any open submenu
+          openSubmenu(item, event);
+            break;
+        case 'users':
+          setSubmenu({ visible: false, content: null, position: {} }); // Close any open submenu
+          openSubmenu2(item, event);
+            break;
+        
+        default:
+          setSubmenu({ visible: false, content: null, position: {} }); // Close any open submenu
+          setSubmenu2({ visible: false, content: null, position: {} }); // Close any open submenu
+          onSelectTreeMenuItem(item, value);
     }
-    };
+ 
+      };
+
+
+
 
     const handleSubmenuItemClick = (submenuItem, value) => {
         setSubmenu({ visible: false, content: null, position: {} }); // Close the submenu
@@ -118,6 +154,26 @@ import {
         }
     };
 
+    const handleDeleteUser = (item, value) =>
+     {
+      if (window.confirm(`Are you sure you want to delete ${value}? The user will be remove from all work spaces.`))
+      {  
+      onSelectTreeMenuItem(item, value);
+      return
+      } 
+       else {
+        // User clicked 'Cancel', do nothing
+        console.log("Deletion cancelled.");
+        return
+        }
+    };
+
+    const handleEditUser = (item, value) =>
+     {   
+      console.log("Hello 1");
+      onSelectTreeMenuItem(item, value);
+      return
+    };
     
     const handleCreateWorkspace = (item, value) => {
       const workspaceName = prompt("Please enter the name of the new workspace:");
@@ -172,6 +228,44 @@ import {
                         <Email className="menu-icon" />
                         <div className="menu-text" >{invite}</div>
                         <Delete className="menu-icon" onClick={(e) => handleDeleteInvite("deleteInvite",invite, e)} style={{ cursor: 'pointer', marginLeft: '10px', fontSize: "14px", color: 'green'}} />
+                      </div>
+                    </React.Fragment>
+                  ))}
+                </div>
+                )}
+              
+              <div className="menu-separator"></div> 
+                <div className="menu-item" onClick={(e) => handleMenuItemClick("users", null, e)}>
+                  <GroupAdd  className="menu-icon" />
+                  <span className="menu-text"> Users  </span>
+                  <KeyboardArrowRight  className="menu-icon"/>
+                </div>
+
+              {submenu2.visible && (
+                <div className="context-menu-sub-tree" style={{ position: "absolute", top: 100, left: 200 }}>
+                    {/* Content based on `submenu.content` */}
+                   
+                    <div className="menu-text-workspaces">Users</div>
+                    {users.map((user, index) => (
+                    <React.Fragment key={index}>
+                      <div className="menu-separator"></div>
+                      <div className="menu-item">
+                        <Email className="menu-icon" />
+                        <div className="menu-text" >{user.email}</div>
+                        {user.username !== "Admin" && (
+                          <>
+                            <Edit 
+                              className="menu-icon" 
+                              onClick={(e) => handleEditUser("editUser", user.email, e)} 
+                              style={{ cursor: 'pointer', marginLeft: '10px', fontSize: "14px", color: 'green'}}
+                            />
+                            <Delete 
+                              className="menu-icon" 
+                              onClick={(e) => handleDeleteUser("deleteUser", user.email, e)} 
+                              style={{ cursor: 'pointer', marginLeft: '10px', fontSize: "14px", color: 'green'}}
+                            />
+                          </>
+                        )}
                       </div>
                     </React.Fragment>
                   ))}

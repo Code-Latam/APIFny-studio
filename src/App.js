@@ -13,6 +13,7 @@ import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
 import React, { useState, useEffect } from 'react';
 import Login from "./pages/login/Login";
+import Updateuseradmin from "./pages/updateuseradmin/Updateuseradmin";
 import Updateuser from "./pages/updateuser/Updateuser";
 import ApisEditor from './components/apisEditor/ApisEditor';
 
@@ -89,6 +90,10 @@ function App() {
           explorerId = {user.explorerId || "1"}
           authorization = {authorization}
           />
+          : <Login />}
+        </Route>
+        <Route path="/edituser">
+        {user ? <Updateuseradmin />
           : <Login />}
         </Route>
       </Switch>
