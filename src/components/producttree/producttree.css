@@ -110,8 +110,8 @@
 
 .context-menu-icon {
   
-  color: white;
-  background: #03A062;
+  color: #03A062;
+  background: transparent;
   cursor: pointer;
   width: 25px;
   height:20px;
@@ -119,8 +119,8 @@
 
 .tree-context-menu-icon {
   
-  color: white;
-  background: #03A062;
+  color: #03A062;
+  background: transparent;
   cursor: pointer;
   width: 25px;
   height:20px;
