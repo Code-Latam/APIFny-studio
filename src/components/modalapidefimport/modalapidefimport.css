@@ -113,5 +113,18 @@
   .leftapiImport{
     color: green;
   }
+
+  .leftapiImport
+  {
+  display: flex;
+  justify-content: space-between; /* Align items on the same row */
+  align-items: center; /* Vertically center items */
+  font-size: 20;
+  font-weight: 200;
+  }
+
+  .leftapiImport svg {
+    transform: translateY(-3px); /* Adjust this value to shift the icon up */
+  }
   
   

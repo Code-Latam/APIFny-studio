@@ -5,6 +5,13 @@ import axios from "axios";
 import Modal from "../modal/Modal";
 import Modallink from "../modallink/Modallink";
 
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css'; 
+import CustomTooltip from '../../tooltips/CustomTooltip';
+import tooltips from '../../tooltips/tooltips';
+
+import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+
 
 
 const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskChange,onLinkChange,onWorkflowChange, graphChange, authorization }) => {
@@ -471,12 +478,25 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
     return (
     <div>
       {(authorization.designer || authorization.owner )&&(
-        <div className="buttons">
+        <div className="graph-buttons">
+         <div>
         <button className = "actionButton" onClick={() => handleAddNode()}>Add Task</button>
+        </div>       
+        <div>
         <button className = "actionButton" onClick={() => handleDeleteNode()}>Remove Task</button>
+        </div>
+        <div>
         <button className = "actionButton" onClick={() => handleAddLink()}>Add Link</button>
-        <button className = "actionButton" onClick={() => handleDeleteLink()}>Remove Link</button>  
+        </div>     
+         <div>
+        <button className = "actionButton" onClick={() => handleDeleteLink()}>Remove Link</button>
+        </div>
+        <div>
         <button className="actionButton" onClick={saveSvgAsFile}>Save Image</button> {/* Button for saving SVG */}
+        </div>    
+        <Tippy content={<CustomTooltip content={tooltips.centerPanel.content} isHtml={tooltips.centerPanel.isHtml} />} placement="right" theme = "terminal" trigger ='click' interactive = "true" >
+        <HelpCenterIcon/>
+        </Tippy>
         </div>
         )}
       <div className= "App">

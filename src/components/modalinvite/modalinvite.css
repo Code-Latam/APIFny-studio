@@ -20,12 +20,7 @@
   
   
 
-  .top-invite {
-    display: flex;
-    justify-content: space-between; /* Align items on the same row */
-    align-items: center; /* Vertically center items */
-    border-bottom: 1px solid #03A062; /* Add a simple border line below */
-  }
+ 
   
   .modal-content {
     display: flex;
@@ -115,4 +110,25 @@
     background: black;
   }
   
+
+  .top-invite {
+    display: flex;
+    justify-content: space-between; /* Align items on the same row */
+    align-items: center; /* Vertically center items */
+    border-bottom: 1px solid #03A062; /* Add a simple border line below */
+  }
+
+  .left-invite
+  {
+  display: flex;
+  justify-content: space-between; /* Align items on the same row */
+  align-items: center; /* Vertically center items */
+  font-size: 20;
+  font-weight: 200;
+  }
+
+  .left-invite svg {
+    transform: translateY(-3px); /* Adjust this value to shift the icon up */
+  }
+
   

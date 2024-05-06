@@ -3,6 +3,14 @@ import axios from 'axios';
 import jsYaml from 'js-yaml';
 import "./exportproducts.css";
 
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css'; 
+import 'tippy.js/themes/material.css';
+import CustomTooltip from '../../tooltips/CustomTooltip';
+import tooltips from '../../tooltips/tooltips';
+
+import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+
 const ExportProduct = ({ clientNr, explorerId, onClose }) => {
 
 
@@ -138,7 +146,12 @@ const ExportProduct = ({ clientNr, explorerId, onClose }) => {
   return (
     <div className = "ExportProductmodalDialog">
     <div className="topapidef">
-          <div className="leftapiImport">Export Products</div>
+         <div className="leftapiExport" >Export Products 
+         <Tippy content={<CustomTooltip content={tooltips.exportProducts.content} isHtml={tooltips.exportProducts.isHtml} />} placement="right" theme = "terminal" maxWidth= "700px"  trigger ='click' interactive = "true" >    
+          <HelpCenterIcon />
+          </Tippy>
+          </div>
+    
           <div className="close" onClick={onClose}>
             &times;
           </div>

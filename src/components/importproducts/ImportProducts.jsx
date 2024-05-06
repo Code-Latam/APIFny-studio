@@ -4,6 +4,13 @@ import jsYaml from 'js-yaml';
 import "./importproducts.css";
 
 
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css'; 
+import 'tippy.js/themes/material.css';
+import CustomTooltip from '../../tooltips/CustomTooltip';
+import tooltips from '../../tooltips/tooltips';
+import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+
   const ImportProduct = ({ targetClientNr, targetExplorerId,onClose }) => {
 
     const existingProducts = new Set();
@@ -143,7 +150,13 @@ import "./importproducts.css";
   return (
     <div className = "ImportProductmodalDialog">
     <div className="topapidef">
-          <div className="leftapiImport">Import Products</div>
+     
+          <div className="leftapiImport" >Import Products
+          <Tippy content={<CustomTooltip content={tooltips.importProducts.content} isHtml={tooltips.importProducts.isHtml} />} placement="right" theme = "terminal" maxWidth= "800px" trigger ='click' interactive="true" >
+          <HelpCenterIcon />
+          </Tippy>
+          </div>
+   
           <div className="close" onClick={onClose}>
             &times;
           </div>

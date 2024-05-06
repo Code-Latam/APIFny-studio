@@ -14,6 +14,12 @@ import Taskview from '../taskview/Taskview';
 import Taskcomplianceview from '../taskcomplianceview/Taskcomplianceview';
 import Linkview from '../linkview/Linkview';
 
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css'; 
+import 'tippy.js/themes/material.css';
+import CustomTooltip from '../../tooltips/CustomTooltip';
+import tooltips from '../../tooltips/tooltips';
+
 import ContextMenu from "../contextmenu/ContextMenu"; 
 import ContextMenuTree from "../contextmenutree/ContextMenuTree"; 
 
@@ -38,6 +44,9 @@ import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+
+import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+
 
 const TreeNode = ({ label, children, isChild, topLevelClick }) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -716,19 +725,25 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
     <div className="main-container">
         <div className="left-container">
           {(authorization.designer || authorization.owner) && (
+          
           <div>
-          <button className="open-modal-button" onClick={openProductModal}>
+          <div className = "left-top-buttons">
+         <button className="open-modal-button" onClick={openProductModal}>
           Add Product
           </button>
           <button className="open-modal-button" onClick={openWorkflowModal}>
           Add Workflow
           </button>
+          <Tippy content={<CustomTooltip content={tooltips.leftPanel.content} isHtml={tooltips.leftPanel.isHtml} />} placement="right" theme = "terminal" trigger ='click' interactive = "true"> 
+          <HelpCenterIcon />
+          </Tippy>
+          </div>
+          <Tippy content={<CustomTooltip content={tooltips.mainMenu.content} isHtml={tooltips.mainMenu.isHtml} />} placement="right" theme = "terminal">
           <div className="tree-icon-right-align">
           <FiMoreVertical className="tree-context-menu-icon" onClick={handleTreeContextMenuClick} />
           </div>
-          <br></br>
-          <button className="open-modal-button" onClick={handleApiEditorClick}>All API's</button>
-      
+          </Tippy>
+          <button  onClick={handleApiEditorClick}>All API's</button>
           <br></br>
           <br></br>
           </div>

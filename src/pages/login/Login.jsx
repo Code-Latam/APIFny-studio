@@ -7,6 +7,11 @@ import axios from 'axios';
 import { useLocation } from "react-router-dom";
 import { useHistory } from 'react-router-dom';
 
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css'; 
+import CustomTooltip from '../../tooltips/CustomTooltip';
+import tooltips from '../../tooltips/tooltips';
+
 
 
 
@@ -120,14 +125,17 @@ export default function Login() {
         </div>
         <div className="loginRight">
           <form className="loginBox" onSubmit={handleClick}>
+          <Tippy content={<CustomTooltip content={tooltips.clientNr.content} isHtml={tooltips.clientNr.isHtml} />} placement="right">
           <input
-               placeholder="Client Number"
+               placeholder="Client"
                required
                value={clientNr}
                onChange={(e) => setClientNr(e.target.value)}
                className="loginInput"
                disabled = {false}
             />
+          </Tippy>
+          <Tippy content={<CustomTooltip content={tooltips.gwoken.content} isHtml={tooltips.gwoken.isHtml} />} placement="right">
           <input
               placeholder="Gwoku Token"
               required
@@ -136,9 +144,10 @@ export default function Login() {
               className="loginInput"
               type = "password"
               defaultValue={process.env.REACT_APP_GWOKUTOKEN}
-              disabled
-            />
            
+            />
+            </Tippy>
+          <Tippy content={<CustomTooltip content={tooltips.chatbotKey.content} isHtml={tooltips.chatbotKey.isHtml} />} placement="right">
           <input
               placeholder="Chatbot Key"
               required
@@ -146,6 +155,8 @@ export default function Login() {
               onChange={(e) => setChatbotKey(e.target.value)}
               className="loginInput"
             />
+          </Tippy>
+          <Tippy content={<CustomTooltip content={tooltips.email.content} isHtml={tooltips.email.isHtml} />} placement="right">        
           <input
               placeholder="Email"
               type="email"
@@ -154,13 +165,15 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+          </Tippy>
+          <Tippy content={<CustomTooltip content={tooltips.workspace.content} isHtml={tooltips.workspace.isHtml} />} placement="right">
           <select
           value={explorerSelect} // Set the value attribute to the selected value
           onChange={(e) => setExplorerSelect(e.target.value)}
           className="loginInput"
           >
           <option value="" disabled>
-            Select Explorer
+            Select Workspace
           </option>
           {explorers.map((explorer) => (
             <option key={explorer.id} value={explorer.id}>
@@ -168,6 +181,8 @@ export default function Login() {
             </option>
           ))}
         </select>
+        </Tippy>
+        <Tippy content={<CustomTooltip content={tooltips.password.content} isHtml={tooltips.password.isHtml} />} placement="right">
             <input
               placeholder="Password"
               type="password"
@@ -177,6 +192,7 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+           </Tippy> 
             { false && (
             <div style={{ display: "flex", flexDirection: "row" }}> 
             <label className="logincheckboxLabel">
@@ -210,7 +226,6 @@ export default function Login() {
                 "Log In"
               )}
             </button>
-            <span className="loginForgot">Forgot Password?</span>
           </form>
         </div>
       </div>

@@ -8,6 +8,14 @@ import htmlToMd from 'html-to-md';
 import ReactMarkdown from 'react-markdown';
 import { renderToString } from 'react-dom/server';
 
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css'; 
+import 'tippy.js/themes/material.css';
+import CustomTooltip from '../../tooltips/CustomTooltip';
+import tooltips from '../../tooltips/tooltips';
+import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+
+
 function Productcomplianceview({ clientNr, explorerId, productName, authorization, updateTreeView }) {
   const [product, setProduct] = useState(null);
 
@@ -100,13 +108,17 @@ function Productcomplianceview({ clientNr, explorerId, productName, authorizatio
       <div>
         {product ? (
           <div>
-            <div className = "viewButtons">
+         
+        <div className = "left-top-buttons-productview">
         <button className='editorButton' onClick={toggleDisplayMode}>
           {isRichTextMode ? 'Use Markdown Editor' : 'Use Rich Text Editor'}
         </button>
       {(authorization.designer || authorization.owner) && (
                 <button className = "actionbutton" onClick={handleUpdate}>Update</button>
             )}
+      <Tippy content={<CustomTooltip content={tooltips.productComplianceDescription.content} isHtml={tooltips.productComplianceDescription.isHtml} />} placement="right" theme = "terminal" trigger ='click' interactive = "true" >      
+      <HelpCenterIcon/>
+      </Tippy>
       </div>
             <div>
               <label htmlFor="productName">Product Name</label>

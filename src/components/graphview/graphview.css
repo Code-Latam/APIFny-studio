@@ -42,9 +42,16 @@
   {
     margin-right: 5px;
   }
-  .buttons
+  .graph-buttons
   {
+    display: flex;
+    justify-content: left; /* Align items horizontally in the center */
+    align-items: center; /* Align items vertically in the center */
     margin-left: 0px;
     margin-top: 10px;
     
+  }
+
+  .graph-buttons svg {
+    transform: translateY(-3px); /* Adjust this value to shift the icon up */
   }

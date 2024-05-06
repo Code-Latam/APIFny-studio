@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from "../../context/AuthContext";
 import './contextmenutree.css';
+
+import HelpCenterIcon from '@mui/icons-material/HelpCenter';
 import {
     RssFeed,
     Chat,
@@ -27,6 +29,11 @@ import {
     Edit
   } from "@material-ui/icons";
 
+  import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css'; 
+import 'tippy.js/themes/material.css';
+import CustomTooltip from '../../tooltips/CustomTooltip';
+import tooltips from '../../tooltips/tooltips';
  
 
   const ContextMenuTree = ({onSelectTreeMenuItem, position }) => {
@@ -216,8 +223,15 @@ import {
                 {submenu.visible && (
                 <div className="context-menu-sub-tree" style={{ position: "absolute", top: 60, left: 200 }}>
                     {/* Content based on `submenu.content` */}
+                    <div className="menu-text-invitation">
+                    <Tippy content={<CustomTooltip content={tooltips.invitation.content} isHtml={tooltips.invitation.isHtml} />} placement="right" theme = "terminal" maxWidth= "700px"  trigger ='click' interactive = "true" >
+                    <HelpCenterIcon/>
+                    </Tippy>
+                    </div>
+                    <div className="menu-separator"></div>
                     <div className="menu-item" onClick={() => handleSendNewInvitation("SendNewInvitation", null)}>
                     <div className="menu-text-send">Send new invitation</div>
+                
                     </div>
                     <div className="menu-separator"></div> 
                     <div className="menu-text-workspaces">Invitations Pending</div>
@@ -243,9 +257,13 @@ import {
 
               {submenu2.visible && (
                 <div className="context-menu-sub-tree" style={{ position: "absolute", top: 100, left: 200 }}>
-                    {/* Content based on `submenu.content` */}
-                   
-                    <div className="menu-text-workspaces">Users</div>
+                    {/* Content based on `submenu.content` */} 
+                    <div className="menu-text-user">
+                    <Tippy content={<CustomTooltip content={tooltips.usersroles.content} isHtml={tooltips.usersroles.isHtml} />} placement="right" theme = "terminal" maxWidth= "700px"  trigger ='click' interactive = "true" >
+                    <HelpCenterIcon/>
+                    </Tippy>
+                    </div>
+                    
                     {users.map((user, index) => (
                     <React.Fragment key={index}>
                       <div className="menu-separator"></div>
@@ -254,16 +272,20 @@ import {
                         <div className="menu-text" >{user.email}</div>
                         {user.username !== "Admin" && (
                           <>
+                            <Tippy content={<CustomTooltip content={tooltips.editUser.content} isHtml={tooltips.editUser.isHtml} />} placement="right" theme = "terminal"  interactive = "true">
                             <Edit 
                               className="menu-icon" 
                               onClick={(e) => handleEditUser("editUser", user.email, e)} 
                               style={{ cursor: 'pointer', marginLeft: '10px', fontSize: "14px", color: 'green'}}
                             />
+                            </Tippy>
+                            <Tippy content={<CustomTooltip content={tooltips.deleteUser.content} isHtml={tooltips.deleteUser.isHtml} />} placement="right" theme = "terminal"  interactive = "true">
                             <Delete 
                               className="menu-icon" 
                               onClick={(e) => handleDeleteUser("deleteUser", user.email, e)} 
                               style={{ cursor: 'pointer', marginLeft: '10px', fontSize: "14px", color: 'green'}}
                             />
+                            </Tippy>
                           </>
                         )}
                       </div>
@@ -300,7 +322,9 @@ import {
         )}
       
       <div className="menu-separator"></div>
-      <div className="menu-text-workspaces">Workspaces</div>
+      <Tippy content={<CustomTooltip content={tooltips.workspaces.content} isHtml={tooltips.workspaces.isHtml} />} placement="right" theme = "terminal"   trigger ='click' interactive = "true"> 
+      <div className="menu-text-workspaces">Workspaces(?)</div>
+      </Tippy>
       <div className="menu-separator"></div>
         <div className="menu-item" onClick={() => handleCreateWorkspace("createWorkspace",null)}>
           <CreateNewFolder className="menu-icon" />
@@ -314,7 +338,9 @@ import {
           <div className="menu-item">
             <Bookmark className="menu-icon" />
             <span className="menu-text" onClick={(e) => handleMenuItemClick("explorer", explorer, e)}>{explorer}</span>
+            <Tippy content={<CustomTooltip content={tooltips.deleteWorkspace.content} isHtml={tooltips.deleteWorkspace.isHtml} />} placement="right" theme = "terminal"  interactive = "true"> 
             <Delete className="menu-icon" onClick={(e) => handleDeleteExplorer("deleteExplorer",explorer, e)} style={{ cursor: 'pointer', marginLeft: '10px', fontSize: "14px", color: 'green'}} />
+            </Tippy>
           </div>
         </React.Fragment>
       ))}

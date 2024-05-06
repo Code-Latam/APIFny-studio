@@ -4,6 +4,14 @@ import "./modalinvite.css";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css'; 
+import 'tippy.js/themes/material.css';
+import CustomTooltip from '../../tooltips/CustomTooltip';
+import tooltips from '../../tooltips/tooltips';
+
+import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+
 function Modalinvite({ clientNr, explorerId, onClose }) {
 
   const { user } = useContext(AuthContext);
@@ -76,7 +84,15 @@ function Modalinvite({ clientNr, explorerId, onClose }) {
     <div className="modalinviteDialog">
       <div>
         <div className="top-invite">
-          <div className="left-invite">Send Invitation</div>
+
+         <div className="left-invite">
+          Send Invitation 
+          <Tippy content={<CustomTooltip content={tooltips.invitation.content} isHtml={tooltips.invitation.isHtml} />} placement="right" theme = "terminal" trigger ='click' interactive = "true" >    
+          <HelpCenterIcon/>
+          </Tippy>
+          </div>
+         
+         
           <div className="close-invite" onClick={onClose}>
             &times;
           </div>

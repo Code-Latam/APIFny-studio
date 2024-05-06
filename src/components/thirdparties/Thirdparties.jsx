@@ -2,6 +2,13 @@ import React, { useState, useEffect } from 'react';
 import "./thirdparties.css";
 import axios from "axios";
 
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css'; 
+import 'tippy.js/themes/material.css';
+import CustomTooltip from '../../tooltips/CustomTooltip';
+import tooltips from '../../tooltips/tooltips';
+import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+
 // CRUDTableComponent.jsx
 
 
@@ -92,6 +99,7 @@ const Thirdparties = ({clientNr, explorerId, onClose}) => {
 
   return (
     <div className="crud-table-container">
+    <div className = "thirdparty-table-container">
       <table>
         <thead>
           <tr>
@@ -112,6 +120,10 @@ const Thirdparties = ({clientNr, explorerId, onClose}) => {
           ))}
         </tbody>
       </table>
+      <Tippy content={<CustomTooltip content={tooltips.thirdparties.content} isHtml={tooltips.thirdparties.isHtml} />} placement="right" theme = "terminal" trigger ='click' interactive = "true" >
+      <HelpCenterIcon/>
+      </Tippy>
+      </div>
 
       <div className="form-container">
         <form>

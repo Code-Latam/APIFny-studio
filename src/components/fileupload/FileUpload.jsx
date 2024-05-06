@@ -4,6 +4,12 @@ import "./fileupload.css";
 import { AuthContext } from "../../context/AuthContext";
 import { encodebody, getDecodedBody } from "../../utils/utils.js";
 
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css'; 
+import 'tippy.js/themes/material.css';
+import CustomTooltip from '../../tooltips/CustomTooltip';
+import tooltips from '../../tooltips/tooltips';
+
 const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
 function FileUpload({clientNr, explorerId}) {

@@ -3,6 +3,14 @@ import axios from "axios";
 import "./modalapidefimport.css";
 import FileUpload from '../fileupload/FileUpload';
 
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css'; 
+import 'tippy.js/themes/material.css';
+import CustomTooltip from '../../tooltips/CustomTooltip';
+import tooltips from '../../tooltips/tooltips';
+
+import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+
 function Modalapidefimport({ clientNr, explorerId,onClose }) {
 
   const [products, setProducts] = useState([]);
@@ -96,7 +104,12 @@ function Modalapidefimport({ clientNr, explorerId,onClose }) {
     <div className="modalDialog">
       <div>
         <div className="topapidef">
-          <div className="leftapiImport">Import Api Definitions</div>
+            <div className="leftapiImport">Import Api Definitions
+            <Tippy content={<CustomTooltip content={tooltips.importApiDefinitions.content} isHtml={tooltips.importApiDefinitions.isHtml} />} placement="right" theme = "terminal" maxWidth= "600px" trigger ='click' interactive='true' >
+          <HelpCenterIcon />
+          </Tippy>
+          </div>
+        
           <div className="close" onClick={onClose}>
             &times;
           </div>

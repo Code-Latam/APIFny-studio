@@ -166,6 +166,20 @@ button {
 
 }
 
+.left-top-buttons
+  {
+    display: flex;
+    justify-content: left; /* Align items horizontally in the center */
+    align-items: center; /* Align items vertically in the center */
+    margin-left: 0px;
+    margin-top: 0px;
+    
+  }
+
+  .left-top-buttons svg {
+    transform: translateY(-3px); /* Adjust this value to shift the icon up */
+  }
+
 
 
 

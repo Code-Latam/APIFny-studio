@@ -8,6 +8,13 @@ import htmlToMd from 'html-to-md';
 import ReactMarkdown from 'react-markdown';
 import { renderToString } from 'react-dom/server';
 
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css'; 
+import 'tippy.js/themes/material.css';
+import CustomTooltip from '../../tooltips/CustomTooltip';
+import tooltips from '../../tooltips/tooltips';
+import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+
 function Productview({ clientNr, explorerId, productName, authorization, updateTreeView }) {
   const [product, setProduct] = useState(null);
 
@@ -130,11 +137,11 @@ function Productview({ clientNr, explorerId, productName, authorization, updateT
 
   return (
     <div className="Productview">
-      <div>
+      <div >
         
         {product ? (
-          <div>
-            <div >
+          <div >
+        <div className = 'left-top-buttons-productview' >
         <button className='editorButton' onClick={toggleDisplayMode}>
           {isRichTextMode ? 'Use Markdown Editor' : 'Use Rich Text Editor'}
         </button>
@@ -144,6 +151,9 @@ function Productview({ clientNr, explorerId, productName, authorization, updateT
       {(authorization.designer || authorization.owner) && (
                 <button className = "actionbutton" onClick={handleDelete}>Remove</button>
             )}
+      <Tippy content={<CustomTooltip content={tooltips.productDescription.content} isHtml={tooltips.productDescription.isHtml} />} placement="right" theme = "terminal" trigger ='click' interactive = "true" >      
+      <HelpCenterIcon/>
+      </Tippy>
       </div>
             <div className = "input-container">
               <label className = "input-label" htmlFor="productName">Product Name:</label>

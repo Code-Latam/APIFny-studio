@@ -94,3 +94,16 @@
     color: black;
     border-radius: 5px;
   }
+
+  .thirdparty-table-container
+  {
+    display: flex;
+    justify-content: left; /* Align items horizontally in the center */
+    align-items:normal; /* Align items vertically in the center */
+    
+    
+  }
+
+  .thirdparty-table-container svg {
+    transform: translateY(-3px); /* Adjust this value to shift the icon up */
+  }

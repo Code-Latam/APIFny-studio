@@ -72,6 +72,16 @@
     background-color: #f0f0f0;
   }
 
+  .context-menu-sub-tree div {
+    padding: 6px 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .context-menu-sub-tree div:hover {
+    background-color: #f0f0f0;
+  }
+
   /* CSS */
 .menu-text-workspaces {
   text-align: center; /* Centers the text horizontally within the div */
@@ -80,10 +90,38 @@
   font-weight: bold; 
 }
 
+.menu-text-user
+{
+display: flex;
+font-size: 14px;
+color: black;
+font-weight: bold; 
+justify-content: right; /* Align items on the same row */
+align-items: center; /* Vertically center items */
+}
+
+.menu-text-user svg {
+  transform: translateY(-3px); /* Adjust this value to shift the icon up */
+}
+
+.menu-text-invitation
+{
+display: flex;
+font-size: 14px;
+color: black;
+font-weight: bold; 
+justify-content: right; /* Align items on the same row */
+align-items: center; /* Vertically center items */
+}
+
+.menu-text-invitation svg {
+  transform: translateY(-3px); /* Adjust this value to shift the icon up */
+}
+
 .menu-text-send {
   text-align: center; /* Centers the text horizontally within the div */
   font-size: 14px; /* Adjust the font size of the text */
-  color: green;
+ 
 }
 
   
