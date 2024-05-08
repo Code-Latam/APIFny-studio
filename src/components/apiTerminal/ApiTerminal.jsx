@@ -7,6 +7,13 @@ import {HeadersGlobalAdd, requestBodyGlobalAdd, addAuthToHeaders, addAuthToReque
 import { ReactTerminal } from "react-terminal";
 import ReactJson from 'react-json-view';
 
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css'; 
+import 'tippy.js/themes/material.css';
+import CustomTooltip from '../../tooltips/CustomTooltip';
+import tooltips from '../../tooltips/tooltips';
+import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+
 const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,apiName }) => {
   const [gwoken, setGwoken] = useState('saasasasas');
   const [chatbotKey, setChatbotKey] = useState('chatbot199');
@@ -264,9 +271,12 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
 
   return (
     <div className="container">
-      <div className="terminalbuttons">
+      <div className = "left-top-buttons-productview">
         <button className="save-button" onClick={handleSave}>Save</button>
         <button className="restore-button" onClick={handleRestoreDefault}>Restore Default</button>
+        <Tippy content={<CustomTooltip content={tooltips.taskComplianceDescription.content} isHtml={tooltips.taskComplianceDescription.isHtml} />} placement="right" theme = "terminal" trigger ='click' interactive = "true" >      
+        <HelpCenterIcon/>
+        </Tippy>
       </div>
       <div className="page">
         <div className="curl-panel">

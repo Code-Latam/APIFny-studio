@@ -4,16 +4,8 @@
     padding-left: 20px;
     padding-right: 20px;
     color: #03A062;
-   
   }
 
-  .Workflowviewtop {
-    font-size: 50;
-    display: flex;
-    justify-content: space-between; /* Align items on the same row */
-    align-items: center; /* Vertically center items */
-  }
-  
   .input-container {
     display: flex;
     align-items: center;
@@ -73,4 +65,17 @@
     display: inline-block;
   }
   
+  .left-top-buttons-workflowview
+  {
+    display: flex;
+    justify-content: left; /* Align items horizontally in the center */
+    align-items: center; /* Align items vertically in the center */
+    margin-left: 0px;
+    margin-top: 0px;
+    
+  }
+
+  .left-top-buttons-workflowview svg {
+    transform: translateY(-3px); /* Adjust this value to shift the icon up */
+  }
   

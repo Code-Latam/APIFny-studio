@@ -5,6 +5,13 @@ import JSONInput from 'react-json-editor-ajrm';
 import locale from 'react-json-editor-ajrm/locale/en';
 import Editor from '@monaco-editor/react';
 
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css'; 
+import 'tippy.js/themes/material.css';
+import CustomTooltip from '../../tooltips/CustomTooltip';
+import tooltips from '../../tooltips/tooltips';
+import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+
 function Linkview({ clientNr, explorerId, workflowName, mylink,authorization,updateGraphView }) {
 
   const [link, setLink] = useState(mylink);
@@ -213,8 +220,11 @@ function Linkview({ clientNr, explorerId, workflowName, mylink,authorization,upd
         {link ? (
           <div>
             {(authorization.designer || authorization.owner) && (
-              <div>
+              <div className = "left-top-buttons-productview">
                 <button onClick={handleUpdate}>Update</button>
+                <Tippy content={<CustomTooltip content={tooltips.linkView.content} isHtml={tooltips.linkView.isHtml} />} placement="right" theme = "terminal" trigger ='click' interactive = "true" >      
+                <HelpCenterIcon/>
+                </Tippy>
               </div>
             )}
             <br></br>

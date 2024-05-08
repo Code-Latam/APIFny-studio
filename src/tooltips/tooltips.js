@@ -422,7 +422,7 @@ const tooltips = {
         <p>Additional functions can be activated using the context icon in the top right of this panel:</p>
         <ul>
             <li><strong>Export to Open API:</strong> Exports all APIs associated with the product, including those in workflows. These can then be imported into tools like Postman or Swagger, or any third-party product that supports Open API specification files.</li>
-            <li><strong>Compliance:</strong> Activates a dialogue to edit compliance information or directives applicable to the product, which can also be set at the workflow and task levels.</li>
+            <li><strong>Compliance:</strong> Activates a dialogue to edit compliance information or directives applicable to the product. Compliance information can also be set at the workflow and task levels.</li>
         </ul>
     </section>`,
         isHtml: true
@@ -446,9 +446,162 @@ const tooltips = {
         <p>Additional functions can be activated using the context icon in the top right of the this panel:</p>
         <ul>
             <li><strong>Export to Open API:</strong> Exports all APIs associated with the product, including those in workflows. These can then be imported into tools like Postman or Swagger, or any third-party product that supports Open API specification files.</li>
-            <li><strong>Description:</strong> Activates a dialogue to edit general product information that is not compliance related, General information can also be set at the workflow and task levels.</li>
+            <li><strong>Description:</strong> Activates a dialogue to edit general product information that is not compliance related. General information can also be set at the workflow and task levels.</li>
         </ul>
     </section>`,
+        isHtml: true
+        },
+    // Workflow screens
+    workflowDescription: {
+        content: `<section>
+        <h3 style="margin-bottom: 10px; margin-top: 10px";>Product Selection and Display</h3>
+        <p>When a workflow is clicked in the tree within the left panel or the "Description" option is selected in the context menu of this panel, its properties are displayed for viewing and editing. Editing capabilities are only allowed for users with owner or designer rights.</p>
+    </section>
+
+    <section>
+    <h3 style="margin-bottom: 10px; margin-top: 10px";>Editing Product Properties</h3>
+        <p>Initially, the description option is selected, displaying editable fields:</p>
+        <ul>
+            <li><strong>Status:</strong> Set this to either <em>public</em> or <em>private</em>. If set to <em>private</em>, only designers and owners can view the workflow. If set to <em>public</em>, the workflow is visible to all users in the product tree.</li>
+            <li><strong>Sequence:</strong> A numeric value that determines the workflows's position in the product tree. For example, a sequence of 1 positions the workflow at the beginning of the workflow list in the product.</li>
+            <li><strong>Description:</strong> Use the rich text editor to modify the workflow's description. This editor supports links, block text, and other rich text features. Toggle to the markdown editor using the markdown button if preferred.</li>
+        </ul>
+    </section>
+
+    <section>
+    <h3 style="margin-bottom: 10px; margin-top: 10px";>Additional Options</h3>
+        <p>Additional functions can be activated using the context icon in the top right of this panel:</p>
+        <ul>
+            <li><strong>Run Workflow:</strong>This option will run all APIS associated with the workflow in sequence. Instructions are available at the interface.</li>
+            <li><strong>Javascript Code:</strong>This option will display Javascript code that can potentially be used to run the API calls in the workflow using an IDE.</li>
+            <li><strong>Python Code:</strong>This option will display Python code that can potentially be used to run the API calls in the workflow using an IDE.</li>
+            <li><strong>Export to Open API:</strong> Exports all APIs associated with the workflow. These can then be imported into tools like Postman or Swagger, or any third-party product that supports Open API specification files.</li>
+            <li><strong>Compliance:</strong> Activates a dialogue to edit compliance information or directives applicable to the workflow. Compliance information can also be set at the product and task levels.</li>
+        </ul>
+    </section>`,
+        isHtml: true
+        },
+    workflowComplianceDescription: {
+        content: `<section>
+        <h3 style="margin-bottom: 10px; margin-top: 10px";>Product Selection and Display</h3>
+        <p>When the "Compliance" option is selected in the context menu of this panel, its properties are displayed for viewing and editing. Editing capabilities are only allowed for users with owner or designer rights.</p>
+    </section>
+
+    <section>
+    <h3 style="margin-bottom: 10px; margin-top: 10px";>Editing Compliance Product Properties</h3>
+        <p>Initially, the editor will be displayed:</p>
+        <ul>
+            <li><strong>Compliance Description:</strong> Use the rich text editor to modify the product's compliance description. This editor supports links, block text, and other rich text features. Toggle to the markdown editor using the markdown button if preferred.</li>
+        </ul>
+    </section>
+
+    <section>
+    <h3 style="margin-bottom: 10px; margin-top: 10px";>Additional Options</h3>
+        <p>Additional functions can be activated using the context icon in the top right of this panel:</p>
+        <ul>
+                 <li><strong>Export to Open API:</strong> Exports all APIs associated with the workflow. These can then be imported into tools like Postman or Swagger, or any third-party product that supports Open API specification files.</li>
+            <li><strong>Description:</strong> Activates a dialogue to edit general information applicable to the workflow. A general description can also be set at the product and task levels.</li>
+        </ul>
+    </section>`,
+        isHtml: true
+        },
+    taskDescription: {
+        content: `<section>
+        <h3 style="margin-bottom: 10px; margin-top: 10px";>Product Selection and Display</h3>
+        <p>When a task is clicked in the graph within the central panel or the "Description" option is selected in the context menu of this panel, its properties are displayed for viewing and editing. Editing capabilities are only allowed for users with owner or designer rights.</p>
+    </section>
+
+    <section>
+    <h3 style="margin-bottom: 10px; margin-top: 10px";>Editing Product Properties</h3>
+        <p>Initially, the description option is selected, displaying editable fields:</p>
+        <ul>
+            <li><strong>Task Name:</strong> Initiall the system generates a unique identifier for the name of the task, but the user can change this name to a more meaningful one.</li>
+            <li><strong>Task Type:</strong> The user can set a task as type "normal" or "API". If task type API is selected then the sytem will treat the Task as an API call, subsequently the user can select the API to be called from the "Implements" field. The API definition must have been previously created using the All API's button, or by importing the API definition.</li>
+            <li><strong>Node Type:</strong> The user may impart additional meaning to the task by choosing the shape of the node. The shape can be a circle, a diamond or any shape that is available in the dropdown list.</li>
+        </ul>
+    </section>
+
+    <section>
+    <h3 style="margin-bottom: 10px; margin-top: 10px";>Additional Options</h3>
+        <p>Additional functions can be activated using the context icon in the top right of this panel:</p>
+        <ul>
+            <li><strong>Curl:</strong>This option is only available if the task type is an API, and when activated will enable the user to call the API directly using the default or custom parameters.</li>
+            <li><strong>Javascript Code:</strong>This option is only available if the task type is an API, and when activated will display Javascript code that can potentially be used to run the API call using an IDE.</li>
+            <li><strong>Python Code:</strong>This option is only available if the task type is an API, and when activated will display Python code that can potentially be used to run the API call using an IDE.</li>
+            <li><strong>Export to Open API:</strong> This option is only available if the task type is an API, and when activated will export the API definition associated with the task. The definition can then be imported into tools like Postman or Swagger, or any third-party product that supports Open API specification files.</li>
+            <li><strong>Compliance:</strong> Activates a dialogue to edit compliance information or directives applicable to the task. Compliance information can also be set at the product and workflow levels.</li>
+        </ul>
+    </section>`,
+        isHtml: true
+        },
+    taskComplianceDescription: {
+        content: `<section>
+        <h3 style="margin-bottom: 10px; margin-top: 10px";>Product Selection and Display</h3>
+        <p>When the "Compliance Description" option is selected in the context menu of this panel, its properties are displayed for viewing and editing. Editing capabilities are only allowed for users with owner or designer rights.</p>
+    </section>
+
+    <section>
+    <h3 style="margin-bottom: 10px; margin-top: 10px";>Editing Compliance Product Properties</h3>
+        <p>Initially, the editor will be displayed:</p>
+        <ul>
+            <li><strong>Compliance Description:</strong> Use the rich text editor to modify the task's compliance description. This editor supports links, block text, and other rich text features. Toggle to the markdown editor using the markdown button if preferred.</li>
+        </ul>
+    </section>
+
+    <section>
+    <h3 style="margin-bottom: 10px; margin-top: 10px";>Additional Options</h3>
+        <p>Additional functions can be activated using the context icon in the top right of this panel:</p>
+        <ul>
+            <li><strong>Curl:</strong>This option is only available if the task type is an API, and when activated will enable the user to call the API directly using the default or custom parameters.</li>
+            <li><strong>Javascript Code:</strong>This option is only available if the task type is an API, and when activated will display Javascript code that can potentially be used to run the API call using an IDE.</li>
+            <li><strong>Python Code:</strong>This option is only available if the task type is an API, and when activated will display Python code that can potentially be used to run the API call using an IDE.</li>
+            <li><strong>Export to Open API:</strong> This option is only available if the task type is an API, and when activated will export the API definition associated with the task. The definition can then be imported into tools like Postman or Swagger, or any third-party product that supports Open API specification files.</li>
+            <li><strong>Description:</strong> Activates a dialogue to edit general information applicable to the task. General information can also be set at the product and workflow levels.</li>
+        </ul>
+    </section>`,
+        isHtml: true
+        },
+    linkView: {
+        content: `<h3 style="margin-bottom: 10px; margin-top: 10px";>Overview</h3>
+        <p>The Linkview interface allows users with appropriate permissions (designers or owners) to update links, manage parameters, and configure link types between tasks in a workflow.</p>
+    
+        <h3 style="margin-bottom: 10px; margin-top: 10px";>Updating a Link</h3>
+        <p>To update a link's properties:</p>
+        <ol>
+            <li>Ensure that you have selected a workflow and a link within that workflow.</li>
+            <li>If authorized, use the 'Update' button to save changes made to the link.</li>
+        </ol>
+    
+        <h3 style="margin-bottom: 10px; margin-top: 10px";>Managing Link Parameters</h3>
+        <p>Link parameters define the data that is passed between tasks. These include:</p>
+        <ul>
+            <li><strong>Path Parameters:</strong> These parameters are part of the URL path of the API call.</li>
+            <li><strong>Query Parameters:</strong> These parameters are appended to the URL of the API call.</li>
+            <li><strong>Request Body Parameters:</strong> These parameters are included in the body of the POST request.</li>
+        </ul>
+        <p>To edit any of these parameters, use the corresponding JSON editor provided in the interface.</p>
+    
+        <h3 style="margin-bottom: 10px; margin-top: 10px";>Link Type Configuration</h3>
+        <p>The type of link can be selected from the options provided, which affect the visual representation and behavior of the link in the workflow graph:</p>
+        <ul>
+            <li>STRAIGHT</li>
+            <li>CURVE_SMOOTH</li>
+            <li>CURVE_FULL</li>
+        </ul>
+    
+        <h3 style="margin-bottom: 10px; margin-top: 10px";>Changing Source and Target Tasks</h3>
+        <p>If you need to change the source and target tasks of a link, you must delete the current link and create a new one. Use the 'Remove Link' and 'Add Link' buttons located in the central panel to perform these actions.</p>
+    
+        <h3 style="margin-bottom: 10px; margin-top: 10px";>General Usage Tips</h3>
+        <ul>
+            <li>Changes in the interface will not be saved until the 'Update' button is clicked.</li>
+            <li>Ensure all JSON fields are valid before attempting to save changes.</li>
+            <li>Use the source and target fields to understand the direction and endpoints of the link.</li>
+        </ul>
+    
+        <h3 style="margin-bottom: 10px; margin-top: 10px";>Important Considerations</h3>
+        <p>Always ensure that changes made are necessary and accurate, as modifying link parameters and types can significantly impact the behavior of the workflow.</p>
+    `,
         isHtml: true
         },
   };

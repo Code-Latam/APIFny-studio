@@ -7,6 +7,13 @@ import htmlToMd from 'html-to-md';
 import ReactMarkdown from 'react-markdown';
 import { renderToString } from 'react-dom/server';
 
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css'; 
+import 'tippy.js/themes/material.css';
+import CustomTooltip from '../../tooltips/CustomTooltip';
+import tooltips from '../../tooltips/tooltips';
+import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+
 function Taskcomplianceview({ clientNr, explorerId, workflowName, taskId, authorization,updateGraphView }) {
 
   
@@ -110,7 +117,7 @@ const handleTextareaChange = (e) => {
               
               {task ? (
                 <div>
-                  <div>
+                  <div className = "left-top-buttons-productview">
             {(authorization.designer || authorization.owner) && (
               <button className='editorButton' onClick={toggleDisplayMode}>
                 {isRichTextMode ? 'Use Markdown Editor' : 'Use Rich Text Editor'}
@@ -121,6 +128,9 @@ const handleTextareaChange = (e) => {
                       <button className = 'editorButton' onClick={handleUpdate}>Update</button>
                   
                   )}
+            <Tippy content={<CustomTooltip content={tooltips.taskComplianceDescription.content} isHtml={tooltips.taskComplianceDescription.isHtml} />} placement="right" theme = "terminal" trigger ='click' interactive = "true" >      
+            <HelpCenterIcon/>
+            </Tippy>
             </div>
             <div>
               <label htmlFor="taskName">Task Name</label>
