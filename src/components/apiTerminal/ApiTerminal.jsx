@@ -274,7 +274,7 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
       <div className = "left-top-buttons-productview">
         <button className="save-button" onClick={handleSave}>Save</button>
         <button className="restore-button" onClick={handleRestoreDefault}>Restore Default</button>
-        <Tippy content={<CustomTooltip content={tooltips.taskComplianceDescription.content} isHtml={tooltips.taskComplianceDescription.isHtml} />} placement="right" theme = "terminal" trigger ='click' interactive = "true" >      
+        <Tippy content={<CustomTooltip content={tooltips.curlExecution.content} isHtml={tooltips.curlExecution.isHtml} />} placement="right" theme = "terminal" trigger ='click' interactive = "true" >      
         <HelpCenterIcon/>
         </Tippy>
       </div>

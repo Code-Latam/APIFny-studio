@@ -48,14 +48,18 @@ const tooltips = {
         isHtml: false
     },
     leftPanel: {
-        content: `<h3 style="margin-bottom: 10px; margin-top: 10px";>Adding Products</h3>
+        content: `
+        <p>The product tree panel is used to manage products and workflows. It supports the addition, removal and editing of products and workflows. A product can be seen as as a collection of workflows. A workflow can be seen as a collection of tasks that follow each other in a certain sequence. Our workflows are organized as Directed Acyclic Graphs (DAG). A DAG is a directed graph that has no cycles. This means it consists of nodes (in our case tasks) and links, with each node directed from one node to another, by the link. You cannot traverse the graph and return to the same node by following the directions of the links.
+        In simpler terms, a DAG is a way to represent relationships or dependencies where everything moves in one direction and there are no loops—once you move forward, you can’t go back to where you started within the graph.
+        </p> 
+        <h3 style="margin-bottom: 10px; margin-top: 10px";>Adding Products</h3>
         <p>Use the Add Product button to add products. This is the first step needed to create a workflow of APIs. A product can have multiple workflows. You can start documenting your product immediately at creation or later when you have more information. Products that are added will appear automatically in this panel.</p>
     </section>
 
     <section>
     <h3 style="margin-bottom: 10px; margin-top: 10px";>Adding Workflows</h3>
         <div>
-            <strong>Use the Add Workflow button to add workflows. You first need a product before you can add workflows. Workflows that are added will appear automatically in this panel.</strong>
+            Use the Add Workflow button to add workflows. You first need a product before you can add workflows. Workflows that are added will appear automatically in this panel.
             <br>
             <strong>Characteristics:</strong>
             <ul>
@@ -69,7 +73,7 @@ const tooltips = {
     <section>
     <h3 style="margin-bottom: 10px; margin-top: 10px";>Adding APIs</h3>
         <div>
-            <strong>Use the All API's button to manually add API calls that you will use in your workflows.</strong>
+            Use the All API's button to manually add API calls that you will use in your workflows.
             <br>
             <ul>
                 <li>You can also use the 'Import API Definition' option in the context Menu of this panel to import API definitions from POSTMAN or OpenAPI (SWAGGER).</li>
@@ -82,9 +86,10 @@ const tooltips = {
     // Center Panel Help
     centerPanel: {
         content: `<section>
+        <p>The workflow graph panel is used to detail out the workflow in a product. You must have previously created a product and a workflow in the product tree panel. In this panel you can add tasks (nodes) and links to further detail out the workflow. Please remember your workflows must be organized as Directed Acyclic Graphs (DAGs). A DAG is a directed graph that has no cycles. </p>
         <h3 style="margin-bottom: 10px; margin-top: 10px";>Adding Tasks to Workflow</h3>
         <div>
-            <strong>Use the Add Task button to add tasks to the graph area below.</strong>
+            <strong>Use the Add Task button to add tasks to the workflow graph area.</strong>
             <br>
             <ul>
                 <li>Select a workflow before trying to add a task. Once selected, you can add multiple tasks.</li>
@@ -127,7 +132,7 @@ const tooltips = {
     <section>
     <h3 style="margin-bottom: 10px; margin-top: 10px";>Removing Links from Workflow</h3>
         <div>
-            <strong>Use the Reomve Link button to remove links from the graph area below.</strong>
+            <strong>Use the Remove Link button to remove links from the graph area below.</strong>
             <br>
             <ul>
                 <li>Select a link before trying to remove it.</li>
@@ -404,7 +409,7 @@ const tooltips = {
     productDescription: {
         content: `<section>
         <h3 style="margin-bottom: 10px; margin-top: 10px";>Product Selection and Display</h3>
-        <p>When a product is clicked in the tree within the left panel or the "Description" option is selected in the context menu of this panel, its properties are displayed for viewing and editing. Editing capabilities are only allowed for users with owner or designer rights.</p>
+        <p>When a product is clicked in the tree within the products-tree-panel or the "Description" option is selected in the context menu of this panel, its properties are displayed for viewing and editing. Editing capabilities are only allowed for users with owner or designer rights.</p>
     </section>
 
     <section>
@@ -429,12 +434,12 @@ const tooltips = {
         },
     productComplianceDescription: {
         content: `<section>
-        <h3 style="margin-bottom: 10px; margin-top: 10px";>Product Selection and Display</h3>
+        <h3 style="margin-bottom: 10px; margin-top: 10px";>Product Compliance Selection and Display</h3>
         <p>When the "Compliance" option is selected in the context menu of this panel, its properties are displayed for viewing and editing. Editing capabilities are only allowed for users with owner or designer rights.</p>
     </section>
 
     <section>
-    <h3 style="margin-bottom: 10px; margin-top: 10px";>Editing Compliance Product Properties</h3>
+    <h3 style="margin-bottom: 10px; margin-top: 10px";>Editing Product Compliance Properties</h3>
         <p>Initially, the editor will be displayed:</p>
         <ul>
             <li><strong>Compliance Description:</strong> Use the rich text editor to modify the product's compliance description. This editor supports links, block text, and other rich text features. Toggle to the markdown editor using the markdown button if preferred.</li>
@@ -454,12 +459,12 @@ const tooltips = {
     // Workflow screens
     workflowDescription: {
         content: `<section>
-        <h3 style="margin-bottom: 10px; margin-top: 10px";>Product Selection and Display</h3>
+        <h3 style="margin-bottom: 10px; margin-top: 10px";>Workflow Selection and Display</h3>
         <p>When a workflow is clicked in the tree within the left panel or the "Description" option is selected in the context menu of this panel, its properties are displayed for viewing and editing. Editing capabilities are only allowed for users with owner or designer rights.</p>
     </section>
 
     <section>
-    <h3 style="margin-bottom: 10px; margin-top: 10px";>Editing Product Properties</h3>
+    <h3 style="margin-bottom: 10px; margin-top: 10px";>Editing Workflow Properties</h3>
         <p>Initially, the description option is selected, displaying editable fields:</p>
         <ul>
             <li><strong>Status:</strong> Set this to either <em>public</em> or <em>private</em>. If set to <em>private</em>, only designers and owners can view the workflow. If set to <em>public</em>, the workflow is visible to all users in the product tree.</li>
@@ -483,12 +488,12 @@ const tooltips = {
         },
     workflowComplianceDescription: {
         content: `<section>
-        <h3 style="margin-bottom: 10px; margin-top: 10px";>Product Selection and Display</h3>
+        <h3 style="margin-bottom: 10px; margin-top: 10px";>Workflow Compliance Selection and Display</h3>
         <p>When the "Compliance" option is selected in the context menu of this panel, its properties are displayed for viewing and editing. Editing capabilities are only allowed for users with owner or designer rights.</p>
     </section>
 
     <section>
-    <h3 style="margin-bottom: 10px; margin-top: 10px";>Editing Compliance Product Properties</h3>
+    <h3 style="margin-bottom: 10px; margin-top: 10px";>Editing Workflow Compliance Properties</h3>
         <p>Initially, the editor will be displayed:</p>
         <ul>
             <li><strong>Compliance Description:</strong> Use the rich text editor to modify the product's compliance description. This editor supports links, block text, and other rich text features. Toggle to the markdown editor using the markdown button if preferred.</li>
@@ -507,15 +512,15 @@ const tooltips = {
         },
     taskDescription: {
         content: `<section>
-        <h3 style="margin-bottom: 10px; margin-top: 10px";>Product Selection and Display</h3>
+        <h3 style="margin-bottom: 10px; margin-top: 10px";>Task Selection and Display</h3>
         <p>When a task is clicked in the graph within the central panel or the "Description" option is selected in the context menu of this panel, its properties are displayed for viewing and editing. Editing capabilities are only allowed for users with owner or designer rights.</p>
     </section>
 
     <section>
-    <h3 style="margin-bottom: 10px; margin-top: 10px";>Editing Product Properties</h3>
+    <h3 style="margin-bottom: 10px; margin-top: 10px";>Editing Task Properties</h3>
         <p>Initially, the description option is selected, displaying editable fields:</p>
         <ul>
-            <li><strong>Task Name:</strong> Initiall the system generates a unique identifier for the name of the task, but the user can change this name to a more meaningful one.</li>
+            <li><strong>Task Name:</strong> Initially the system generates a unique identifier for the name of the task, but the user can change this name to a more meaningful one.</li>
             <li><strong>Task Type:</strong> The user can set a task as type "normal" or "API". If task type API is selected then the sytem will treat the Task as an API call, subsequently the user can select the API to be called from the "Implements" field. The API definition must have been previously created using the All API's button, or by importing the API definition.</li>
             <li><strong>Node Type:</strong> The user may impart additional meaning to the task by choosing the shape of the node. The shape can be a circle, a diamond or any shape that is available in the dropdown list.</li>
         </ul>
@@ -536,7 +541,7 @@ const tooltips = {
         },
     taskComplianceDescription: {
         content: `<section>
-        <h3 style="margin-bottom: 10px; margin-top: 10px";>Product Selection and Display</h3>
+        <h3 style="margin-bottom: 10px; margin-top: 10px";>Compliance Description Selection and Display</h3>
         <p>When the "Compliance Description" option is selected in the context menu of this panel, its properties are displayed for viewing and editing. Editing capabilities are only allowed for users with owner or designer rights.</p>
     </section>
 
@@ -561,6 +566,36 @@ const tooltips = {
     </section>`,
         isHtml: true
         },
+
+    curlExecution: {
+        content: `<h3 style="margin-bottom: 10px; margin-top: 10px";>Curl Execution</h3>
+        <p>The Curl Menu Item will be displayed when a task is selected and the task has an API definition associated with it. The API Terminal component allows users to interact with an API directly from a terminal interface. Users can edit API routes and request bodies, save custom configurations, restore to default settings, and execute API requests. Note that the API call displayed is the default definition of the API call as found in the "ALL  APIS " section of the Studio. API definitions can be created form scratch or imported using the "Import Api Definitions" menu item in the product tree panel menu. </p>   
+        <p><strong>Usage Instructions</strong></p>
+        <p>To use the API Terminal, follow these steps:</p>
+        <ol>
+            <li><strong>Saving API Settings:</strong> Customize your API request parameters and click the 'Save' button to store these settings.</li>
+            <li><strong>Restoring Default Settings:</strong> To revert to the original API settings, click the 'Restore Default' button.</li>
+            <li><strong>Executing API Requests:</strong> Enter commands into the terminal to interact with the API. Supported commands include:</li>
+            <ul>
+                <li><code>run</code> - Executes the API call and displays the response in a formatted JSON view.</li>
+                <li><code>clear</code> - Clear the execution window</li>
+            </ul>
+        </ol>
+    
+        <p><strong>Editing API Parameters<strong></p>
+        <p>You can edit the following API parameters directly in the terminal interface:</p>
+        <ul>
+            <li>API Route: Modify the API endpoint route by editing the text area with the route information.</li>
+            <li>Request Body:  Adjust request body fields using the provided text areas for each parameter.</li>
+        </ul>
+    
+        <p><strong>Error Handling</strong></p>
+        <p>If there is an error during the API execution or during the save and restore operations, the terminal will display an error message. Ensure the input format and data are correct before retrying.</p>
+        <p><strong>Additional Features</strong></p>
+        <p>The component includes tooltips and a help icon for additional information and compliance guidelines related to the task.</p>`,
+        isHtml: true
+        },
+
     linkView: {
         content: `<h3 style="margin-bottom: 10px; margin-top: 10px";>Overview</h3>
         <p>The Linkview interface allows users with appropriate permissions (designers or owners) to update links, manage parameters, and configure link types between tasks in a workflow.</p>

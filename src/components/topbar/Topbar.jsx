@@ -28,7 +28,7 @@ export default function Topbar() {
     <div className="topbarContainer">
       <div className="topbarLeft">
       <a href={gwocuSettings.url} target="_blank" style={{ textDecoration: "none" }}>
-      <div className="logotext">{gwocuSettings.clientname} GWOCU Studio</div>
+      <div className="logotext">{gwocuSettings.clientNr} GWOCU Studio</div>
       </a>
       </div>
       <div className="topbarCenter">
@@ -37,9 +37,10 @@ export default function Topbar() {
       <div className="topbarRight">
         <div className="topbarLinks">
         <span className="topbarLink" onClick={handleClick}>
-        Sign Out of the GWOCU Studio
+        Sign Out
         </span>
         </div>
+        <a target="_blank" className="topbarLink" href="https://wiki.gwocu.com/en/GWOCU-Studio/GWOCU-Studio">Online Help</a>
         <div className="topbarIcons">
           <div className="topbarIconItem">
             <Chat />
