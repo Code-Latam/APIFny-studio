@@ -129,6 +129,7 @@ export function addAuthToHeaders(myheadersWithGlobals,yamlObject )
           // first check if it is a function or regular value parameter
           const paramValue = globalParameters.parameters[param];
 
+
           if (isFunctionParam(String(paramValue)))
           {
               // it is a function. Calll the function to return the value
@@ -153,8 +154,28 @@ export function addAuthToHeaders(myheadersWithGlobals,yamlObject )
   
     // Add missing parameters to body
     for (const param in globalParameters.parameters) {
-      if (!apiRequestBody.hasOwnProperty(param)) {
-        apiRequestBody[param] = globalParameters.parameters[param];
+      if (!apiRequestBody.hasOwnProperty(param) && (globalParameters.addIfMissing?.toLowerCase() ?? 'no') === 'yes')
+
+      {
+        const paramValue = globalParameters.parameters[param];
+        if (isFunctionParam(String(paramValue)))
+        {
+            // it is a function. Calll the function to return the value
+            console.log ("function found")
+            console.log(String(paramValue));
+            const functionString = String(paramValue);
+            const calculationFunction = new Function(functionString);
+            const myparamvalue = calculationFunction();
+            console.log("FUNCTION VALUE");
+            console.log(myparamvalue);
+            apiRequestBody[param] = myparamvalue;
+        }
+        else
+        {
+          //not a function. use value
+          apiRequestBody[param] = globalParameters.parameters[param];
+        }
+
       }
     }
   

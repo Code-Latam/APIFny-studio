@@ -177,13 +177,13 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
       setExplorer(myExplorer);
 
       if (myApi.requestBody) {
+        console.log('API REQUEST BODY', myApi.requestBody);
         const yamlObject = await getConfiguration(myExplorer,myApi.thirdparty);
-        console.log("YAML");
-        console.log(yamlObject);
+        // console.log("YAML");
+        // console.log(yamlObject);
         const initialRequestBodyFields = { ...myApi.requestBody };
         const myRequestBodyWithGlobals = requestBodyGlobalAdd( initialRequestBodyFields,yamlObject);
-        console.log("HAPPY");
-        console.log(initialRequestBodyFields);
+        console.log('REQUEST BODY WITH GLOBALS ADDED', myRequestBodyWithGlobals);
         setRequestBodyFields(myRequestBodyWithGlobals);
       }
 
