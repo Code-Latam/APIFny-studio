@@ -61,13 +61,27 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
     },
   };
 
+  function removeProperty(propertyName, object) {
+    // create a new object to store the result
+    let result = {};
+    // loop through the keys of the original object
+    for (let key in object) {
+      // if the key is not equal to the property name to remove
+      if (key !== propertyName) {
+        // copy the key-value pair to the result object
+        result[key] = object[key];
+      }
+    }
+    // return the result object
+    return result;
+  }
 
   const handleSave = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
       const endpoint = `${process.env.REACT_APP_CENTRAL_BACK}/api/registercustom`;
 
-      const registerCustomPayload = {
+      const myCustomPayload = {
         ...api,
         requestBody: requestBodyFields,
         clientNr: clientNr,
@@ -77,6 +91,8 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
         email: user.email,
         chatbotKey: user.chatbotKey,
       };
+
+      const registerCustomPayload = removeProperty("_id", myCustomPayload );
 
       const response = await axios.post(endpoint, registerCustomPayload);
       alert("Custom API values saved!");
@@ -127,6 +143,7 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
     console.log("REQUEST BODY FIELDS");
     console.log(requestBodyFields);
   };
+
 
 
   const handleRouteChange = (value) => {
