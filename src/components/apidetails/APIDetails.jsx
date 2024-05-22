@@ -262,7 +262,20 @@ const theme = createTheme({
     },
   };
 
-
+  function removeProperty(propertyName, object) {
+    // create a new object to store the result
+    let result = {};
+    // loop through the keys of the original object
+    for (let key in object) {
+      // if the key is not equal to the property name to remove
+      if (key !== propertyName) {
+        // copy the key-value pair to the result object
+        result[key] = object[key];
+      }
+    }
+    // return the result object
+    return result;
+  }
 
   const handleSubmit = async (e) => {
     try {
@@ -315,6 +328,27 @@ const theme = createTheme({
         status: fetchResponse.status,
         resultBody: responseData
       };
+
+      // save result for eventual workflow use
+      const user = JSON.parse(localStorage.getItem("user"));
+      const endpoint = `${process.env.REACT_APP_CENTRAL_BACK}/api/registerapiresult`;
+
+      const myresultPayload = {
+        result: {...resultWithStatus},
+        clientNr: clientNr,
+        explorerId: explorerId,
+        name: apiData.name,
+        email: user.email,
+        chatbotKey: user.chatbotKey,
+      }
+      try
+        {
+        await axios.post(endpoint, myresultPayload);
+        }
+    catch(error)
+        {
+            console.log("An error occured when saving result", error);
+        }
 
     return resultWithStatus;
 

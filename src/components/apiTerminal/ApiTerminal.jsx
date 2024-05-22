@@ -275,6 +275,27 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
       resultBody: responseData
     };
 
+    // save result for eventual workflow use
+    const user = JSON.parse(localStorage.getItem("user"));
+    const endpoint = `${process.env.REACT_APP_CENTRAL_BACK}/api/registerapiresult`;
+
+    const myresultPayload = {
+      result: {...resultWithStatus},
+      clientNr: clientNr,
+      explorerId: explorerId,
+      name: apiName,
+      email: user.email,
+      chatbotKey: user.chatbotKey,
+    }
+    try
+      {
+      await axios.post(endpoint, myresultPayload);
+      }
+  catch(error)
+      {
+          console.log("An error occured when saving result", error);
+      }
+
   return resultWithStatus;
 
    

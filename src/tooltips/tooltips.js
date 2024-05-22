@@ -347,6 +347,8 @@ const tooltips = {
         
         <h3 style="margin-bottom: 10px; margin-top: 10px";>Troubleshooting</h3>
         <ul>
+            <li>If you are importing a Swagger file (OpenAPI) make sure the file does not contain external references. The file must be completely self contained.</li>
+            <li>Test you swagger file for correctness using <a href="https://editor.swagger.io/" target="_blank">the Swagger editor</a>.</li>
             <li>If the upload fails, check your network connection and ensure that the file format is correct (either Postman v2.1 or Swagger v3.0).</li>
             <li>Ensure that the file size does not exceed the limits specified by your platform's guidelines.</li>
             <li>If problems persist, contact technical support for assistance.</li>

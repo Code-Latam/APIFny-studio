@@ -300,6 +300,16 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
     return "";
     }
 
+    function findPathOrder(arr, source, target) {
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].source === source && arr[i].target === target) {
+          return arr[i].pathOrder;
+        }
+      }
+      // Return null or any default value if the combination is not found
+      return "";
+      }
+
   function findQueryParameters(arr, source, target) {
     for (let i = 0; i < arr.length; i++) {
       if (arr[i].source === source && arr[i].target === target) {
@@ -354,6 +364,7 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
     const myResourcePath = findResourcePath(graph.links, sourceId, targetId)
 
     const myPathParameters = findPathParameters(graph.links, sourceId, targetId)
+    const myPathOrder = findPathOrder(graph.links, sourceId, targetId)
     const myQueryParameters = findQueryParameters(graph.links, sourceId, targetId)
     const myRequestbodyParameters = findRequestbodyParameters(graph.links, sourceId, targetId)
 
@@ -365,6 +376,7 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
       passLinkParameters: myPassLinkParameters,
       resourcePath: myResourcePath,
       pathParameters:myPathParameters,
+      pathOrder: myPathOrder,
       queryParameters: myQueryParameters,
       requestbodyParameters: myRequestbodyParameters
     };
