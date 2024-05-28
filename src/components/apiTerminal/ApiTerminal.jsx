@@ -164,7 +164,7 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
   }, [reload, clientNr,explorerId,apiName]);
 
   const fetchApi = async () => {
-    const user = JSON.parse(localStorage.getItem("user"));
+    var user = JSON.parse(localStorage.getItem("user"));
     
     try {
       const myApibody = 
@@ -178,11 +178,47 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
         chatbotKey: user.chatbotKey
       }
       const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/api/query", myApibody);
-      const myApi = await response.data;
+      var myApi = await response.data;
       console.log("MY API");
       console.log(myApi)
-      setApi(myApi);
-      setRoute(myApi.urlRoute)
+      
+
+      // check if there are active links to build up the route
+
+      try 
+      {
+        const myLinkParamPayload =
+        {
+          clientNr: clientNr,
+          explorerId: explorerId,
+          workflowName: workflowName,
+          taskId: taskId,
+          chatbotKey: user.chatbotKey,
+          email:user.email,
+          baseUrl: myApi.resourcePath ? myApi.resourcePath : ""
+        }
+        console.log("MYLINK PARAM PAYLOAD", myLinkParamPayload );
+        const myLinkParamResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/link/querylinkparameters", myLinkParamPayload);
+        var myParams = await myLinkParamResponse.data;
+        var activeLinks = false;
+        if (myParams.activeLinks)
+        {
+          setRoute(myParams.path)
+          activeLinks = true ;
+        }
+        else
+        {
+          setRoute(myApi.urlRoute)
+          activeLinks = false;
+        }
+
+      }
+      catch(error)
+      {
+        setRoute(myApi.urlRoute)
+        activeLinks = false;
+      }
+      
 
       const myExplorerbody = 
       {
@@ -198,7 +234,19 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
         const yamlObject = await getConfiguration(myExplorer,myApi.thirdparty);
         // console.log("YAML");
         // console.log(yamlObject);
-        const initialRequestBodyFields = { ...myApi.requestBody };
+        var initialRequestBodyFields
+        if (activeLinks)
+        {
+          initialRequestBodyFields = {...myParams.requestBody} ;
+          myApi.requestBody = {...myParams.requestBody};
+        }
+        else
+        {
+          initialRequestBodyFields = { ...myApi.requestBody };
+        }
+        
+        setApi(myApi);
+
         const myRequestBodyWithGlobals = requestBodyGlobalAdd( initialRequestBodyFields,yamlObject);
         console.log('REQUEST BODY WITH GLOBALS ADDED', myRequestBodyWithGlobals);
         setRequestBodyFields(myRequestBodyWithGlobals);
@@ -321,10 +369,11 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
           <form id="form" onSubmit={handleSubmit}>
             <div className="input-fields">
               <div>1  // API EXPLORER. NOTE, FIELDS ARE EDITABLE!!</div>
-              <div>2  //</div>
-              <div>3  // {api.description}.</div>
-              <div>4  //</div>
-              <div>5  curl -X {api.method}</div>
+              <div>3  //</div>
+              <div>4  // Api Name: {api.name}.</div>
+              <div>4  // {api.description}.</div>
+              <div>5  //</div>
+              <div>6  curl -X {api.method}</div>
               <div>
               <textarea
                 title={`Curl`}

@@ -599,10 +599,11 @@ const tooltips = {
         },
 
     linkView: {
-        content: `<h3 style="margin-bottom: 10px; margin-top: 10px";>Overview</h3>
+        content: `<h3 style="margin-bottom: 10px; margin-top: 10px";>Link Selection and Display</h3>
         <p>The Linkview interface allows users with appropriate permissions (designers or owners) to update links, manage parameters, and configure link types between tasks in a workflow.</p>
+<br>
     
-        <h3 style="margin-bottom: 10px; margin-top: 10px";>Updating a Link</h3>
+<h3 style="margin-bottom: 10px; margin-top: 10px";>Updating a Link</h3>
         <p>To update a link's properties:</p>
         <ol>
             <li>Ensure that you have selected a workflow and a link within that workflow.</li>
@@ -612,13 +613,147 @@ const tooltips = {
         <h3 style="margin-bottom: 10px; margin-top: 10px";>Managing Link Parameters</h3>
         <p>Link parameters define the data that is passed between tasks. These include:</p>
         <ul>
-            <li><strong>Path Parameters:</strong> These parameters are part of the URL path of the API call.</li>
+            <li><strong>Resource and Path Parameters:</strong> These parameters are part of the URL path of the API call.</li>
             <li><strong>Query Parameters:</strong> These parameters are appended to the URL of the API call.</li>
             <li><strong>Request Body Parameters:</strong> These parameters are included in the body of the POST request.</li>
         </ul>
-        <p>To edit any of these parameters, use the corresponding JSON editor provided in the interface.</p>
+        <p>To edit any of these parameters, use the corresponding JSON editor provided in the interface. A task in a workflow of the gwocu studio can have multiple links pointing to it. If <strong>Pass following Parameters to target API..</strong>  is checked the studio will pass the parameters defined in the link to the task. If it is checked for more than one link all the parameters of every link checked will be combined and passed to the task. Consequently when executing the Curl in the workflow or when running the workflow, if the task is an API call (colored blue) the url and requestbody will be changed according to the values of these parameters passed through the links. The <strong>sequence</strong> input field indicates the sequence in which the links will be procesessed if there is more than one link pointing to a task. This is important in the case of processing Source and Path Parameters as the order is important to target the correct resources.</p>
+<br>
+  <p>Whenever {{parameterName}} is used in one of the parameter fields, as shown in the examples below, the studio will search for the value of parameterName in the response body of the API that serves as the source task for the link. It will replace {{parameterName}} with the corresponding value from the response. Note that in {{parameterName}} parameterName can be any property name from the response. Refer to the examples below for further clarification.</p>
+				
+  <h3 style="margin-bottom: 10px; margin-top: 10px";>Resource and Path Parameters</h3>
+    <p>
+        In the context of API design, <strong>Resource Parameters</strong> refer to the static parts of an API URL that define the type or collection of resources, whereas <strong>Path Parameters</strong> refer to the variable parts of the API URL that specify particular instances of those resources. In the studio environment, both are combined into a single object called "Resource and Path Parameters." The order in which these parameters are presented is dictated by the studio field "Path Order."
+    </p>
     
-        <h3 style="margin-bottom: 10px; margin-top: 10px";>Link Type Configuration</h3>
+    <h3 style="margin-bottom: 10px; margin-top: 10px";>Example</h3>
+    <p>Given a GWOCU studio JSON formatted input for Resource and Path Parameters:</p>
+    <pre>
+<code>
+{
+    "userResource": "users",
+    "userId": "{{userId}}", // note the studio will search for the value of this property in the resultbody of the executed source task.
+    "languageResource": "language",
+    "languageId": "Dutch"
+}
+</code>
+    </pre>
+    
+    <p>And a Path Order input of:</p>
+    <pre>
+<code>
+["userResource", "userId", "languageResource", "languageId"]
+</code>
+    </pre>
+
+<p>And a Result Body of a previously executed API:</p>
+    <pre>
+<code>
+{
+    result: {
+    "userId": "1234"
+}
+</code>
+    </pre>
+  <p> note: the previously executed API must be the source task of the link that is under consideration. The source task must have an API that is associated with it and it must have been previously executed in the curl view of the task. </p>
+    
+    <p>With a base URL of:</p>
+    <pre>
+<code>https://example.com</code>
+    </pre>
+    
+    <p>The constructed URL for a GET API request would be:</p>
+    <pre>
+<code>GET https://example.com/users/1234/language/Dutch</code>
+    </pre>
+    
+    <h3 style="margin-bottom: 10px; margin-top: 10px";>Task Affected</h3>
+    <p>
+        Note that the task that will be affected by setting these parameters is the task to where the link is pointed to, but only if it is an API task (colored blue). The Base URL for this API can be set in the "All APIs" section within the Studio. You can find this API there and change the Base Url value if needed. If there are other links pointing to the task and they are allowed to pass parameters then the Source and Path Parameters will be combined.
+    </p>
+
+
+    <h3 style="margin-bottom: 10px; margin-top: 10px";>Query Parameters</h3>
+    <p>
+        <strong>Query Parameters</strong> are a way to pass additional information to an API endpoint. They are appended to the end of the URL after a <code>?</code> and are used to filter, sort, or specify additional options for the request. Each parameter is a key-value pair, and multiple parameters are separated by an <code>&</code>.
+    </p>
+    <p>Query parameters are commonly used in GET requests to refine the data that is being requested from the server.</p>
+    
+    <h3>Example with Query Parameters</h3>
+    <p>Using the previously constructed URL example for Resource and Path Parameters, let's expand it to include query parameters.</p>
+    
+    <h3 style="margin-bottom: 10px; margin-top: 10px";>Base URL with Resource and Path Parameters:</h3>
+    <pre><code>https://example.com/users/1234/language/Dutch</code></pre>
+    
+    <p>Now, suppose we want to add query parameters to filter results by date and sort them by name. The query parameters might look like this in the studio:</p>
+		 <pre>
+<code>
+{
+    "date": "2024-05-27",
+    "sort": "name"
+}
+</code>
+    </pre>
+     <p>this will result in a generated query parameter string like: </P
+    <pre><code>?date=2024-05-27&sort=name</code></pre>
+    
+    <h4>And the complete URL with Query Parameters would be:</h4>
+    <pre><code>GET https://example.com/users/1234/language/Dutch?date=2024-05-27&sort=name</code></pre>
+    <h3 style="margin-bottom: 10px; margin-top: 10px";>Task Affected</h3>
+    <p>
+        Note that the task that will be affected by setting these parameters is the task to where the link is pointed to, but only if it is an API task (colored blue). If there are other links pointing to the task and they are allowed to pass parameters then the query parameters will be combined.
+    </p>
+    <br>
+  <p>Again you may choose to use a property value of a previously executed API in the workflow by using "{{property name}} in the query parameter object. for instance: </p>
+
+ <pre>
+<code>
+{
+    "date": "2024-05-27",
+    "sort": {{"name"}}
+}
+</code>
+    </pre>
+
+  
+  
+    <h3 style="margin-bottom: 10px; margin-top: 10px";>Request Body Parameters</h3>
+    <p>
+        <strong>Request Body Parameters</strong> are used to send data to the server in the body of the HTTP request. This is common with <code>POST</code>, <code>PUT</code>, and <code>PATCH</code> requests. The data is typically sent in JSON format.
+    </p>
+    <p>Request Body Parameters are used when you need to send more complex data structures to the server.</p>
+    
+    <h3 style="margin-bottom: 10px; margin-top: 10px";>Example with Request Body Parameters</h3>
+    <p>Continuing with the context of our previous examples, let's consider creating a new user language preference using a POST request.</p>
+    
+    <h3 style="margin-bottom: 10px; margin-top: 10px";>Base URL:</h3>
+    <pre><code>https://example.com/users/1234/language</code></pre>
+    
+    <p>Suppose we want to add a new language preference for the user with ID <code>1234</code>. The request body might look like this:</p>
+    <pre><code>
+{
+    "language": "Dutch",
+    "level": "Intermediate"
+}
+</code></pre>
+    
+<h3 style="margin-bottom: 10px; margin-top: 10px";>Complete Request with Request Body</h3>
+    <pre><code>POST https://example.com/users/1234/language HTTP/1.1
+Host: example.com
+Content-Type: application/json
+
+{
+    "language": "Dutch",
+    "level": "Intermediate"
+}
+</code></pre>
+   
+<h3 style="margin-bottom: 10px; margin-top: 10px";>Task Affected</h3>
+    <p>
+        Note that the task that will be affected by setting these parameters is the task to where the link is pointed to, but only if it is an API task (colored blue). The Base URL for this API can be set in the "All APIs" section within the Studio. You can find this API there and change the Base Url value if needed. If there are other links pointing to the task and they are allowed to pass parameters then the Request Body Parameters will be combined.
+    </p>
+    
+    <h3 style="margin-bottom: 10px; margin-top: 10px";>Link Type Configuration</h3>
         <p>The type of link can be selected from the options provided, which affect the visual representation and behavior of the link in the workflow graph:</p>
         <ul>
             <li>STRAIGHT</li>
@@ -637,8 +772,7 @@ const tooltips = {
         </ul>
     
         <h3 style="margin-bottom: 10px; margin-top: 10px";>Important Considerations</h3>
-        <p>Always ensure that changes made are necessary and accurate, as modifying link parameters and types can significantly impact the behavior of the workflow.</p>
-    `,
+        <p>Always ensure that changes made are necessary and accurate, as modifying link parameters and types can significantly impact the behavior of the workflow.</p>`,
         isHtml: true
         },
   };

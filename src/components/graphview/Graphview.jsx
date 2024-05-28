@@ -289,6 +289,16 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
       // Return null or any default value if the combination is not found
       return null;
    }
+
+   function findSequence(arr, source, target) {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].source === source && arr[i].target === target) {
+        return arr[i].sequence;
+      }
+    }
+    // Return null or any default value if the combination is not found
+    return null;
+ }
    
    function findPathParameters(arr, source, target) {
     for (let i = 0; i < arr.length; i++) {
@@ -360,7 +370,8 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
     // graph.links[..]
 
     const myType = findType(graph.links, sourceId, targetId)
-    const myPassLinkParameters = findPassLinkParameters(graph.links, sourceId, targetId)
+    const myPassLinkParameters = findPassLinkParameters(graph.links, sourceId, targetId);
+    const myPassSequence = findSequence(graph.links, sourceId, targetId)
     const myResourcePath = findResourcePath(graph.links, sourceId, targetId)
 
     const myPathParameters = findPathParameters(graph.links, sourceId, targetId)
@@ -374,6 +385,7 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
       target: targetId,
       type: myType,
       passLinkParameters: myPassLinkParameters,
+      sequence: myPassSequence,
       resourcePath: myResourcePath,
       pathParameters:myPathParameters,
       pathOrder: myPathOrder,

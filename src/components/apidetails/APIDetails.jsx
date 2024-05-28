@@ -413,7 +413,7 @@ const theme = createTheme({
           </Select>
         </FormControl>
         <TextField label="URL Route Example" value={apiData.urlRoute} variant="outlined" fullWidth margin="normal" onChange={(e) => handleApiDataChange('urlRoute', e.target.value)} />
-        <TextField label="Resource Path" value={apiData.resourcePath ? apiData.resourcePath : ""} variant="outlined" fullWidth margin="normal" onChange={(e) => handleApiDataChange('resourcePath', e.target.value)} />
+        <TextField label="Base Url" value={apiData.resourcePath ? apiData.resourcePath : ""} variant="outlined" fullWidth margin="normal" onChange={(e) => handleApiDataChange('resourcePath', e.target.value)} />
         <br></br>
         <label className = "apidescription" >Description:
          </label>

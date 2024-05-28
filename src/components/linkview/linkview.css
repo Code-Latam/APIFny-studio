@@ -40,8 +40,17 @@
     margin-bottom: 10px;
     display: flex;
     align-items: center;
+    gap: 5px;
   }
 
   .passLinkParametersCheckbox {
     margin-right: 5px;
+  }
+
+  .SequenceViewinput
+  {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    width:25px;
+   
   }

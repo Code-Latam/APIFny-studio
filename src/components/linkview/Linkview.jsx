@@ -27,6 +27,7 @@ function Linkview({ clientNr, explorerId, workflowName, mylink,authorization,upd
   
   const [selectedType, setSelectedType] = useState(mylink.type);
   const [isChecked, setIsChecked] = useState(mylink.passLinkParameters || false);
+  const [selectedSequence, setSelectedSequence] = useState(mylink.sequence || "1");
 
   const [sourceAndTargetNames, setSourceAndTargetNames] = useState({sourceName:"",targetName:""});
   const typeOptions = ["STRAIGHT", "CURVE_SMOOTH", "CURVE_FULL"];
@@ -45,7 +46,7 @@ function Linkview({ clientNr, explorerId, workflowName, mylink,authorization,upd
   }
   
 
-  function replaceType(arr, source, target, newType, newPassLinkParameters,newPathParameters, newPathOrder, newQueryParameters, newRequestBodyParameters) {
+  function replaceType(arr, source, target, newType, newPassLinkParameters, newPassSequence,newPathParameters, newPathOrder, newQueryParameters, newRequestBodyParameters) {
     for (let i = 0; i < arr.length; i++) {
       if (arr[i].source === source && arr[i].target === target) {
         arr[i].type = newType || "STRAIGHT";
@@ -54,6 +55,7 @@ function Linkview({ clientNr, explorerId, workflowName, mylink,authorization,upd
         arr[i].queryParameters = newQueryParameters;
         arr[i].requestbodyParameters = newRequestBodyParameters;
         arr[i].passLinkParameters = newPassLinkParameters || false;
+        arr[i].sequence = newPassSequence || 1;
         // If you want to stop after the first occurrence is replaced, you can return here
         return arr;
       }
@@ -220,7 +222,7 @@ function Linkview({ clientNr, explorerId, workflowName, mylink,authorization,upd
     const myLinks = myQueryResponse.data.links;
 
     // replace the type in the original links
-    const myNewLinks =  replaceType(myLinks, mylink.source, mylink.target, selectedType, isChecked, selectedPathParameters,selectedPathOrder,selectedQueryParameters,selectedRequestbodyParameters) 
+    const myNewLinks =  replaceType(myLinks, mylink.source, mylink.target, selectedType, isChecked,selectedSequence, selectedPathParameters,selectedPathOrder,selectedQueryParameters,selectedRequestbodyParameters) 
     
    
 
@@ -351,6 +353,17 @@ function Linkview({ clientNr, explorerId, workflowName, mylink,authorization,upd
     setSelectedQueryParameters(parsedValue);
   };
 
+  const handleSequenceChange = (event) => {
+    const inputValue = event.target.value;
+  
+    // Check if the input is a valid number
+    if (/^\d+$/.test(inputValue) || inputValue === '') {
+      // If it's a valid number or an empty string, update the state
+      setSelectedSequence(inputValue)
+    }
+    // If it's not a valid number, you can choose to do nothing or provide feedback to the user
+    // For example, show an error message or prevent further action
+  };
 
   const handleRequestBodyParametersChange = (value, event) => {
     console.log("change");
@@ -412,6 +425,16 @@ function Linkview({ clientNr, explorerId, workflowName, mylink,authorization,upd
                 className="LinkViewinputname"
                 disabled
               />
+           <div className="checkboxContainer">
+          <label htmlFor="sequence">Sequence</label>
+            <input
+              type="text"
+              id="sequence"
+              value={selectedSequence}
+              onChange = {handleSequenceChange}
+              className = "SequenceViewinput"
+            />
+            </div>
             <div className="checkboxContainer">
               <input
               type="checkbox"
@@ -420,11 +443,13 @@ function Linkview({ clientNr, explorerId, workflowName, mylink,authorization,upd
               checked={isChecked}
               onChange={() => setIsChecked(!isChecked)}
             />
-             <label htmlFor="passLinkParametersCheckbox">Pass following Parameters to target API..</label>
-        
-            </div>
             
-            <label htmlFor="pathParameter">Path Parameters</label>
+             <label htmlFor="passLinkParametersCheckbox">Pass following Parameters to target API..</label>  
+            </div>
+
+            
+            
+            <label htmlFor="pathParameter">Resource and Path Parameters</label>
 
               <Editor
               id='json-editor1'
