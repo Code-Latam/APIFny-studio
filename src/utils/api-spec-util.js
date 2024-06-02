@@ -236,55 +236,190 @@ export function addAuthToHeaders(myheadersWithGlobals,yamlObject )
     }
   };
 
-  export async function makeCurlComponentFromApi(api,explorer) 
+  export async function makeCurlComponentFromApi(explorer, workflowName,taskId, api) 
   {
     // Construct the curl statement
     const yamlObject = await getConfiguration(explorer, api.thirdparty)
-    const apiType = api.method;
-    const endpoint = api.urlRoute;
+    
 
     const apiHeaders = parseApiHeaders(api);
     const Globalheaders = HeadersGlobalAdd(apiHeaders, yamlObject);
-    const headers = addAuthToHeaders(Globalheaders,yamlObject);
+    var headers = addAuthToHeaders(Globalheaders,yamlObject);
 
-    const globalRequestBody = requestBodyGlobalAdd(api.requestBody,yamlObject );
-    const requestBody = addAuthToRequestBody(globalRequestBody,yamlObject);
+    var user = JSON.parse(localStorage.getItem("user"));
+    var endpoint;
 
+    try 
+      {
+        const myLinkParamPayload =
+        {
+          clientNr: explorer.clientNr,
+          explorerId: explorer.explorerId,
+          workflowName: workflowName,
+          taskId: taskId,
+          chatbotKey: user.chatbotKey,
+          email:user.email,
+          baseUrl: api.resourcePath ? api.resourcePath : ""
+        }
+        console.log("MYLINK PARAM PAYLOAD", myLinkParamPayload );
+        const myLinkParamResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/link/querylinkparameters", myLinkParamPayload);
+        var myParams = await myLinkParamResponse.data;
+        var activeLinks = false;
+        if (myParams.activeLinks)
+        {
+          endpoint = myParams.path;
+          activeLinks = true ;
+        }
+        else
+        {
+          endpoint = api.urlRoute;
+          activeLinks = false;
+        }
 
+      }
+      catch(error)
+      {
+        endpoint = api.urlRoute
+        activeLinks = false;
+      }
+      
+      var initialRequestBodyFields
+      if (activeLinks)
+      {
+        initialRequestBodyFields = {...myParams.requestBody} ;
+      }
+      else
+      {
+        initialRequestBodyFields = { ...api.requestBody };
+      }
 
-   let stringifiedHeaders = headers ? JSON.stringify(headers).replace(/"/g, "'") : {};
+  const globalRequestBody = requestBodyGlobalAdd(initialRequestBodyFields,yamlObject );
+  const requestBody = addAuthToRequestBody(globalRequestBody,yamlObject);
+
+  const apiType = api.method;
+
+  let stringifiedHeaders = headers ? JSON.stringify(headers).replace(/"/g, "'") : {};
   let stringifiedRequestBody = requestBody ? JSON.stringify(requestBody).replace(/"/g, "'") : {};
 
     const curlStatement = `curl -X ${apiType.toUpperCase()} ${endpoint} -H '${stringifiedHeaders}' -d '${stringifiedRequestBody}'`;
     console.log("CURL COMPONENT C");
     console.log(curlStatement);
-    return (
-      <div>
-        {curlStatement}
-      </div>
-    );
+    return curlStatement;
   };
 
-  export async function makeCurlComponentFromApiExecutionResult(api,explorer) 
+  export async function makeCurlComponentFromApiExecutionResult(explorer, workflowName,taskId, api) 
   {
     // Construct the curl statement
     const yamlObject = await  getConfiguration(explorer, api.thirdparty)
-    const apiType = api.method;
-    const endpoint = api.urlRoute;
+    
 
     const apiHeaders = parseApiHeaders(api);
     const Globalheaders = HeadersGlobalAdd(apiHeaders, yamlObject);
-    const headers = addAuthToHeaders(Globalheaders,yamlObject);
+    var headers = addAuthToHeaders(Globalheaders,yamlObject);
 
-    const globalRequestBody = requestBodyGlobalAdd(api.requestBody,yamlObject );
+    var user = JSON.parse(localStorage.getItem("user"));  
+    var endpoint;
+
+    try 
+      {
+        const myLinkParamPayload =
+        {
+          clientNr: explorer.clientNr,
+          explorerId: explorer.explorerId,
+          workflowName: workflowName,
+          taskId: taskId,
+          chatbotKey: user.chatbotKey,
+          email:user.email,
+          baseUrl: api.resourcePath ? api.resourcePath : ""
+        }
+        console.log(" 2. MYLINK PARAM PAYLOAD", myLinkParamPayload );
+        const myLinkParamResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/link/querylinkparameters", myLinkParamPayload);
+        var myParams = await myLinkParamResponse.data;
+        var activeLinks = false;
+        if (myParams.activeLinks)
+        {
+          endpoint = myParams.path;
+          activeLinks = true ;
+        }
+        else
+        {
+          endpoint = api.urlRoute;
+          activeLinks = false;
+        }
+
+      }
+      catch(error)
+      {
+        endpoint = api.urlRoute
+        activeLinks = false;
+      }
+      
+      var initialRequestBodyFields
+      if (activeLinks)
+      {
+        initialRequestBodyFields = {...myParams.requestBody} ;
+      }
+      else
+      {
+        initialRequestBodyFields = { ...api.requestBody };
+      }
+
+
+    const globalRequestBody = requestBodyGlobalAdd(initialRequestBodyFields,yamlObject );
     const requestBody = addAuthToRequestBody(globalRequestBody,yamlObject);
+    headers["destination"] = endpoint;
 
-    const curlStatement = "success";
-    return (
-      <div>
-        <pre>{curlStatement}</pre>
-      </div>
-    );
+  
+    const allowedMethodsForBody = ["POST", "PUT", "PATCH"]; 
+    const fetchOptions = {
+      method: api.method,
+      headers: {
+        ...headers,
+      },
+    };
+    // Check if the current API method allows a body
+    if (allowedMethodsForBody.includes(api.method.toUpperCase())) {
+      fetchOptions.body = JSON.stringify(requestBody);
+    }
+
+    console.log("FETCHOPTIONS");
+    console.log(fetchOptions);
+    
+    const fetchResponse = await fetch(process.env.REACT_APP_CENTRAL_BACK + "/relay", fetchOptions);
+      
+    const responseData = await fetchResponse.json();
+   
+
+    const resultWithStatus = {
+      status: fetchResponse.status,
+      resultBody: responseData
+    };
+
+    console.log("RESULT WITH STATUS", resultWithStatus );
+
+    // save result for eventual workflow use
+    const resultEndpoint = `${process.env.REACT_APP_CENTRAL_BACK}/api/registerapiresult`;
+
+    const myresultPayload = {
+      result: {...resultWithStatus},
+      clientNr: explorer.clientNr,
+      explorerId: explorer.explorerId,
+      name: api.name,
+      email: user.email,
+      chatbotKey: user.chatbotKey,
+    }
+
+    console.log("MY RESULT PAYLOAD", myresultPayload );
+    try
+      {
+      await axios.post(resultEndpoint, myresultPayload);
+      }
+  catch(error)
+      {
+          console.log("An error occured when saving result", error);
+      }
+  
+    return resultWithStatus
   };
 
   export function isObject(value)

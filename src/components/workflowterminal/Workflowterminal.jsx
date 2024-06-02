@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ReactTerminal } from "react-terminal";
 import axios from 'axios';
 import {makeCurlComponentFromApi,makeCurlComponentFromApiExecutionResult, HeadersGlobalAdd, requestBodyGlobalAdd, addAuthToHeaders, addAuthToRequestBody, parseApiHeaders, getConfiguration, isValidConfiguration} from "../../utils/api-spec-util.js";
+import ReactJson from 'react-json-view';
 
 
 
@@ -29,7 +30,20 @@ const Workflowterminal = ({ clientNr, explorerId, productName, name, authorizati
         { return <div style={{ color: '#006400' }}> <br></br>{'There are no APIS to execute in this workflow'}</div>; }
       current_api_index = 0  ;
       const myOutput = await constructOutputAPIExecution(current_api_index)
-      return <div style={{ color: '#006400' }}> <br></br><div>Workflow running..</div><br></br><div>Executed API..{apiList[current_api_index].name}</div><br></br>{myOutput}<br></br><div>Type "next" to execute next API or "stop" to end the workflow</div></div>;
+
+      return (
+      <div style={{ color: '#006400' }}> 
+      <br></br>
+      <div>Workflow running..</div>
+      <br></br><div>Executed API..{apiList[current_api_index].api.name}</div>
+      <br></br>
+      {myOutput.curl}
+      <br></br>
+      <ReactJson src={myOutput.executionResult} theme="apathy"   name={null} collapsed={1} />
+      <div>Type "next" to execute next API or "stop" to end the workflow</div>
+      </div>
+      );
+
       } catch (error) {
         console.error('Error during API execution:', error);
         return <div style={{ color: '#006400' }}> {'An error occured during API execution'}</div>;
@@ -47,7 +61,15 @@ const Workflowterminal = ({ clientNr, explorerId, productName, name, authorizati
       }
       try {
       const myOutput = await constructOutputAPIExecution(current_api_index)
-      return <div style={{ color: '#006400' }}> <br></br><div>Executed API..{apiList[current_api_index].name}</div><br></br>{myOutput}<br></br><div>Type "next" to execute next API or "stop" to end the workflow</div></div>;
+      return (
+      <div style={{ color: '#006400' }}>
+      <br></br>
+      <div>Executed API..{apiList[current_api_index].api.name}</div>
+      <br></br>{myOutput.curl}<br></br>
+      <ReactJson src={myOutput.executionResult} theme="apathy"   name={null} collapsed={1} />
+      <div>Type "next" to execute next API or "stop" to end the workflow</div>
+      </div>
+      )
       } catch (error) {
         console.error('Error during API execution:', error);
         return <div style={{ color: '#006400' }}> {'An error occured during API execution. Type run to start the workflow again!'}</div>;
@@ -76,11 +98,12 @@ const Workflowterminal = ({ clientNr, explorerId, productName, name, authorizati
   const constructOutputAPIExecution = async (index) => {
     if (index < apiList.length) 
     {
-      const curlComponent = await makeCurlComponentFromApi(apiList[index],explorer)
+      const curlComponent = await makeCurlComponentFromApi(explorer,name,apiList[index].taskId, apiList[index].api)
       console.log("CURL COMPONENT B");
       console.log({curlComponent});
-      // const executionResultComponent = await makeCurlComponentFromApiExecutionResult(index,explorer)
-      return curlComponent
+      const executionResultComponent = await makeCurlComponentFromApiExecutionResult(explorer, name, apiList[index].taskId, apiList[index].api)
+      const myReturnObject = { curl: curlComponent, executionResult: executionResultComponent  }
+      return myReturnObject
     } else {
       setWorkflowStarted(false);
       return
@@ -104,7 +127,7 @@ const Workflowterminal = ({ clientNr, explorerId, productName, name, authorizati
       setApiList(myApiList.filter(obj => Object.keys(obj).length > 0));
 
       console.log("FIRSTAPILIST");
-      console.log(apiList);
+      console.log(myApiList);
 
       const myExplorerbody = {
         clientNr: clientNr,
