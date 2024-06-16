@@ -8,6 +8,7 @@ import Topbar from "..//topbar/Topbar";
 import APIDetails from '../apidetails/APIDetails';
 import MyFolderTree from '../myfoldertree/MyFolderTree';
 import { TerminalContextProvider } from "react-terminal";
+import {encodebody, getDecodedBody} from "../../utils/utils.js";
 
 const ApisEditor = ({clientNr, explorerId, authorization}) => {
   const [folders, setFolders] = useState([]);
@@ -26,8 +27,8 @@ const ApisEditor = ({clientNr, explorerId, authorization}) => {
           explorerId: explorerId,
           name: apiName
         }  
-        const apiResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/query', myApiPayload)
-        setSelectedApi(apiResponse.data)
+        const apiResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/query', encodebody(myApiPayload))
+        setSelectedApi(getDecodedBody(apiResponse.data))
       } 
       catch (error) 
       {
@@ -46,8 +47,8 @@ const ApisEditor = ({clientNr, explorerId, authorization}) => {
         clientNr: clientNr,
         explorerId: explorerId
       }  
-      const foldersResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/query', myFolderPayload)
-      setFolders(foldersResponse.data)
+      const foldersResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/query', encodebody(myFolderPayload))
+      setFolders(getDecodedBody(foldersResponse.data))
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -57,65 +58,14 @@ const ApisEditor = ({clientNr, explorerId, authorization}) => {
     setSelectedNode(node);
   };
 
-  const handleFolderFormSubmit = async (data) => {
-    try {
-      if (selectedNode && selectedNode.type === 'folder') {
-        // Update existing folder
-        await axios.put(`/api/folders/${selectedNode.id}`, data);
-      } else {
-        // Create new folder
-        await axios.post('/api/folders', data);
-      }
-      fetchFoldersAndAPIs();
-    } catch (error) {
-      console.error('Error saving folder:', error);
-    }
-  };
+  
 
-  const handleDeleteFolder = async () => {
-    try {
-      if (selectedNode && selectedNode.type === 'folder') {
-        await axios.delete(`/api/folders/${selectedNode.id}`);
-        fetchFoldersAndAPIs();
-        setSelectedNode(null);
-      }
-    } catch (error) {
-      console.error('Error deleting folder:', error);
-    }
-  };
+  
 
-  const handleUpdateApi = async () => {
-    console.log("Update API");
-  };
+  
 
 
-  const handleAPIFormSubmit = async (data) => {
-    try {
-      if (selectedNode && selectedNode.type === 'api') {
-        // Update existing API
-        await axios.put(`/api/apis/${selectedNode.id}`, data);
-      } else {
-        // Create new API
-        await axios.post('/api/apis', data);
-      }
-      fetchFoldersAndAPIs();
-    } catch (error) {
-      console.error('Error saving API:', error);
-    }
-  };
-
-  const handleDeleteAPI = async () => {
-    try {
-      if (selectedNode && selectedNode.type === 'api') {
-        await axios.delete(`/api/apis/${selectedNode.id}`);
-        fetchFoldersAndAPIs();
-        setSelectedNode(null);
-      }
-    } catch (error) {
-      console.error('Error deleting API:', error);
-    }
-  };
-
+  
 
 
   return (

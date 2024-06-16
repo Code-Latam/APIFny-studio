@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { useHistory } from 'react-router-dom';
 import PasswordValidator from 'password-validator';
+import {encodebody, getDecodedBody} from "../../utils/utils.js";
 
 function Modalacceptinvite({ clientNr, explorerId, onClose }) {
 
@@ -60,8 +61,8 @@ function Modalacceptinvite({ clientNr, explorerId, onClose }) {
 
     // verify token and return JSON
     try {
-    const tokenresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/invitation/verifytoken', {token:token});
-    var myuserData = tokenresponse.data
+    const tokenresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/invitation/verifytoken', encodebody({token:token}));
+    var myuserData = getDecodedBody(tokenresponse.data)
     setClient(myuserData.clientNr);
   
     }
@@ -79,25 +80,25 @@ function Modalacceptinvite({ clientNr, explorerId, onClose }) {
         username: myuserData.toEmail,
         password: password,
         chatbotKey: myuserData.chatbotKey,
-        groups: [],
+        groups: ["chatbotDesigners"],
         explorers: myuserData.explorers,
         isAdmin: false
 
       }
-      console.log("USER");
+      console.log("USER PAYLOAD");
       console.log(userPayload);
-      await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/auth/register', userPayload);
+      await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/auth/register', encodebody(userPayload));
       // Redirect to login page after successful registration
       alert("User was created successfully! Please login.")
       // delete invite
-      await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/invitation/delete", { chatbotKey: myuserData.chatbotKey, email:  myuserData.toEmail});
+      await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/invitation/delete", encodebody({ chatbotKey: myuserData.chatbotKey, email:  myuserData.toEmail}));
       
       history.push(`/login?clientNr=${encodeURIComponent(myuserData.clientNr)}&chatbotKey=${encodeURIComponent(myuserData.chatbotKey)}&email=${encodeURIComponent(myuserData.email)}`);
       // history.push('/login');
     } catch (err) {
       if (err.response) {
         // The request was made and the server responded with a status code that is not in the range of 2xx
-        alert(`Failed to create user: ${err.response.data}`);
+        alert(`Failed to create user: ${getDecodedBody(err.response.data)}`);
         return
       } else if (err.request) {
         // The request was made but no response was received

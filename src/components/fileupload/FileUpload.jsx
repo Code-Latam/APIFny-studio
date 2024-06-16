@@ -10,6 +10,7 @@ import 'tippy.js/themes/material.css';
 import CustomTooltip from '../../tooltips/CustomTooltip';
 import tooltips from '../../tooltips/tooltips';
 
+
 const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
 function FileUpload({clientNr, explorerId}) {
@@ -99,7 +100,7 @@ function FileUpload({clientNr, explorerId}) {
         callAPI(clientNr, explorerId, process.env.REACT_APP_HOST_CENTRAL_BACK + "/upload/postmandef/"+clientNr+ "/" + explorerId + "/" + myfilename);
       })
       .catch((error) => {
-        alert(error.response.data);
+        alert("Error during upload operation: " + (error.response ? JSON.stringify(getDecodedBody(error.response.data)) : error.message));
       });
   };
 
@@ -111,7 +112,7 @@ function FileUpload({clientNr, explorerId}) {
     };
     const body = originalbody;
     axios
-      .post(process.env.REACT_APP_CENTRAL_BACK + "/apiimport/postman", body)
+      .post(process.env.REACT_APP_CENTRAL_BACK + "/apiimport/postman", encodebody(body))
       .then((response) => {
         setProgress(90);
         alert("finished uploading")
@@ -119,7 +120,7 @@ function FileUpload({clientNr, explorerId}) {
         window.location.reload();
       })
       .catch((error) => {
-        alert(error.response.data);
+        alert("Error during upload operation: " + (error.response ? JSON.stringify(getDecodedBody(error.response.data)) : error.message));
       });
   }
 
@@ -150,7 +151,7 @@ function FileUpload({clientNr, explorerId}) {
         callAPI2(clientNr, explorerId, process.env.REACT_APP_HOST_CENTRAL_BACK + "/upload/swaggerdef/"+clientNr+ "/" + explorerId + "/" + myfilename);
       })
       .catch((error) => {
-        alert(error.response.data);
+        alert("Error during upload operation: " + (error.response ? JSON.stringify(getDecodedBody(error.response.data)) : error.message));
       });
   };
 
@@ -162,7 +163,7 @@ function FileUpload({clientNr, explorerId}) {
     };
     const body = originalbody;
     axios
-      .post(process.env.REACT_APP_CENTRAL_BACK + "/apiimport/openapi", body)
+      .post(process.env.REACT_APP_CENTRAL_BACK + "/apiimport/openapi", encodebody(body))
       .then((response) => {
         setProgress(90);
         alert("finished uploading")
@@ -170,7 +171,7 @@ function FileUpload({clientNr, explorerId}) {
         window.location.reload();
       })
       .catch((error) => {
-        alert(error.response.data);
+        alert("Error during upload operation: " + (error.response ? JSON.stringify(getDecodedBody(error.response.data)) : error.message));
       });
   }
 

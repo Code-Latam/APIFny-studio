@@ -10,6 +10,7 @@ import 'tippy.js/themes/material.css';
 import CustomTooltip from '../../tooltips/CustomTooltip';
 import tooltips from '../../tooltips/tooltips';
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+import {encodebody, getDecodedBody} from "../../utils/utils.js";
 
   const ImportProduct = ({ targetClientNr, targetExplorerId,onClose }) => {
 
@@ -59,13 +60,13 @@ import HelpCenterIcon from '@mui/icons-material/HelpCenter';
             // This pseudocode assumes an endpoint for checking product existence
             try
             { 
-              await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/product/query', { clientNr: targetClientNr, explorerId: targetExplorerId, productName: cleanedProduct.productName });
+              await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/product/query', encodebody({ clientNr: targetClientNr, explorerId: targetExplorerId, productName: cleanedProduct.productName }));
               existingProducts.add(cleanedProduct.productName);
               continue;
             }
             catch (error)
             {
-              await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/product/register', cleanedProduct);
+              await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/product/register', encodebody(cleanedProduct));
             }           
         }
         // Process and register workflows
@@ -74,7 +75,7 @@ import HelpCenterIcon from '@mui/icons-material/HelpCenter';
           if (!existingProducts.has(workflow.productName)) {
             const cleanedWorkflow = cleanObject(workflow);
             try {
-              await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/workflow/register', cleanedWorkflow);
+              await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/workflow/register', encodebody(cleanedWorkflow));
               workflowsSet.add(cleanedWorkflow.name);
             } catch (error) {
               console.error(`Error registering workflow `);
@@ -87,7 +88,7 @@ import HelpCenterIcon from '@mui/icons-material/HelpCenter';
             const cleanedtask = cleanObject(task);
             try {
 
-              await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/task/register', cleanedtask);
+              await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/task/register', encodebody(cleanedtask));
             } catch (error) {
               console.error(`Error registering task`);
             }
@@ -112,7 +113,7 @@ import HelpCenterIcon from '@mui/icons-material/HelpCenter';
             try {
               // NOTE WORKFLOW CREATION WITH THE WORKFLOW REGISTER API HAS ALREADY CREATEd A LINK OBJECT FOR THAT WORKFLOW
               // SO WE NEED TO UPDATE IT!
-              await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/link/update', cleanedLink);
+              await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/link/update', encodebody(cleanedLink));
             } catch (error) {
               
               console.error(`Error registering link:`, error);
@@ -129,12 +130,12 @@ import HelpCenterIcon from '@mui/icons-material/HelpCenter';
             const cleanedapi = cleanObject(api);
             try {
               // try to find the API. if it exists, skip!
-              const apiquery = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/query', { clientNr: targetClientNr, explorerId: targetExplorerId ,name: cleanedapi.name });
+              const apiquery = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/query', encodebody({ clientNr: targetClientNr, explorerId: targetExplorerId ,name: cleanedapi.name }));
               continue; 
               
             } 
             catch (error) {
-              await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/register', cleanedapi);
+              await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/register', encodebody(cleanedapi));
             }
         }
         }

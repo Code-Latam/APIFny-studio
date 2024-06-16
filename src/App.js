@@ -16,6 +16,7 @@ import Login from "./pages/login/Login";
 import Updateuseradmin from "./pages/updateuseradmin/Updateuseradmin";
 import Updateuser from "./pages/updateuser/Updateuser";
 import ApisEditor from './components/apisEditor/ApisEditor';
+import {getDecodedBody, encodebody} from "./utils/utils.js";
 
 function App() {
   const { user } = useContext(AuthContext);
@@ -36,11 +37,9 @@ function App() {
           chatbotKey: user.chatbotKey,
           email: user.email,
         };
-        console.log("Just before calling user query");
-        const res = await axios.post(`${process.env.REACT_APP_CENTRAL_BACK}/users/query`, userPayload);
-        console.log("Just after calling user query");
-        console.log(res.data);
-        const currentAuth = res.data.explorers.find(explorer => explorer.name === user.explorerId);
+        const res = await axios.post(`${process.env.REACT_APP_CENTRAL_BACK}/users/query`, encodebody(userPayload));
+        const resData = getDecodedBody(res.data)
+        const currentAuth = resData.explorers.find(explorer => explorer.name === user.explorerId);
         //const currentAuth = res.data.explorers[user.explorerId]
         setAuthorization(currentAuth);
         // Assuming the response might affect authorization somehow

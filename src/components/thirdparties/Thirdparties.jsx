@@ -8,6 +8,7 @@ import 'tippy.js/themes/material.css';
 import CustomTooltip from '../../tooltips/CustomTooltip';
 import tooltips from '../../tooltips/tooltips';
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+import {encodebody, getDecodedBody} from "../../utils/utils.js";
 
 // CRUDTableComponent.jsx
 
@@ -34,8 +35,8 @@ const Thirdparties = ({clientNr, explorerId, onClose}) => {
         clientNr:clientNr
     }
     try {
-      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/thirdparties/queryall', payload);
-      setRecords(response.data);
+      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/thirdparties/queryall', encodebody(payload));
+      setRecords(getDecodedBody(response.data));
     } catch (error) {
       console.error('Error fetching records:', error);
     }
@@ -52,7 +53,7 @@ const Thirdparties = ({clientNr, explorerId, onClose}) => {
         name: selectedRecord.name
     }
     try {
-      await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/thirdparties/delete', payload);
+      await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/thirdparties/delete', encodebody(payload));
       fetchRecords();
       setSelectedRecord(null);
       setFormData({
@@ -68,7 +69,7 @@ const Thirdparties = ({clientNr, explorerId, onClose}) => {
 
   const handleUpdateRecord = async () => {
     try {
-      await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/thirdparties/update', formData);
+      await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/thirdparties/update', encodebody(formData));
       fetchRecords();
       setSelectedRecord(null);
       setFormData({
@@ -84,7 +85,7 @@ const Thirdparties = ({clientNr, explorerId, onClose}) => {
 
   const handleAddRecord = async () => {
     try {
-      await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/thirdparties/register', formData);
+      await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/thirdparties/register', encodebody(formData));
       fetchRecords();
       setFormData({
         clientNr: clientNr,

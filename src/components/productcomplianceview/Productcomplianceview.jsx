@@ -14,6 +14,7 @@ import 'tippy.js/themes/material.css';
 import CustomTooltip from '../../tooltips/CustomTooltip';
 import tooltips from '../../tooltips/tooltips';
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+import {encodebody, getDecodedBody} from "../../utils/utils.js";
 
 
 function Productcomplianceview({ clientNr, explorerId, productName, authorization, updateTreeView }) {
@@ -64,44 +65,43 @@ function Productcomplianceview({ clientNr, explorerId, productName, authorizatio
       complianceDescription: product.complianceDescription
     };
 
-      const myResponse = await axios.post(apiUrl, requestBody);
+      const myResponse = await axios.post(apiUrl, encodebody(requestBody));
       alert("Product was succesfully updated.");
 
   };
 
   useEffect(() => {
-    // Define the API URL for fetching the product
-    const apiUrl = process.env.REACT_APP_CENTRAL_BACK + '/product/query';
+    const fetchProduct = async () => {
+      const apiUrl = `${process.env.REACT_APP_CENTRAL_BACK}/product/query`;
 
-    // Define the request body
-    const requestBody = {
-      clientNr,
-      explorerId,
-      productName,
-    };
-    console.log("IN FETCH");
-    console.log(requestBody);
-    // Make a POST request to fetch the product
-    fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
-    })
-      .then((response) => response.json())
-      .then((data) => {
+      // Define the request body
+      const requestBody = {
+        clientNr,
+        explorerId,
+        productName,
+      };
+
+      try {
+        // Make a POST request to fetch the product
+        const response = await axios.post(apiUrl, encodebody(requestBody), {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = getDecodedBody(response.data);
         // Set the fetched product data to the state
-        console.log("DATA");
-        console.log(data);
         setProduct(data);
         const markdownContent = htmlToMd(data.complianceDescription);
         setMarkdownContent(markdownContent);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error('Error fetching product:', error);
-      });
-  }, [clientNr, explorerId, productName]);
+      }
+    };
+
+    fetchProduct();
+  }, [clientNr, explorerId, productName]); // Dependency array ensures the effect runs when these variables change
+
 
   return (
     <div className="Productcomplianceview">

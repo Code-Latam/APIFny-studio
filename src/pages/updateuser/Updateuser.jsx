@@ -38,11 +38,11 @@ export default function Updateuser() {
       };
       const body = encodebody(user);
       try {
-        await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/update", body);
+        await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/update", encodebody(body));
         alert("User has been updated");
         history.push("/");
-      } catch (err) {
-        alert(getDecodedBody(err.response.data))
+      } catch (error) {
+        alert("Error during update operation: " + (error.response ? JSON.stringify(getDecodedBody(error.response.data)) : error.message));
         }
     }
   };

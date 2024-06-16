@@ -88,8 +88,9 @@ export default function Updateuseradmin() {
             email: user.email
         };
         try {
-            const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/query", myPayload);
-            let explorerOptions = response.data.explorers.map(explorer => ({
+            const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/query", encodebody(myPayload));
+            const responseData = getDecodedBody(response.data);
+            let explorerOptions = responseData.explorers.map(explorer => ({
                 name: explorer.name,
                 label: `workspace name: ${explorer.name} (designer: ${explorer.designer ? 'Yes' : 'No'}, owner: ${explorer.owner ? 'Yes' : 'No'}, reader: ${explorer.reader ? 'Yes' : 'No'})`,
                 designer: explorer.designer,
@@ -160,8 +161,7 @@ const handleClick = async (e) => {
       alert("User has been updated");
       history.goBack(); 
   } catch (err) {
-      console.error("Error updating user:", err.response.data);
-      alert(getDecodedBody(err.response.data));
+    alert("Error during save operation: " + (err.response ? JSON.stringify(getDecodedBody(err.response.data)) : err.message));
   }
 };
 

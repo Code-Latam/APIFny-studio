@@ -1,28 +1,35 @@
 const crypto = require('crypto-js');
 const forge = require('node-forge');
 
-export function encodebody(originalbody)
+export function encodebody(originalbody, gwokenPar = null, gwokenTokenPar= null, E2EEPar = null )
 {
+  var gwoken;
+  var E2EE;
+  var gwokutoken;
+  if (gwokenPar === null || gwokenTokenPar === null || E2EEPar === null)
 
-   
-
+    {
+    console.log("GETTING STORAGE ITEMS");
+    console.log(localStorage.getItem('gwocu-setting'));
     const gwocuSettingsString = localStorage.getItem('gwocu-setting');
     const gwocuSettings = gwocuSettingsString ? JSON.parse(gwocuSettingsString) : null;
+    gwoken = gwocuSettings.gwoken ;
+    E2EE = gwocuSettings.endtoend ; 
+    gwokutoken = gwocuSettings.clientToken ;
+    }
+    else
+    {
+      gwoken = gwokenPar ;
+      E2EE = E2EEPar ;
+      gwokutoken = gwokenTokenPar ;
+    }
 
-    console.log("Settings");
-    console.log(gwocuSettings);
-    const gwoken = gwocuSettings.gwokenEnabled ;
-    const E2EE = gwocuSettings.E2EEEnabled ; 
-    const gwokutoken = gwocuSettings.gwokenToken ;
+   console.log("Tokens");
+   console.log(gwoken);
+   console.log(E2EE);
+   console.log(gwokutoken);
 
 
-
-
-
-
-    // const gwoken = process.env.REACT_APP_GWOKEN ;
-    // const E2EE = process.env.REACT_APP_E2EE ;    ;
-    // const gwokutoken = process.env.REACT_APP_GWOKUTOKEN ;
 
 
 
@@ -234,10 +241,13 @@ function CalculateSignature(token,parameters)
           console.log(api);
         const url = api.urlRoute;
         const method = api.method;
+        console.log("BEFORE HEADER MAP");
+        console.log("HEADERS IS", api.headers);
         const headers = Object.fromEntries(api.headers.map(header => {
           const [key, value] = header.split(':');
           return [key.trim(), value.trim()];
         }));
+        console.log("AFTER HEADER MAP");
       
         const javascriptCode = `
 // API Name: ${api.name}

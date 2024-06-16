@@ -17,7 +17,7 @@ export const loginCall = async (userCredential, dispatch) => {
     const client = clientRes.data;
     const gwocuSettingsString = JSON.stringify(client);
     localStorage.setItem('gwocu-setting', gwocuSettingsString);
-    
+    console.log("gwocu-setting set:", localStorage.getItem('gwocu-setting'));
 
     
     const myUserPayload = {

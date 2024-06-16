@@ -14,6 +14,7 @@ import 'tippy.js/themes/material.css';
 import CustomTooltip from '../../tooltips/CustomTooltip';
 import tooltips from '../../tooltips/tooltips';
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+import {getDecodedBody, encodebody} from "../../utils/utils.js";
 
 function Workflowview({ clientNr, explorerId, productName, name, authorization, updateTreeView  }) {
   const [workflow, setWorkflow] = useState(null);
@@ -33,36 +34,33 @@ function Workflowview({ clientNr, explorerId, productName, name, authorization, 
 
 
   useEffect(() => {
-    // Define the API URL for fetching the product
-    const apiUrl = process.env.REACT_APP_CENTRAL_BACK + '/workflow/query';
+    const fetchWorkflow = async () => {
+      const apiUrl = process.env.REACT_APP_CENTRAL_BACK + '/workflow/query';
 
-    // Define the request body
-    const requestBody = {
-      clientNr,
-      explorerId,
-      productName,
-      name
-    };
+      const requestBody = {
+        clientNr,
+        explorerId,
+        productName,
+        name,
+      };
 
-    // Make a POST request to fetch the product
-    fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // Set the fetched product data to the state
+      try {
+        const response = await axios.post(apiUrl, encodebody(requestBody), {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = getDecodedBody(response.data);
         setWorkflow(data);
         setSelectedStatus(data.status);
         const markdownContent = htmlToMd(data.description);
         setMarkdownContent(markdownContent);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error('Error fetching workflow:', error);
-      });
+      }
+    };
+
+    fetchWorkflow();
   }, [clientNr, explorerId, productName, name]);
 
   const handleDescriptionChange = (value) => {
@@ -123,7 +121,7 @@ function Workflowview({ clientNr, explorerId, productName, name, authorization, 
       status: selectedStatus,
     };
 
-      const myResponse = await axios.post(apiUrl, requestBody);
+      const myResponse = await axios.post(apiUrl, encodebody(requestBody));
       alert("Workflow was succesfully updated.");
   };
 
@@ -138,7 +136,7 @@ function Workflowview({ clientNr, explorerId, productName, name, authorization, 
       name:name,
     };
 
-      const myResponse = await axios.post(apiUrl, requestBody);
+      const myResponse = await axios.post(apiUrl, encodebody(requestBody));
       alert("Workflow was succesfully removed.");
       window.location.reload();
       // updateTreeView();

@@ -3,6 +3,7 @@ import './chatbot.css';
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import axios from 'axios';
+import {encodebody, getDecodedBody} from "../../utils/utils.js";
 
 
 const Chatbot = ({clientNr, explorerId}) => {
@@ -30,9 +31,9 @@ const Chatbot = ({clientNr, explorerId}) => {
             clientNr:user.clientNr, explorerId: explorerId
           })
           const chatbotexplorerrel = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/chatbotexplorerrel/query", 
-          {
+          encodebody({
             clientNr:user.clientNr, explorerId: explorerId
-          });
+          }));
         
           
           if (user.groups.includes('apiFnyDesigners') || user.groups.includes('apiOwners')) 
@@ -72,7 +73,7 @@ const Chatbot = ({clientNr, explorerId}) => {
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify(requestData),
+              body: JSON.stringify(encodebody(requestData)),
             }
           );
 

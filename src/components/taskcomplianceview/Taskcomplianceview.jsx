@@ -13,7 +13,7 @@ import 'tippy.js/themes/material.css';
 import CustomTooltip from '../../tooltips/CustomTooltip';
 import tooltips from '../../tooltips/tooltips';
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
-
+import {encodebody, getDecodedBody} from "../../utils/utils.js";
 function Taskcomplianceview({ clientNr, explorerId, workflowName, taskId, authorization,updateGraphView }) {
 
   
@@ -31,43 +31,41 @@ function Taskcomplianceview({ clientNr, explorerId, workflowName, taskId, author
   
 
   useEffect(() => {
+    const fetchTask = async () => {
+      const apiUrl = `${process.env.REACT_APP_CENTRAL_BACK}/task/query`;
 
-    
+      // Define the request body
+      const requestBody = {
+        clientNr,
+        explorerId,
+        workflowName,
+        taskId,
+      };
 
-    // Define the API URL for fetching the product
-    const apiUrl = process.env.REACT_APP_CENTRAL_BACK + '/task/query';
+      console.log(requestBody);
 
-    // Define the request body
-    const requestBody = {
-      clientNr: clientNr,
-      explorerId: explorerId,
-      workflowName: workflowName,
-      taskId: taskId
-     
-    };
+      try {
+        // Make a POST request to fetch the task
+        const response = await axios.post(apiUrl, encodebody(requestBody), {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-      console.log(requestBody)
-
-    // Make a POST request to fetch the task
-    fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
-    })
-      .then((response) => response.json())
-      .then((data) => {
+        const data = getDecodedBody(response.data);
         // Set the fetched product data to the state
         setTask(data);
-        // set the markdown
+        // Set the markdown
         const markdownContent = htmlToMd(data.complianceDescription);
         setMarkdownContent(markdownContent);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error('Error fetching task:', error);
-      });
-  }, [workflowName,taskId]);
+      }
+    };
+
+    fetchTask();
+  }, [workflowName, taskId]); // Dependency array ensures the effect runs when these variables change
+
 
  const handleComplianceDescriptionChange = (value) => {
   setTask((prevTask) => ({
@@ -106,7 +104,7 @@ const handleTextareaChange = (e) => {
       complianceDescription: task.complianceDescription
     };
 
-      const myResponse = await axios.post(apiUrl, requestBody);
+      const myResponse = await axios.post(apiUrl, encodebody(requestBody));
       alert("Task was succesfully updated.");
 
   };

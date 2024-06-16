@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import './workflowcode.css'; // Import your CSS file here
-import {generateJavaScriptCode,generatePythonCode, getDecodedBody} from "../../utils/utils.js";
+import {generateJavaScriptCode,generatePythonCode, getDecodedBody, encodebody} from "../../utils/utils.js";
 import axios from "axios";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { light as lightStyle, dark as darkStyle } from 'react-syntax-highlighter/dist/esm/styles/hljs';
@@ -46,11 +46,14 @@ const WorkflowCode = ({ clientNr, explorerId, productName, workflowName, codeTyp
         explorerId: explorerId,
         workflowName:workflowName
       }
-      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/link/queryorderedapi", myApibody);
-      const myApiList = await response.data;
-      console.log("API OBJECT first render");
+      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/link/queryorderedapi", encodebody(myApibody));
+      const myApiList = getDecodedBody(response.data);
 
+      console.log("APILIST", myApiList );
+    
       generateCode(myApiList)
+
+      console.log("after generate code");
 
       setApiList(myApiList);
 
@@ -59,8 +62,8 @@ const WorkflowCode = ({ clientNr, explorerId, productName, workflowName, codeTyp
         clientNr: clientNr,
         explorerId: explorerId
       }
-      const Eresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/explorer/query", myExplorerbody);
-      const myExplorer = Eresponse.data;
+      const Eresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/explorer/query", encodebody(myExplorerbody));
+      const myExplorer = getDecodedBody(Eresponse.data);
       setExplorer(myExplorer);
 
 
@@ -82,10 +85,11 @@ const WorkflowCode = ({ clientNr, explorerId, productName, workflowName, codeTyp
     for (const api of apis) {
       if (Object.keys(api).length > 0) {
         if (codeType === "python") {
-          const pythonCode = generatePythonCode(api, explorer, requestBodyFields);
+          const pythonCode = generatePythonCode(api.api, explorer, requestBodyFields);
           combinedPythonCode += pythonCode;
         } else if (codeType === "javascript") {
-          const javascriptCode = generateJavaScriptCode(api, explorer, requestBodyFields);
+          const javascriptCode = generateJavaScriptCode(api.api, explorer, requestBodyFields);
+          console.log("after first javascript");
           combinedJavaScriptCode += javascriptCode;
         }
       }

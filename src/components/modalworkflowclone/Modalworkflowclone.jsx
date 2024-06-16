@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./modalworkflowclone.css";
+import {encodebody, getDecodedBody} from "../../utils/utils.js";
 
 function Modalworkflowclone({ clientNr, explorerId, onClose, sourceWorkflowName,SourceProductName }) {
 
@@ -20,15 +21,14 @@ function Modalworkflowclone({ clientNr, explorerId, onClose, sourceWorkflowName,
         explorerId: explorerId,
       }
       try {
-        const productresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/product/queryall", myProductsPayload);
-
-        setProducts(productresponse.data);
+        const productresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/product/queryall", encodebody(myProductsPayload));
+        const productresponseData = getDecodedBody(productresponse.data);
+        setProducts(productresponseData);
          
-        console.log("PRODUCTS");
-        console.log(productresponse.data);
         
-        if (productresponse.data.length > 0) {
-          setSelectedDestinationProduct(productresponse.data[0].productName);
+        
+        if (productresponseData.length > 0) {
+          setSelectedDestinationProduct(productresponseData[0].productName);
         }
 
       } catch (error) {
@@ -68,12 +68,12 @@ function Modalworkflowclone({ clientNr, explorerId, onClose, sourceWorkflowName,
         newName: workflowCloneName
       };
   
-      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/workflow/cloneworkflow", mypayload);
-  
+      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/workflow/cloneworkflow", encodebody(mypayload));
+      const responseData = getDecodedBody(response.data);
       // Check if the response indicates an error
-      if (response.data && response.data.error) {
+      if (responseData && responseData.error) {
         // Display an alert with the error data
-        alert(`Error: ${response.data.error}`);
+        alert(`Error: ${responseData.error}`);
         return false;
       }
   

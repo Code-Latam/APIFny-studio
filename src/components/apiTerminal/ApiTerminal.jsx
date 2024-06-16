@@ -13,6 +13,7 @@ import 'tippy.js/themes/material.css';
 import CustomTooltip from '../../tooltips/CustomTooltip';
 import tooltips from '../../tooltips/tooltips';
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+import {encodebody, getDecodedBody} from "../../utils/utils.js";
 
 const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,apiName }) => {
   const [gwoken, setGwoken] = useState('saasasasas');
@@ -24,6 +25,7 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
   const [explorer, setExplorer] = useState([]);
   const [requestBodyFields, setRequestBodyFields] = useState({});
   const [reload, setReload] = useState(false);
+
 
   const commands = {
     whoami: () => {
@@ -94,11 +96,11 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
 
       const registerCustomPayload = removeProperty("_id", myCustomPayload );
 
-      const response = await axios.post(endpoint, registerCustomPayload);
+      const response = await axios.post(endpoint, encodebody(registerCustomPayload));
       alert("Custom API values saved!");
       setReload(true);
     } catch (error) {
-      alert("Error during save operation: " + (error.response ? JSON.stringify(error.response.data) : error.message));
+      alert("Error during save operation: " + (error.response ? JSON.stringify(getDecodedBody(error.response.data)) : error.message));
     }
   };
 
@@ -116,11 +118,11 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
         chatbotKey: user.chatbotKey
       };
 
-      const response = await axios.post(endpoint, query);
+      const response = await axios.post(endpoint, encodebody(query));
       alert("Default API values restored!");
       setReload(true);
     } catch (error) {
-      alert((error.response ? JSON.stringify(error.response.data) : error.message));
+      alert((error.response ? JSON.stringify(getDecodedBody(error.response.data)) : error.message));
     }
   };
 
@@ -177,13 +179,8 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
         email: user.email,
         chatbotKey: user.chatbotKey
       }
-      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/api/query", myApibody);
-      var myApi = await response.data;
-      console.log("MY API");
-      console.log(myApi)
-      
-
-      // check if there are active links to build up the route
+      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/api/query", encodebody(myApibody));
+      var myApi = getDecodedBody(response.data);
 
       try 
       {
@@ -198,8 +195,8 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
           baseUrl: myApi.resourcePath ? myApi.resourcePath : ""
         }
         console.log("MYLINK PARAM PAYLOAD", myLinkParamPayload );
-        const myLinkParamResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/link/querylinkparameters", myLinkParamPayload);
-        var myParams = await myLinkParamResponse.data;
+        const myLinkParamResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/link/querylinkparameters", encodebody(myLinkParamPayload));
+        var myParams = getDecodedBody(myLinkParamResponse.data);
         var activeLinks = false;
         if (myParams.activeLinks)
         {
@@ -225,8 +222,8 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
         clientNr: clientNr,
         explorerId: explorerId
       }
-      const Eresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/explorer/query", myExplorerbody);
-      const myExplorer = await Eresponse.data;
+      const Eresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/explorer/query", encodebody(myExplorerbody));
+      const myExplorer = getDecodedBody(Eresponse.data);
       setExplorer(myExplorer);
 
       if (myApi.requestBody) {
@@ -337,7 +334,7 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
     }
     try
       {
-      await axios.post(endpoint, myresultPayload);
+      await axios.post(endpoint, encodebody(myresultPayload));
       }
   catch(error)
       {

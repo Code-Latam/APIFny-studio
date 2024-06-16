@@ -12,6 +12,7 @@ import 'tippy.js/dist/tippy.css';
 import CustomTooltip from '../../tooltips/CustomTooltip';
 import tooltips from '../../tooltips/tooltips';
 
+import {encodebody, getDecodedBody} from "../../utils/utils.js";
 
 
 
@@ -30,11 +31,11 @@ export default function Login() {
   const [clientNr, setClientNr] = useState(clientNrFromQuery || "");
   const [chatbotKey, setChatbotKey] = useState(chatbotKeyFromQuery || "");
   const [email, setEmail] = useState("");
-
+  const [gwokenToken, setGwokenToken] = useState(process.env.REACT_APP_GWOKUTOKEN || "");
 
   
   const [explorers, setExplorers] = useState([]);
-  const [gwokenToken, setGwokenToken] = useState("");
+ 
   const [gwokenEnabledChecked, setgwokenEnabledChecked] = useState(false);
   const [E2EEEnabledChecked, setE2EEEnabledChecked] = useState(false);
   const [explorerSelect, setExplorerSelect] = useState("");
@@ -95,15 +96,16 @@ export default function Login() {
           chatbotKey,
           email,
         };
-        console.log("BODY");
-        console.log(body);
+        
         try {
+
+
           const response = await axios.post(
             process.env.REACT_APP_CENTRAL_BACK + "/users/explorers",
-            body
+            encodebody(body,true, gwokenToken,false)
           );
           // Assuming the API response has an array of explorers in the 'data' property
-          setExplorers(response.data);
+          setExplorers(getDecodedBody(response.data));
         } catch (error) {
           setExplorers([]);
         }
@@ -111,7 +113,7 @@ export default function Login() {
     };
 
     fetchExplorerData();
-  }, [clientNr, chatbotKey, email]);
+  }, [clientNr, chatbotKey, email,gwokenToken]);
 
 
   return (

@@ -35,61 +35,67 @@ function Taskview({ clientNr, explorerId, workflowName, taskId, authorization,up
   };
 
   
+
   useEffect(() => {
-    const fetchApisAndTask = async () => {
-      const apiBaseUrl = process.env.REACT_APP_CENTRAL_BACK;
-      
-      // Fetch APIs
-      const fetchApis = async () => {
-        const myBody = {
-          clientNr,
-          explorerId,
-        };
-        try {
-          const apisResponse = await axios.post(`${apiBaseUrl}/api/queryall`, encodebody(myBody));
-          const myEmptyApi = { apiName: "" };
-          const myApis = getDecodedBody(apisResponse.data);
-          myApis.unshift(myEmptyApi);
-          setApis(myApis);
-        } catch (error) {
-          console.error("Error fetching APIs:", error);
-        }
-      };
 
-      // Fetch task
-      const fetchTask = async () => {
-        const requestBody = {
-          clientNr,
-          explorerId,
-          workflowName,
-          taskId,
-        };
-        
-        try {
-          const response = await axios.post(`${apiBaseUrl}/task/query`, encodebody(requestBody), {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-          const data = getDecodedBody(response.data);
-          setTask(data);
-          setSelectedType(data.symbolType);
-          setSelectedTaskType(data.taskType);
-          setSelectedApi(data.apiName);
-          const markdownContent = htmlToMd(data.description);
-          setMarkdownContent(markdownContent);
-        } catch (error) {
-          console.error('Error fetching task:', error);
-        }
-      };
-
-      await fetchApis();
-      await fetchTask();
+    const fetchApis = async () => {
+      const myBody = {
+        clientNr: clientNr,
+        explorerId: explorerId
+      }
+      try {
+        const apisresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/api/queryall", encodebody(myBody));
+        const myEmptyApi = { apiName: ""}
+        const myapis = getDecodedBody(apisresponse.data);
+        myapis.unshift(myEmptyApi);;
+        setApis(myapis);  
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
 
-    fetchApisAndTask();
-  }, [workflowName, taskId]);
   
+  
+    fetchApis();
+
+
+    // Define the API URL for fetching the product
+    const apiUrl = process.env.REACT_APP_CENTRAL_BACK + '/task/query';
+
+    // Define the request body
+    const requestBody = {
+      clientNr: clientNr,
+      explorerId: explorerId,
+      workflowName: workflowName,
+      taskId: taskId
+     
+    };
+
+      console.log(requestBody)
+
+    // Make a POST request to fetch the task
+    fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Set the fetched product data to the state
+        setTask(data);
+        setSelectedType(data.symbolType);
+        setSelectedTaskType(data.taskType);
+        setSelectedApi(data.apiName)
+        // set the markdown
+        const markdownContent = htmlToMd(data.description);
+        setMarkdownContent(markdownContent);
+      })
+      .catch((error) => {
+        console.error('Error fetching task:', error);
+      });
+  }, [workflowName,taskId]);
 
  const handleDescriptionChange = (value) => {
   setTask((prevTask) => ({

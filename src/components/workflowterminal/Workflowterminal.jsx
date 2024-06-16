@@ -3,6 +3,7 @@ import { ReactTerminal } from "react-terminal";
 import axios from 'axios';
 import {makeCurlComponentFromApi,makeCurlComponentFromApiExecutionResult, HeadersGlobalAdd, requestBodyGlobalAdd, addAuthToHeaders, addAuthToRequestBody, parseApiHeaders, getConfiguration, isValidConfiguration} from "../../utils/api-spec-util.js";
 import ReactJson from 'react-json-view';
+import {generateJavaScriptCode,generatePythonCode, getDecodedBody, encodebody} from "../../utils/utils.js";
 
 
 
@@ -121,20 +122,18 @@ const Workflowterminal = ({ clientNr, explorerId, productName, name, authorizati
         workflowName: name
       };
 
-      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/link/queryorderedapi", myApibody);
-      const myApiList = await response.data;
+      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/link/queryorderedapi", encodebody(myApibody));
+      const myApiList = getDecodedBody(response.data);
 
       setApiList(myApiList.filter(obj => Object.keys(obj).length > 0));
 
-      console.log("FIRSTAPILIST");
-      console.log(myApiList);
 
       const myExplorerbody = {
         clientNr: clientNr,
         explorerId: explorerId
       };
-      const Eresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/explorer/query", myExplorerbody);
-      const myExplorer = Eresponse.data;
+      const Eresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/explorer/query", encodebody(myExplorerbody));
+      const myExplorer = getDecodedBody(Eresponse.data);
       setExplorer(myExplorer);
     } catch (error) {
       console.error(error);

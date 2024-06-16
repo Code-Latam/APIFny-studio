@@ -10,6 +10,7 @@ import CustomTooltip from '../../tooltips/CustomTooltip';
 import tooltips from '../../tooltips/tooltips';
 
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+import {encodebody, getDecodedBody} from "../../utils/utils.js";
 
 const ExportProduct = ({ clientNr, explorerId, onClose }) => {
 
@@ -27,8 +28,8 @@ const ExportProduct = ({ clientNr, explorerId, onClose }) => {
 
   // Fetch initial data for products
   useEffect(() => {
-    axios.post(process.env.REACT_APP_CENTRAL_BACK +'/product/queryall', { clientNr, explorerId })
-      .then(response => setProducts(response.data))
+    axios.post(process.env.REACT_APP_CENTRAL_BACK +'/product/queryall', encodebody({ clientNr, explorerId }))
+      .then(response => setProducts(getDecodedBody(response.data)))
       .catch(error => console.error("Error fetching products:", error));
     // Fetch workflows, tasks, and links in a similar manner
   }, [clientNr, explorerId]);
@@ -57,12 +58,12 @@ const ExportProduct = ({ clientNr, explorerId, onClose }) => {
     // Assuming there's an API endpoint to fetch workflows by product name
     // Fetch and compile workflows associated with the current product
     try {
-      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/workflow/queryallgivenproduct', {
+      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/workflow/queryallgivenproduct', encodebody({
         clientNr: product.clientNr,
         explorerId: product.explorerId,
         productName: product.productName,
-      });
-      const productWorkflows = response.data;
+      }));
+      const productWorkflows = getDecodedBody(response.data);
       for (const workflow of productWorkflows) {
         exportData.workflows.push({ ...workflow });
         // Here you can add logic to fetch and include tasks and links for each workflow
@@ -75,12 +76,12 @@ const ExportProduct = ({ clientNr, explorerId, onClose }) => {
   // Fetch tasks for each workflow in the workflows array
   for (const workflow of exportData.workflows) {
     try {
-      const taskResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/task/queryall', {
+      const taskResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/task/queryall', encodebody({
         clientNr: workflow.clientNr,
         explorerId: workflow.explorerId,
         workflowName: workflow.name,
-      });
-      const workflowTasks = taskResponse.data;
+      }));
+      const workflowTasks = getDecodedBody(taskResponse.data);
 
       for (const task of workflowTasks) {
         exportData.tasks.push({
@@ -92,12 +93,12 @@ const ExportProduct = ({ clientNr, explorerId, onClose }) => {
     }
     // fetch also the links
     try {
-        const linkResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK +'/link/query', {
+        const linkResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK +'/link/query', encodebody({
           clientNr: workflow.clientNr,
           explorerId: workflow.explorerId,
           workflowName: workflow.name,
-        });
-        const workflowLink = linkResponse.data; // Assuming this returns a single link object
+        }));
+        const workflowLink = getDecodedBody(linkResponse.data); // Assuming this returns a single link object
   
         exportData.links.push({
           ...workflowLink
@@ -110,10 +111,10 @@ const ExportProduct = ({ clientNr, explorerId, onClose }) => {
   //finally add the APIS To the export too!
 
   try {
-    const apiResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/queryall', {
+    const apiResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/queryall', encodebody({
       clientNr: clientNr, explorerId: explorerId // Use the clientNr provided to the component
-    });
-    const apis = apiResponse.data;
+    }));
+    const apis = getDecodedBody(apiResponse.data);
   
     // Assuming `apis` is an array of API objects
     for (const api of apis) {

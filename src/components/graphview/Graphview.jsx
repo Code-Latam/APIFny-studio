@@ -11,6 +11,7 @@ import CustomTooltip from '../../tooltips/CustomTooltip';
 import tooltips from '../../tooltips/tooltips';
 
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+import {encodebody, getDecodedBody} from "../../utils/utils.js";
 
 
 
@@ -164,11 +165,14 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
 
       console.log("task insert object");
       console.log(mybody);
-
-      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/task/register", mybody);
-      
-      // onTaskChange("task",selectedProduct, selectedWorkflow.name,"",newNodeId);
+      try{
+      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/task/register", encodebody(mybody));
       setNodesAdded(nodesAdded+1);
+      }
+      catch(error)
+      {
+        console.log("An error occured adding task", error);
+      }
     };
 
    
@@ -217,7 +221,7 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
     
       try {
         // Make the API call to delete the node
-        const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/link/update", myPayload);
+        const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/link/update", encodebody(myPayload));
         
         // Update the state or perform any other necessary actions
         setNodesAdded(nodesAdded + 1);
@@ -248,7 +252,7 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
     
       try {
         // Make the API call to delete the node
-        const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/task/delete", nodeToDelete);
+        const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/task/delete", encodebody(nodeToDelete));
         
         // Update the state or perform any other necessary actions
         setNodesAdded(nodesAdded + 1);
@@ -272,7 +276,7 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
       try { 
       console.log("Payload");
       console.log(myPositionPayload);
-      const myresponse = axios.post(process.env.REACT_APP_CENTRAL_BACK + "/task/update",myPositionPayload)
+      const myresponse = axios.post(process.env.REACT_APP_CENTRAL_BACK + "/task/update",encodebody(myPositionPayload))
     }
     catch (error) {
       console.error("Error updating node:", error);
@@ -393,7 +397,8 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
       requestbodyParameters: myRequestbodyParameters
     };
     setSelectedLink(myLinkObject);
-    onLinkChange("link",selectedProduct, graph.name,myLinkObject);
+    const linkId = myLinkObject.source + myLinkObject.target ;
+    onLinkChange("link",selectedProduct, graph.name,myLinkObject, linkId);
     // setSelectedWorkflow(graph);
 
    }
@@ -478,8 +483,8 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
         }
     
         // Make the API call using axios and parse the response as JSON
-        const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + endpoint, mybody);
-        const json = response.data;
+        const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + endpoint, encodebody(mybody));
+        const json = getDecodedBody(response.data);
     
         // Set the data state variable with the filtered JSON data
         setData(json);

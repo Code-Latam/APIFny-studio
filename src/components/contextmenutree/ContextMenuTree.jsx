@@ -34,6 +34,7 @@ import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/material.css';
 import CustomTooltip from '../../tooltips/CustomTooltip';
 import tooltips from '../../tooltips/tooltips';
+import {encodebody, getDecodedBody} from "../../utils/utils.js";
  
 
   const ContextMenuTree = ({onSelectTreeMenuItem, position }) => {
@@ -48,26 +49,26 @@ import tooltips from '../../tooltips/tooltips';
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/query", {
+          const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/query", encodebody({
             clientNr:user.clientNr, chatbotKey: user.chatbotKey, email:user.email
-          });
+          }));
           //set workspaces
           const listExplorers = response.data.explorers;
           const names = listExplorers.map(explorer => explorer.name);
           setExplorers(names); // Adjust according to your response structure
           // fetch invites to populate submenu
-          const inviteResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/invitation/queryall", {
+          const inviteResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/invitation/queryall", encodebody({
             chatbotKey: user.chatbotKey
 
-          });
+          }));
           const emails = inviteResponse.data.map(invite => invite.email);
                 setInvites(emails);  // Set the state with the array of emails
 
-          const usersResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/queryall", {
+          const usersResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/queryall", encodebody({
             clientNr: user.clientNr,
             chatbotKey: user.chatbotKey
 
-          });
+          }));
           // const myUsersEmails = usersResponse.data.map(myuser => myuser.email);
                 setUsers(usersResponse.data);  // Set the state with the array of emails
 

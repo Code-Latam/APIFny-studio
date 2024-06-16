@@ -2,6 +2,7 @@ const crypto = require('crypto-js');
 const forge = require('node-forge');
 import yaml from 'js-yaml';
 import axios from 'axios';
+import {getDecodedBody, encodebody} from "./utils.js";
 
 export function HeadersGlobalAdd(apiHeaders, yamlObject) {
   const globalParameters = yamlObject['Global-Parameters-Header'];

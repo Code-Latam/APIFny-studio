@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./modalproduct.css";
+import {encodebody, getDecodedBody} from "../../utils/utils.js";
 
 function Modalproduct({ clientNr, explorerId, onClose }) {
 
@@ -56,12 +57,12 @@ function Modalproduct({ clientNr, explorerId, onClose }) {
         status: "Private",
       };
   
-      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/product/register", mypayload);
-  
+      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/product/register", encodebody(mypayload));
+      const responseData = getDecodedBody(response.data);
       // Check if the response indicates an error
-      if (response.data && response.data.error) {
+      if (responseData && responseData.error) {
         // Display an alert with the error data
-        alert(`Error: ${response.data.error}`);
+        alert(`Error: ${responseData.error}`);
         return false;
       }
   

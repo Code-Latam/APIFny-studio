@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./modalworkflow.css";
+import {encodebody, getDecodedBody} from "../../utils/utils.js";
 
 function Modalworkflow({ clientNr, explorerId, onClose }) {
 
@@ -25,15 +26,12 @@ function Modalworkflow({ clientNr, explorerId, onClose }) {
         explorerId: explorerId,
       }
       try {
-        const productresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/product/queryall", myProductsPayload);
-
-        setProducts(productresponse.data);
-         
-        console.log("PRODUCTS");
-        console.log(productresponse.data);
+        const productresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/product/queryall", encodebody(myProductsPayload));
+        const productresponseData = getDecodedBody(productresponse.data);
+        setProducts(productresponseData);
         
-        if (productresponse.data.length > 0) {
-          setSelectedProduct(productresponse.data[0].productName);
+        if (productresponseData.length > 0) {
+          setSelectedProduct(productresponseData[0].productName);
         }
 
       } catch (error) {
@@ -86,12 +84,12 @@ function Modalworkflow({ clientNr, explorerId, onClose }) {
         status: "Private",
       };
   
-      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/workflow/register", mypayload);
-  
+      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/workflow/register", encodebody(mypayload));
+      const responseData = getDecodedBody(response.data)
       // Check if the response indicates an error
-      if (response.data && response.data.error) {
+      if (responseData && responseData.error) {
         // Display an alert with the error data
-        alert(`Error: ${response.data.error}`);
+        alert(`Error: ${responseData.error}`);
         return false;
       }
   

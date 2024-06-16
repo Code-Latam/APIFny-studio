@@ -47,6 +47,7 @@ import { AuthContext } from "../../context/AuthContext";
 
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
 
+import {encodebody, getDecodedBody} from "../../utils/utils.js";
 
 const TreeNode = ({ label, children, isChild, topLevelClick }) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -77,6 +78,7 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
   const [selectedWork, setSelectedWorkflow] = useState(null);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [selectedLink, setSelectedLink] = useState(null);
+  const [selectedLinkId, setSelectedLinkId] = useState(null);
   const [selectedApi, setSelectedApi] = useState(null);
   const [selectedCodeType, setCodeType] = useState(null);
   const [products, setProducts] = useState([]);
@@ -143,8 +145,8 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
         explorerId:explorerId,
         name: ExportApiName
       }
-      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/api/query", myApibody);
-      const myApi = await response.data;
+      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/api/query", encodebody(myApibody));
+      const myApi = await getDecodedBody(response.data);
       const myApiList = [];
       myApiList.push(myApi);
 
@@ -171,8 +173,8 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
         explorerId: explorerId,
         workflowName: workflowName
       }
-      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/link/queryorderedapi", myWorkflowbody);
-      const myApiList = await response.data;
+      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/link/queryorderedapi", encodebody(myWorkflowbody));
+      const myApiList = await getDecodedBody(response.data);
 
       if (myApiList === undefined || myApiList.length === 0)
       {
@@ -203,8 +205,8 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
         productName: productName
       }
 
-      const workflowListResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/workflow/queryallgivenproduct", myWorkflowListRequestBody);
-      const myWorkflowList = await workflowListResponse.data;
+      const workflowListResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/workflow/queryallgivenproduct", encodebody(myWorkflowListRequestBody));
+      const myWorkflowList = await getDecodedBody(workflowListResponse.data);
       if (myWorkflowList === undefined || myWorkflowList.length === 0)
       {
         return
@@ -225,8 +227,8 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
             console.log(myWorkflowRequestbody);
 
             try {
-              const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/link/queryorderedapi", myWorkflowRequestbody);
-              var myApiList = await response.data;
+              const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/link/queryorderedapi", encodebody(myWorkflowRequestbody));
+              var myApiList = await getDecodedBody(response.data);
         
               if (myApiList === undefined || myApiList.length === 0) {
                 myApiList = [];
@@ -265,24 +267,23 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
     switch (menuItem) {
       case 'createWorkspace':
         try {
-          await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/workspace/register", {clientNr: user.clientNr, explorerId: value,  chatbotKey: user.chatbotKey, email: user.email});
+          await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/workspace/register", encodebody({clientNr: user.clientNr, explorerId: value,  chatbotKey: user.chatbotKey, email: user.email}));
         }
         catch (err) {
           
           if (err.response) {
             // The request was made and the server responded with a status code that is not in the range of 2xx
-            console.error("API Error:", err.response.data);
-            alert(`Failed to Create the workspace: ${err.response.data}`);
+          
+            alert(`Failed to Create the workspace: ${getDecodedBody(err.response.data)}`);
             break;
           } else if (err.request) {
             // The request was made but no response was received
-            console.error("API Error: No response received");
             alert("Failed to create the workspace: No response from server");
             break
           } else {
             // Something happened in setting up the request that triggered an Error
             console.error("Error:", err.message);
-            alert(`Failed to create the workspace: ${err.message}`);
+            alert(`Failed to create the workspace: ${getDecodedBody(err.message)}`);
             break;
           }
           break;
@@ -297,10 +298,8 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
 
         case 'editUser':
         // fetch user
-        console.log("FETCH USER");
-        console.log({ clientNr:user.clientNr, chatbotKey: user.chatbotKey, email: value});
-        const responseTargetUser = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/query", { clientNr:user.clientNr, chatbotKey: user.chatbotKey, email: value});
-        const targetuser = responseTargetUser.data;
+        const responseTargetUser = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/query", encodebody({ clientNr:user.clientNr, chatbotKey: user.chatbotKey, email: value}));
+        const targetuser = getDecodedBody(responseTargetUser.data);
 
         history.push({
           pathname: '/edituser',
@@ -310,23 +309,20 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
 
         case 'deleteInvite':
           try {
-            await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/invitation/delete", { chatbotKey: user.chatbotKey, email: value});
+            await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/invitation/delete", encodebody({ chatbotKey: user.chatbotKey, email: value}));
           }
           catch (err) {
             if (err.response) {
               // The request was made and the server responded with a status code that is not in the range of 2xx
-              console.error("API Error:", err.response.data);
-              alert(`Failed to delete the invite: ${err.response.data}`);
+              alert(`Failed to delete the invite: ${getDecodedBody(err.response.data)}`);
               break;
             } else if (err.request) {
               // The request was made but no response was received
-              console.error("API Error: No response received");
               alert("Failed to delete the invite: No response from server");
               break
             } else {
               // Something happened in setting up the request that triggered an Error
-              console.error("Error:", err.message);
-              alert(`Failed to delete the invite: ${err.message}`);
+              alert(`Failed to delete the invite: ${getDecodedBody(err.message)}`);
               break;
             }
           
@@ -338,13 +334,13 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
 
           case 'deleteUser':
           try {
-            await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/delete", { clientNr: user.clientNr, chatbotKey: user.chatbotKey, email: value});
+            await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/delete", encodebody({ clientNr: user.clientNr, chatbotKey: user.chatbotKey, email: value}));
           }
           catch (err) {
             if (err.response) {
               // The request was made and the server responded with a status code that is not in the range of 2xx
-              console.error("API Error:", err.response.data);
-              alert(`Failed to delete the user: ${err.response.data}`);
+            
+              alert(`Failed to delete the user: ${getDecodedBody(err.response.data)}`);
               break;
             } else if (err.request) {
               // The request was made but no response was received
@@ -353,8 +349,7 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
               break
             } else {
               // Something happened in setting up the request that triggered an Error
-              console.error("Error:", err.message);
-              alert(`Failed to delete the user: ${err.message}`);
+              alert(`Failed to delete the user: ${getDecodedBody(err.message)}`);
               break;
             }
           
@@ -367,23 +362,20 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
 
       case 'deleteExplorer':
       try {
-        await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/workspace/delete", {clientNr: user.clientNr, explorerId: value,  chatbotKey: user.chatbotKey, email: user.email});
+        await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/workspace/delete", encodebody({clientNr: user.clientNr, explorerId: value,  chatbotKey: user.chatbotKey, email: user.email}));
       }
       catch (err) {
         if (err.response) {
           // The request was made and the server responded with a status code that is not in the range of 2xx
-          console.error("API Error:", err.response.data);
-          alert(`Failed to delete the workspace: ${err.response.data}`);
+          alert(`Failed to delete the workspace: ${getDecodedBody(err.response.data)}`);
           break;
         } else if (err.request) {
           // The request was made but no response was received
-          console.error("API Error: No response received");
           alert("Failed to delete the workspace: No response from server");
           break
         } else {
-          // Something happened in setting up the request that triggered an Error
-          console.error("Error:", err.message);
-          alert(`Failed to delete the workspace: ${err.message}`);
+          // Something happened in setting up the request that triggered an Erro
+          alert(`Failed to delete the workspace: ${getDecodedBody(err.message)}`);
           break;
         }
       
@@ -395,12 +387,12 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
       case 'explorer':
         // Check if workspace exists (it could have been deleted by another user)
         let myExplorerId = value;
-        const myUser = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/query", {clientNr: user.clientNr, chatbotKey: user.chatbotKey, email: user.email});
+        const myUser = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/query", encodebody({clientNr: user.clientNr, chatbotKey: user.chatbotKey, email: user.email}));
         
-        let myExplorers = myUser.data.explorers;
+        let myExplorers = getDecodedBody(myUser.data).explorers;
         const myworkspacePayload = { clientNr: clientNr, explorerId: myExplorerId,}
         try {
-          await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/workspace/exist", myworkspacePayload);
+          await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/workspace/exist", encodebody(myworkspacePayload));
         }
         catch(err) {
           alert("The selected workspace was deleted or your access has been revoked by a workspace admin");
@@ -558,12 +550,13 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
     setSelectedLink(null);
   };
 
-  const handleSelectedLinkChange = (newselectItem,newProductName,newWorkflowName,newLink) => {
+  const handleSelectedLinkChange = (newselectItem,newProductName,newWorkflowName,newLink, linkId) => {
     
     setSelectedItemType(newselectItem);
     setSelectedProduct(newProductName);
     setSelectedWorkflow(newWorkflowName);
     setSelectedLink(newLink)
+    setSelectedLinkId(linkId)
     setSelectedTaskId(null)
   };
 
@@ -613,13 +606,11 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
         status: myAll ? "All" : "Public"
       };
 
-      console.log ("BODY");
-      console.log(mybody);
-
+     
   
       // Make the API call using axios and parse the response as JSON
-      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/product/gettree", mybody);
-      const json = response.data;
+      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/product/gettree", encodebody(mybody));
+      const json = getDecodedBody(response.data);
       console.log("JSON");
       console.log(json);
 
@@ -959,6 +950,7 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
          explorerId = {explorerId}
          workflowName = {selectedWork}
          mylink = {selectedLink}
+         linkId = {selectedLinkId}
          authorization = {authorization}
          updateGraphView = {() => {
           setNewGraphItem(newGraphItem+1);

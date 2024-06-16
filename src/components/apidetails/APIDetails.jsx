@@ -13,7 +13,7 @@ import { ReactTerminal } from "react-terminal";
 import ReactJson from 'react-json-view';
 
 import {HeadersGlobalAdd, requestBodyGlobalAdd, addAuthToHeaders, addAuthToRequestBody, parseApiHeaders, getConfiguration, isValidConfiguration, isObject} from "../../utils/api-spec-util.js";
-
+import {encodebody, getDecodedBody} from "../../utils/utils.js";
 
 function APIDetails({ clientNr, explorerId, api }) {
 
@@ -96,9 +96,15 @@ const theme = createTheme({
       clientNr: clientNr,
       explorerId: explorerId
     }
-    const Eresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/explorer/query", myExplorerbody);
-    const myExplorer = await Eresponse.data;
+    try{
+    const Eresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/explorer/query", encodebody(myExplorerbody));
+    const myExplorer = getDecodedBody(Eresponse.data);
     setExplorer(myExplorer);
+    }
+    catch(error)
+    {
+        console.log('Error while fetching explorer:', error);
+    }
   }
 
   const fetchThirdParties = async () => {
@@ -106,13 +112,13 @@ const theme = createTheme({
       clientNr: clientNr,
     }
     try {
-      const thirdpartiesresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/thirdparties/queryall", myBody);
+      const thirdpartiesresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/thirdparties/queryall", encodebody(myBody));
       const myEmptyThirdParty = { name: "none"}
-      const mythirdparties = thirdpartiesresponse.data;
+      const mythirdparties = getDecodedBody(thirdpartiesresponse.data);
       mythirdparties.unshift(myEmptyThirdParty);;
       setThirdparties(mythirdparties);  
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching third party data:", error);
     }
   };
 
@@ -212,15 +218,22 @@ const theme = createTheme({
     try {
     console.log("API VALUE");
     console.log(updatedApi);  
-    const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/update', updatedApi); //  to your actual API endpoint
+    const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/update', encodebody(updatedApi)); //  to your actual API endpoint
     alert("Api was succesfully updated!")
-    // setApiData(response.data);
-    console.log("RESPONSE VALUE");
-    console.log(response.data);
-    } catch (error) {
-      console.error('Error updating API:', error);
     }
-  };
+    catch (error) {
+      if (error.response) {
+          alert(`Error updating API: ${getDecodedBody(error.response.data.message) || 'An error occurred'}`);
+      } else if (error.request) {
+          alert('Error updating API: No response received from the server.');
+      } else {
+          // Something happened in setting up the request that triggered an Error
+          console.error('Error message:', error.message);
+          alert(`Error updating API: ${error.message}`);
+      }
+
+  }
+};
 
 
   useEffect(() => {
@@ -343,7 +356,7 @@ const theme = createTheme({
       }
       try
         {
-        await axios.post(endpoint, myresultPayload);
+        await axios.post(endpoint, encodebody(myresultPayload));
         }
     catch(error)
         {

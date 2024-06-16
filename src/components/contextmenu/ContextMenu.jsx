@@ -82,6 +82,8 @@ import {
             
           </>
         )}
+        {(selectedItemType !== "link")   && (
+          <>
         <div className="menu-separator"></div>
         <div className="menu-item" onClick={() => handleMenuItemClick("description")}>
               <Description className="menu-icon" />
@@ -91,6 +93,9 @@ import {
               <Description className="menu-icon" />
               <span className="menu-text">Compliance..</span>
         </div>
+        </>
+        )}
+
         <div className="menu-item" onClick={() => handleMenuItemClick("Close")}>
           <Close className="menu-icon" />
           <span className="menu-text">Close</span>

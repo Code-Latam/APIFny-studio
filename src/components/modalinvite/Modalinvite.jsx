@@ -11,6 +11,7 @@ import CustomTooltip from '../../tooltips/CustomTooltip';
 import tooltips from '../../tooltips/tooltips';
 
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+import {encodebody, getDecodedBody} from "../../utils/utils.js";
 
 function Modalinvite({ clientNr, explorerId, onClose }) {
 
@@ -60,12 +61,12 @@ function Modalinvite({ clientNr, explorerId, onClose }) {
         url: process.env.REACT_APP_FROND_END + "/acceptinvite"
       };
   
-      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/invitation/invite", mypayload);
-  
+      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/invitation/invite", encodebody(mypayload));
+      const responseData = getDecodedBody(response.data);
       // Check if the response indicates an error
-      if (response.data && response.data.error) {
+      if (responseData && responseData.error) {
         // Display an alert with the error data
-        alert(`Error: ${response.data.error}`);
+        alert(`Error: ${responseData.error}`);
         return false;
       }
       alert("Invite was successfully sent.")

@@ -14,6 +14,7 @@ import 'tippy.js/themes/material.css';
 import CustomTooltip from '../../tooltips/CustomTooltip';
 import tooltips from '../../tooltips/tooltips';
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+import {getDecodedBody, encodebody} from "../../utils/utils.js";
 
 function Workflowcomplianceview({ clientNr, explorerId, productName, name, authorization, updateTreeView  }) {
   const [workflow, setWorkflow] = useState(null);
@@ -28,35 +29,32 @@ function Workflowcomplianceview({ clientNr, explorerId, productName, name, autho
 
 
   useEffect(() => {
-    // Define the API URL for fetching the product
-    const apiUrl = process.env.REACT_APP_CENTRAL_BACK + '/workflow/query';
+    const fetchWorkflow = async () => {
+      const apiUrl = process.env.REACT_APP_CENTRAL_BACK + '/workflow/query';
 
-    // Define the request body
-    const requestBody = {
-      clientNr,
-      explorerId,
-      productName,
-      name
-    };
+      const requestBody = {
+        clientNr,
+        explorerId,
+        productName,
+        name,
+      };
 
-    // Make a POST request to fetch the product
-    fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // Set the fetched product data to the state
+      try {
+        const response = await axios.post(apiUrl, encodebody(requestBody), {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = getDecodedBody(response.data);
         setWorkflow(data);
         const markdownContent = htmlToMd(data.complianceDescription);
         setMarkdownContent(markdownContent);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error('Error fetching workflow:', error);
-      });
+      }
+    };
+
+    fetchWorkflow();
   }, [clientNr, explorerId, productName, name]);
 
   const handleComplianceDescriptionChange = (value) => {
@@ -97,7 +95,7 @@ function Workflowcomplianceview({ clientNr, explorerId, productName, name, autho
       complianceDescription: workflow.complianceDescription,
     };
 
-      const myResponse = await axios.post(apiUrl, requestBody);
+      const myResponse = await axios.post(apiUrl, encodebody(requestBody));
       alert("Workflow was succesfully updated.");
   };
 

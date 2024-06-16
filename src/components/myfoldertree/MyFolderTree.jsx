@@ -3,6 +3,7 @@ import React, { useRef, useMemo, useState, useEffect } from 'react';
 import 'react-complex-tree/lib/style-modern.css';
 import './myfoldertree.css'; 
 import axios from "axios";
+import {encodebody, getDecodedBody} from "../../utils/utils.js";
 
 const MyFolderTree = ({myItems, onSelectApi, clientNr, explorerId }) => {
 
@@ -65,7 +66,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr, explorerId }) => {
                     items: items
                 }
                
-                axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/update', saveFolderPayload);
+                axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/update', encodebody(saveFolderPayload));
 
                 dataProvider.onDidChangeTreeDataEmitter.emit([parentIndex]);    
             return { ...item, data: newName };
@@ -92,7 +93,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr, explorerId }) => {
                     items: items
                 }
                
-                axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/update', saveFolderPayload);
+                axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/update', encodebody(saveFolderPayload));
 
                 const saveApiPayload = {
                     clientNr: clientNr,
@@ -101,7 +102,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr, explorerId }) => {
                     newName: newName
                 }
 
-                axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/changename', saveApiPayload);
+                axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/changename', encodebody(saveApiPayload));
                 dataProvider.onDidChangeTreeDataEmitter.emit([parentIndex]);
                 tree.current.moveFocusUp()
                 return { ...item, data: newName };
@@ -152,7 +153,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr, explorerId }) => {
         items: items
     }
    
-    axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/update', saveFolderPayload); //
+    axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/update', encodebody(saveFolderPayload)); //
 
     dataProvider.onDidChangeTreeDataEmitter.emit([parent]);
   };
@@ -176,7 +177,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr, explorerId }) => {
 
     }
 
-    axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/register', myNewAPiPayload); //
+    axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/register', encodebody(myNewAPiPayload)); //
                    
 
 
@@ -190,7 +191,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr, explorerId }) => {
         items: items
     }
    
-    axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/update', saveFolderPayload); //
+    axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/update', encodebody(saveFolderPayload)); //
     
     alert("Api created in Unassigned Folder!");
 
@@ -214,7 +215,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr, explorerId }) => {
         newApiName: newApiName
     }
 
-    axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/copy', copyAPiPayload); //
+    axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/copy', encodebody(copyAPiPayload)); //
                    
 
 
@@ -228,7 +229,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr, explorerId }) => {
         items: items
     }
    
-    axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/update', saveFolderPayload); //
+    axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/update', encodebody(saveFolderPayload)); //
     
     alert("Api copied to Unassigned Folder!");
 
@@ -279,7 +280,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr, explorerId }) => {
                 explorerId: explorerId,
                 items: items
             }   
-            axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/update', saveFolderPayload); //
+            axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/update', encodebody(saveFolderPayload)); //
 
             dataProvider.onDidChangeTreeDataEmitter.emit([parentFocusedIndex]);
          }
@@ -304,7 +305,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr, explorerId }) => {
                     explorerId: explorerId,
                     items: items
                 }
-                axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/update', saveFolderPayload);       
+                axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/update', encodebody(saveFolderPayload));       
                 
                 dataProvider.onDidChangeTreeDataEmitter.emit(["Unassigned"]);
                 alert('API was moved to unasigned directory')
@@ -322,7 +323,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr, explorerId }) => {
                         name: focusedItem
                     }
 
-                    axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/delete', deletePayload); //
+                    axios.post(process.env.REACT_APP_CENTRAL_BACK + '/api/delete', encodebody(deletePayload)); //
                     
                     const saveFolderPayload = {
                         clientNr: clientNr,
@@ -330,7 +331,7 @@ const MyFolderTree = ({myItems, onSelectApi, clientNr, explorerId }) => {
                         items: items
                     }
                    
-                    axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/update', saveFolderPayload); //
+                    axios.post(process.env.REACT_APP_CENTRAL_BACK + '/folder/update', encodebody(saveFolderPayload)); //
                     
 
                     alert('API was permanently deleted form system')

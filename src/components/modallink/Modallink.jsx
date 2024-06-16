@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./modallink.css";
+import {encodebody, getDecodedBody} from "../../utils/utils.js";
 
 function Modallink({ clientNr, explorerId, graph, onClose }) {
 
@@ -19,16 +20,16 @@ function Modallink({ clientNr, explorerId, graph, onClose }) {
         workflowName: graph.name,
       }
       try {
-        const tasksresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/task/queryall", myBody);
-
-        setSources(tasksresponse.data);
-        setTargets(tasksresponse.data);
+        const tasksresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/task/queryall", encodebody(myBody));
+        const tasksresponseData = getDecodedBody(tasksresponse.data)
+        setSources(tasksresponseData);
+        setTargets(tasksresponseData);
         
-        if (tasksresponse.data.length > 0) {
-          setSelectedSource(tasksresponse.data[0].taskId);
+        if (tasksresponseData.length > 0) {
+          setSelectedSource(tasksresponseData[0].taskId);
         }
-        if (tasksresponse.data.length > 0) {
-          setSelectedTarget(tasksresponse.data[0].taskId);
+        if (tasksresponseData.length > 0) {
+          setSelectedTarget(tasksresponseData[0].taskId);
         }
 
       } catch (error) {
@@ -78,7 +79,7 @@ function Modallink({ clientNr, explorerId, graph, onClose }) {
     console.log("Link create Payload for API");
     console.log(mypayload);
 
-    const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/link/update", mypayload);
+    const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/link/update", encodebody(mypayload));
     
     // setNodesAdded(nodesAdded+1);
     return true;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./modalconfiguration.css";
+import {encodebody, getDecodedBody} from "../../utils/utils.js";
 
 function Modalconfiguration({ clientNr, explorerId, onClose }) {
 
@@ -10,33 +11,33 @@ function Modalconfiguration({ clientNr, explorerId, onClose }) {
   
 
   useEffect(() => {
+    const fetchConfiguration = async () => {
+      const apiUrl = `${process.env.REACT_APP_CENTRAL_BACK}/explorer/query`;
 
-    const apiUrl = process.env.REACT_APP_CENTRAL_BACK + '/explorer/query';
+      // Define the request body
+      const requestBody = {
+        clientNr: clientNr,
+        explorerId: explorerId,
+      };
 
-    // Define the request body
-    const requestBody = {
-      clientNr: clientNr,
-      explorerId: explorerId,
+      try {
+        // Make a POST request to fetch the configuration
+        const response = await axios.post(apiUrl, encodebody(requestBody), {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        // Set the fetched configuration data to the state
+        const responseData = getDecodedBody(response.data);
+        setSelectedConfigurationYaml(responseData.yaml);
+      } catch (error) {
+        console.error('Error fetching product:', error);
+      }
     };
 
-    // Make a POST request to fetch the configuration
-    fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // Set the fetched configuration data to the state
-        setSelectedConfigurationYaml(data.yaml);
-      })
-      .catch((error) => {
-        console.error('Error fetching product:', error);
-      });
-
+    fetchConfiguration();
   }, []); // Empty dependency array ensures the effect runs only once after the initial render
+
 
   
   const handleYamlChange = (event) => {
@@ -65,12 +66,12 @@ function Modalconfiguration({ clientNr, explorerId, onClose }) {
       console.log("HANDLE SAVE");
       console.log(mypayload);
   
-      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/explorer/update", mypayload);
-  
+      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/explorer/update", encodebody(mypayload));
+      const responseData = getDecodedBody(response.data);
       // Check if the response indicates an error
-      if (response.data && response.data.error) {
+      if (responseData && responseData.error) {
         // Display an alert with the error data
-        alert(`Error: ${response.data.error}`);
+        alert(`Error: ${responseData.error}`);
         return false;
       }
   

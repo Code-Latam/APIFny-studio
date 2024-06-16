@@ -11,8 +11,9 @@ import 'tippy.js/themes/material.css';
 import CustomTooltip from '../../tooltips/CustomTooltip';
 import tooltips from '../../tooltips/tooltips';
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+import {encodebody, getDecodedBody} from "../../utils/utils.js";
 
-function Linkview({ clientNr, explorerId, workflowName, mylink,authorization,updateGraphView }) {
+function Linkview({ clientNr, explorerId, workflowName, mylink, linkId, authorization,updateGraphView }) {
 
   const [link, setLink] = useState(mylink);
   const emptyObject = Object.create(null);
@@ -218,8 +219,9 @@ function Linkview({ clientNr, explorerId, workflowName, mylink,authorization,upd
     };
 
     // get original links
-    const myQueryResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/link/query', MyrequestBody);
-    const myLinks = myQueryResponse.data.links;
+    const myQueryResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/link/query', encodebody(MyrequestBody));
+    const myQueryResponseData = getDecodedBody(myQueryResponse.data);
+    const myLinks = myQueryResponseData.links;
 
     // replace the type in the original links
     const myNewLinks =  replaceType(myLinks, mylink.source, mylink.target, selectedType, isChecked,selectedSequence, selectedPathParameters,selectedPathOrder,selectedQueryParameters,selectedRequestbodyParameters) 
@@ -234,7 +236,8 @@ function Linkview({ clientNr, explorerId, workflowName, mylink,authorization,upd
       links:myNewLinks
     };
 
-      const myResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/link/update', MyPayload);
+      const myResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/link/update', encodebody(MyPayload));
+      alert("Link was succesfully updated!")
       updateGraphView();
   };
 
@@ -261,16 +264,15 @@ function Linkview({ clientNr, explorerId, workflowName, mylink,authorization,upd
 
     }
 
-    const myResponseSource = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/task/query", myPayloadSource )
-    const myResponseTarget = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/task/query", myPayloadTarget )
+    const myResponseSource = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/task/query", encodebody(myPayloadSource ))
+    const myResponseTarget = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/task/query", encodebody(myPayloadTarget ))
      
-    console.log("AFTER FETCH");
-    console.log(myResponseSource.data.name);
-
+   const myResponseSourceData = getDecodedBody(myResponseSource.data);
+   const myResponseTargetData = getDecodedBody(myResponseTarget.data);
 
     const mySourceAndTargetNames = {
-      sourceName: myResponseSource.data.name,
-      targetName: myResponseTarget.data.name,
+      sourceName: myResponseSourceData.name,
+      targetName: myResponseTargetData.name,
     }
 
     setSourceAndTargetNames(mySourceAndTargetNames)

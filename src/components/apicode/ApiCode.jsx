@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import './apicode.css'; // Import your CSS file here
-import {generateJavaScriptCode,generatePythonCode, getDecodedBody} from "../../utils/utils.js";
+import {generateJavaScriptCode,generatePythonCode, getDecodedBody, encodebody} from "../../utils/utils.js";
 import axios from "axios";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { light as lightStyle, dark as darkStyle } from 'react-syntax-highlighter/dist/esm/styles/hljs';
@@ -10,6 +10,8 @@ import { FaCopy } from "react-icons/fa";
 
 import { ToastContainer, toast } from 'react-toastify'; // import toastify components
 import 'react-toastify/dist/ReactToastify.css'; // import toastify CSS
+
+
 
 const ApiCode = ({ clientNr, explorerId, productName, workflowName, taskId,apiName, codeType}) => {
   
@@ -48,8 +50,8 @@ const ApiCode = ({ clientNr, explorerId, productName, workflowName, taskId,apiNa
         explorerId: explorerId,
         name: apiName
       }
-      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/api/query", myApibody);
-      const myApi = await response.data;
+      const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/api/query", encodebody(myApibody));
+      const myApi = getDecodedBody(response.data);
       console.log("API OBJECT first render");
       console.log(myApi);
 
@@ -62,8 +64,8 @@ const ApiCode = ({ clientNr, explorerId, productName, workflowName, taskId,apiNa
         clientNr: clientNr,
         explorerId: explorerId
       }
-      const Eresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/explorer/query", myExplorerbody);
-      const myExplorer = Eresponse.data;
+      const Eresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/explorer/query", encodebody(myExplorerbody));
+      const myExplorer = getDecodedBody(Eresponse.data);
       setExplorer(myExplorer);
 
       if (myApi.requestBody) {
