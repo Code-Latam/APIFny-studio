@@ -45,6 +45,7 @@ import {encodebody, getDecodedBody} from "../../utils/utils.js";
     const { user } = useContext(AuthContext);
     const [submenu, setSubmenu] = useState({ visible: false, content: null, position: {} });
     const [submenu2, setSubmenu2] = useState({ visible: false, content: null, position: {} });
+    const [submenu3, setSubmenu3] = useState({ visible: false, content: null, position: {} });
 
     useEffect(() => {
       const fetchData = async () => {
@@ -98,6 +99,15 @@ import {encodebody, getDecodedBody} from "../../utils/utils.js";
         position: { x: rect.right, y: rect.top }
     });
 };
+
+const openSubmenu3 = (item, event) => {
+  const rect = event.target.getBoundingClientRect();
+  setSubmenu3({
+      visible: true,
+      content: item,
+      position: { x: rect.right, y: rect.top }
+  });
+};
   
 
     const handleMenuItemClick = (item, value, event) => {
@@ -107,13 +117,20 @@ import {encodebody, getDecodedBody} from "../../utils/utils.js";
         case 'invitations':
           // CLOSE ALL other sUBMENUS         
           setSubmenu2({ visible: false, content: null, position: {} }); // Close any open submenu
+          setSubmenu3({ visible: false, content: null, position: {} }); 
           openSubmenu(item, event);
             break;
         case 'users':
           setSubmenu({ visible: false, content: null, position: {} }); // Close any open submenu
+          setSubmenu3({ visible: false, content: null, position: {} }); 
           openSubmenu2(item, event);
             break;
-        
+        case 'api-pre-request-actions':
+          setSubmenu({ visible: false, content: null, position: {} }); // Close any open submenu
+          setSubmenu2({ visible: false, content: null, position: {} });
+          openSubmenu3(item, event);
+            break;
+    
         default:
           setSubmenu({ visible: false, content: null, position: {} }); // Close any open submenu
           setSubmenu2({ visible: false, content: null, position: {} }); // Close any open submenu
@@ -207,14 +224,10 @@ import {encodebody, getDecodedBody} from "../../utils/utils.js";
       <div className="context-menu-tree" style={{ postion: "absolute", top: position.y, left: position.x }}>
         { (
           <>    
+             
               <>
-                <div className="menu-item" onClick={(e) => handleMenuItemClick("configuration", null, e)}>
-                  <Code className="menu-icon" />
-                  <span className="menu-text">Configuration</span>
-                </div>
-              </>
-              <>
-              <div className="menu-separator"></div> 
+
+             
                 <div className="menu-item" onClick={(e) => handleMenuItemClick("invitations", null, e)}>
                   <GroupAdd  className="menu-icon" />
                   <span className="menu-text"> Invitations  </span>
@@ -222,7 +235,7 @@ import {encodebody, getDecodedBody} from "../../utils/utils.js";
                 </div>
 
                 {submenu.visible && (
-                <div className="context-menu-sub-tree" style={{ position: "absolute", top: 60, left: 200 }}>
+                <div className="context-menu-sub-tree" style={{ position: "absolute", top: 40, left: 200 }}>
                     {/* Content based on `submenu.content` */}
                     <div className="menu-text-invitation">
                     <Tippy content={<CustomTooltip content={tooltips.invitation.content} isHtml={tooltips.invitation.isHtml} />} placement="right" theme = "terminal" maxWidth= "700px"  trigger ='click' interactive = "true" >
@@ -257,7 +270,7 @@ import {encodebody, getDecodedBody} from "../../utils/utils.js";
                 </div>
 
               {submenu2.visible && (
-                <div className="context-menu-sub-tree" style={{ position: "absolute", top: 100, left: 200 }}>
+                <div className="context-menu-sub-tree" style={{ position: "absolute", top: 70, left: 200 }}>
                     {/* Content based on `submenu.content` */} 
                     <div className="menu-text-user">
                     <Tippy content={<CustomTooltip content={tooltips.usersroles.content} isHtml={tooltips.usersroles.isHtml} />} placement="right" theme = "terminal" maxWidth= "700px"  trigger ='click' interactive = "true" >
@@ -303,6 +316,34 @@ import {encodebody, getDecodedBody} from "../../utils/utils.js";
                 <Folder className="menu-icon" />
                 <span className="menu-text">Import Api Definitions</span>
               </div>
+
+              <div className="menu-item" onClick={(e) => handleMenuItemClick("api-pre-request-actions", null, e)}>
+                  <Description  className="menu-icon" />
+                  <span className="menu-text"> Pre Request Actions  </span>
+                  <KeyboardArrowRight  className="menu-icon"/>
+              </div>
+
+              {submenu3.visible && (
+                <div className="context-menu-sub-tree" style={{ position: "absolute", top: 180, left: 200 }}>
+                    {/* Content based on `submenu.content` */}
+                    <div className="menu-text-invitation">
+                    <Tippy content={<CustomTooltip content={tooltips.apiPreRequestAction.content} isHtml={tooltips.apiPreRequestAction.isHtml} />} placement="right" theme = "terminal" maxWidth= "700px"  trigger ='click' interactive = "true" >
+                    <HelpCenterIcon/>
+                    </Tippy>
+                    </div>
+                    <div className="menu-separator"></div>
+                    <div className="menu-item" onClick={(e) => handleMenuItemClick("workspace-action", null, e)}>
+                    <Code className="menu-icon" />
+                    <span className="menu-text">Workspace Actions</span>
+                    </div>
+                    <div className="menu-item" onClick={(e) => handleMenuItemClick("api-action", null,e)}>
+                    <Code className="menu-icon" />
+                    <span className="menu-text">Api Actions</span>
+            </div>
+                </div>
+                )}
+
+
               <div className="menu-separator"></div> 
               <div className="menu-item" onClick={(e) => handleMenuItemClick("exportproducts", null, e)}>
                 <Folder className="menu-icon" />
@@ -313,12 +354,6 @@ import {encodebody, getDecodedBody} from "../../utils/utils.js";
                 <span className="menu-text">Import Products</span>
               </div>
 
-              <div className="menu-separator"></div>
-
-            <div className="menu-item" onClick={(e) => handleMenuItemClick("thirdparty", null,e)}>
-              <Description className="menu-icon" />
-              <span className="menu-text">Third Party Api Providers</span>
-            </div>
           </>
         )}
       

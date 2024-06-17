@@ -28,7 +28,7 @@ export default function Topbar() {
     <div className="topbarContainer">
       <div className="topbarLeft">
       <a href={gwocuSettings.url} target="_blank" style={{ textDecoration: "none" }}>
-      <div className="logotext">{gwocuSettings.clientNr} GWOCU Studio</div>
+      <div className="logotext"> GWOCU Studio</div>
       </a>
       </div>
       <div className="topbarCenter">

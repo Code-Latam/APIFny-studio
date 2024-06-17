@@ -431,12 +431,12 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
           setTreeMenu('importproducts');
           setIsImportProductsModalOpen(true);
           break;  
-      case 'configuration':
-        setTreeMenu('configuration');
+      case 'workspace-action':
+        setTreeMenu('workspace-action');
         setIsConfigurationModalOpen(true);
         break;
-      case 'thirdparty':
-        setTreeMenu('thirdparty');
+      case 'api-action':
+        setTreeMenu('api-action');
         setIsThirdpartiesOpen(true);
         break;
       case 'importapidefinitions':

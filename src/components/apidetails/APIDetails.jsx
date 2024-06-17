@@ -396,7 +396,7 @@ const theme = createTheme({
          margin="normal" 
          onChange={(e) => handleApiDataChange('name', e.target.value)} />
         
-        <label className = "thirdParty" htmlFor="thirdparty">Third Party</label>
+        <label className = "thirdParty" htmlFor="thirdparty">Api Action</label>
               <select
                 id="thirdparty"
                 value={apiData.thirdparty} 

@@ -26,6 +26,55 @@ const tooltips = {
         <p>You can be a member of multiple workspaces!</p>`,
         isHtml: true 
       },
+      apiPreRequestAction: {
+        content: `<h3 style="margin-bottom: 10px; margin-top: 10px";>Pre Request Actions</h3>
+        <p> Pre-request actions are executed before an API call is made. These actions, written in JavaScript, are specified in a YAML configuration file. Ensure that any JavaScript code included in these YAML files is thoroughly debugged and executable.</p>
+                <ol>
+                    <li><strong>Workspace Actions</strong>: These actions are executed for all API definitions within a workspace.</li>
+                    <li><strong>Api Actions</strong>: These actions are executed only for the specific API definition they are associated with. They override the Workspace Actions for that particular API definition.</li>
+                </ol>
+          
+          <br>
+          <img src="/studio/pre-request-actions.jpeg" alt="pre-request-actions.jpeg" />
+        
+          <h3 style="margin-bottom: 10px; margin-top: 10px";>Workspace Actions</h3>
+                <p>This interface allows users to manage Pre-request API Actions in JavaScript for all apis in the workspace. A default entry is added for each workspace created. Pre-request API Actions in JavaScript are particularly useful when designing authentication methods. You may use them to affect the headers or requestbody of the API calls. Workspace Actions may be overriden by Api Actions if Api Definition is associated with an Api Action. See next section.</p>
+          <p><strong>Importance of Pre Request Api Actions</strong></p>
+                <p>There are many other use-case where a Workspace Action is needed. A Workspace Action definition can have its own details specified in its corresponding YAML configuration file. Instructions on configuring the YAML file are provided in the YAML action file section of this wiki.</p>
+        <br>
+        
+          
+        <h3 style="margin-bottom: 10px; margin-top: 10px";>API Actions</h3>
+                <p>This interface allows users to manage Pre-request API Actions in JavaScript. Any definition added on this screen can later be used in an API Definition within the API editor. Users can add, update, or delete Pre-request API Actions, as well as navigate through existing entries. Pre-request API Actions in JavaScript are particularly useful when integrating external APIs that are not part of the user's own backend or have different authentication methods. If enabled in the API definition by selecting it, Pre-request API Actions always override Workspace Actions.</p>
+          <p><strong>Importance of Pre Request Api Actions</strong></p>
+                <p>A Pre-request API Action definition may be required when you need to incorporate external APIs into your workflows. These are APIs that are not hosted on your own backend and may have different authentication methods. THere are many other use-case where a pre-request action is needed. Each Pre-request API Action definition can have its own details specified in its corresponding YAML configuration file. Instructions on configuring the YAML file are provided in the YAML action file section of this wiki.</p>
+        <br>
+          
+          <p><strong>Adding a Pre Request Api Actions</strong></p>
+                <p>To add a Pre Request Api Action record, fill in the name of the definition, description, and YAML data in the respective fields in the form. Once all fields are completed, click the "Add" button to register the new Pre Request Api Action.</p>
+          <p> <strong>Updating an Existing Pre Request Api Action</strong></p>
+                <p>Select an existing Pre Request Api Action record from the table by clicking on it. The selected record's details will be loaded into the form. Make any necessary changes and click the "Update" button to save the changes.</p>
+          <p><strong>Deleting a Pre Request Api Action</strong></p>
+                <p>With a Pre Request Api Action selected, click the "Delete" button to remove the record from the system. This action is irreversible.</p>
+          <p><strong>Navigating Records</strong></p>
+                <p>The table displays all Pre Request Api Action records associated with the main client. Click on any record to select it and view or modify its details in the form.</p>
+          <p><strong>Form Fields</strong></p>
+                <ul>
+                    <li><strong>Client Number:</strong> Unique identifier for the client. This field is auto-filled when updating records.</li>
+                    <li><strong>Name:</strong> Name of Pre Request Api Action.</li>
+                    <li><strong>Description:</strong> Brief description of the third party.</li>
+                    <li><strong>YAML:</strong> YAML configuration data for the third party. This field is crucial for defining the authentication method and other configurations necessary for API integration. How to configure the YAML file is explained in the YAML action file section of this wiki.</li>
+                </ul>
+          
+           <p><strong>Using the API Action</strong></p>
+                <p>Once you gave defined the api action, you can now use it in the api editor for one or more API definitions. Just select the api action name from the api action field and save:</p> 
+        
+        <br>
+         
+          <p><strong>Closing the Interface</strong></p>
+                <p>Click the "Close" button to exit the management interface at any time.</p>`,
+        isHtml: true 
+      },
     password: {
         content: `<strong>Please use the password you supplied to us at your first invitation.</strong>
                 <br>

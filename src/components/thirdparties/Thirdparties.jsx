@@ -100,12 +100,18 @@ const Thirdparties = ({clientNr, explorerId, onClose}) => {
 
   return (
     <div className="crud-table-container">
+      <div className="top">
+          <div className="left">Api Action</div>
+          <div className="close" onClick={onClose}>
+            &times;
+          </div>
+        </div>
     <div className = "thirdparty-table-container">
       <table>
         <thead>
           <tr>
             <th>Main Client</th>
-            <th>Third Party Name</th>
+            <th>Api Action Name</th>
             <th>Description</th>
            
           </tr>
@@ -136,7 +142,7 @@ const Thirdparties = ({clientNr, explorerId, onClose}) => {
               onChange={(e) => setFormData({ ...formData, clientNr: e.target.value })}
             />
           <label>
-            Name:
+           Api Action Name:
             <input
               className='thirdparty-input'
               type="text"
