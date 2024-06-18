@@ -50,6 +50,7 @@
     "react-file-picker": "^0.0.6",
     "react-folder-tree": "^5.1.1",
     "react-fontawesome": "^1.7.1",
+    "react-helmet": "^6.1.0",
     "react-icons": "^4.12.0",
     "react-json-editor-ajrm": "^2.5.14",
     "react-json-view": "^1.21.3",

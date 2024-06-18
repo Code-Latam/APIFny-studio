@@ -27,6 +27,8 @@ import Modalworkflow from "../modalworkflow/Modalworkflow";
 
 import Modalinvite from '../modalinvite/Modalinvite';
 
+import JiraServiceDeskModal from '../jiraservicedeskmodal/JiraServiceDeskModal';
+
 import Modalproduct from "../modalproduct/Modalproduct";
 import Modalconfiguration from "../modalconfiguration/Modalconfiguration";
 import Thirdparties from "../thirdparties/Thirdparties";
@@ -102,6 +104,7 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
 
   const [isExportProductsModalOpen, setIsExportProductsModalOpen] = useState(false);
   const [isImportProductsModalOpen, setIsImportProductsModalOpen] = useState(false);
+  const [isServicedDeskModalOpen, setIsServicedDeskModalOpen] = useState(false);
 
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [isConfigurationModalOpen, setIsConfigurationModalOpen] = useState(false);
@@ -261,7 +264,7 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
 
 
   const handleSelectTreeMenuItem = async  (menuItem, value) => {
-    
+    console.log("TOPLEVEL MENUTREE", menuItem)
 
     // isThirdpartiesOpen
     switch (menuItem) {
@@ -428,9 +431,17 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
         setIsExportProductsModalOpen(true);
         break;
       case 'importproducts':
+        console.log("IMPORT PRODUCT");
           setTreeMenu('importproducts');
           setIsImportProductsModalOpen(true);
-          break;  
+          break; 
+      case 'helpdesk':
+        console.log("SDESK");
+        const jiraServiceDeskUrl = 'https://customers.support.gwocu.com';
+        window.open(jiraServiceDeskUrl, '_blank', 'noopener,noreferrer');
+        // setTreeMenu('servicedesk');
+        // setIsServicedDeskModalOpen(true);
+        break; 
       case 'workspace-action':
         setTreeMenu('workspace-action');
         setIsConfigurationModalOpen(true);
@@ -844,6 +855,16 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
                   targetExplorerId = {explorerId}
                   onClose={() => {
                   setIsImportProductsModalOpen(false);
+                  }}
+                />
+              )}
+
+        {isServicedDeskModalOpen && (
+                <JiraServiceDeskModal
+                  clientNr = {clientNr}
+                  explorerId = {explorerId}
+                  onClose={() => {
+                  setIsServicedDeskModalOpen(false);
                   }}
                 />
               )}

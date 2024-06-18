@@ -40,7 +40,7 @@ export default function Topbar() {
         Sign Out
         </span>
         </div>
-        <a target="_blank" className="topbarLink" href="https://wiki.gwocu.com/en/GWOCU-Studio/GWOCU-Studio">Online Help</a>
+        <a target="_blank" className="topbarLink" href="https://wiki.gwocu.com/en/GWOCU-Studio/GWOCU-Studio">Wiki</a>
         <div className="topbarIcons">
           <div className="topbarIconItem">
             <Chat />

@@ -134,6 +134,7 @@ const openSubmenu3 = (item, event) => {
         default:
           setSubmenu({ visible: false, content: null, position: {} }); // Close any open submenu
           setSubmenu2({ visible: false, content: null, position: {} }); // Close any open submenu
+          console.log("ITEM", item)
           onSelectTreeMenuItem(item, value);
     }
  
@@ -227,12 +228,14 @@ const openSubmenu3 = (item, event) => {
              
               <>
 
-             
+              
+                
                 <div className="menu-item" onClick={(e) => handleMenuItemClick("invitations", null, e)}>
                   <GroupAdd  className="menu-icon" />
                   <span className="menu-text"> Invitations  </span>
                   <KeyboardArrowRight  className="menu-icon"/>
                 </div>
+                
 
                 {submenu.visible && (
                 <div className="context-menu-sub-tree" style={{ position: "absolute", top: 40, left: 200 }}>
@@ -261,6 +264,8 @@ const openSubmenu3 = (item, event) => {
                   ))}
                 </div>
                 )}
+
+             
               
               <div className="menu-separator"></div> 
                 <div className="menu-item" onClick={(e) => handleMenuItemClick("users", null, e)}>
