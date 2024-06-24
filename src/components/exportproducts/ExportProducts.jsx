@@ -148,9 +148,9 @@ const ExportProduct = ({ clientNr, explorerId, onClose }) => {
     <div className = "ExportProductmodalDialog">
     <div className="topapidef">
          <div className="leftapiExport" >Export Products 
-         <Tippy content={<CustomTooltip content={tooltips.exportProducts.content} isHtml={tooltips.exportProducts.isHtml} />} placement="right" theme = "terminal" maxWidth= "700px"  trigger ='click' interactive = "true" >    
-          <HelpCenterIcon />
-          </Tippy>
+         <a href="https://wiki.gwocu.com/en/GWOCU-Studio/product-tree-panel-menu#exportproducts-section" target="_blank" rel="noopener noreferrer">
+                        <HelpCenterIcon />
+            </a>
           </div>
     
           <div className="close" onClick={onClose}>

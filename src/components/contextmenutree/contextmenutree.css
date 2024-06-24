@@ -83,7 +83,16 @@
   }
 
   /* CSS */
-.menu-text-workspaces {
+  .menu-text-workspaces {
+    display: flex; /* Use inline-flex to align items horizontally */
+    align-items: center; /* Align items vertically in the center */
+    font-size: 14px; /* Adjust the font size of the text */
+    color: black;
+    font-weight: bold; 
+    justify-content: center;
+}
+
+.menu-text-workspaces2 {
   text-align: center; /* Centers the text horizontally within the div */
   font-size: 14px; /* Adjust the font size of the text */
   color: black;

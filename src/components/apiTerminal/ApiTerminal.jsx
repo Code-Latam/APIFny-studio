@@ -357,9 +357,9 @@ const ApiTerminal = ({ clientNr, explorerId, productName, workflowName, taskId,a
       <div className = "left-top-buttons-productview">
         <button className="save-button" onClick={handleSave}>Save</button>
         <button className="restore-button" onClick={handleRestoreDefault}>Restore Default</button>
-        <Tippy content={<CustomTooltip content={tooltips.curlExecution.content} isHtml={tooltips.curlExecution.isHtml} />} placement="right" theme = "terminal" trigger ='click' interactive = "true" >      
-        <HelpCenterIcon/>
-        </Tippy>
+        <a href="https://wiki.gwocu.com/en/GWOCU-Studio/curl-execution" target="_blank" rel="noopener noreferrer">
+                        <HelpCenterIcon />
+            </a>
       </div>
       <div className="page">
         <div className="curl-panel">

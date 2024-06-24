@@ -40,12 +40,19 @@ import {encodebody, getDecodedBody} from "../../utils/utils.js";
   const ContextMenuTree = ({onSelectTreeMenuItem, position }) => {
    
     const [explorers, setExplorers] = useState([]);
+    const [listExplorers, setListExplorers] = useState([]);
     const [invites, setInvites] = useState([]);
     const [users, setUsers] = useState([]);
     const { user } = useContext(AuthContext);
     const [submenu, setSubmenu] = useState({ visible: false, content: null, position: {} });
     const [submenu2, setSubmenu2] = useState({ visible: false, content: null, position: {} });
     const [submenu3, setSubmenu3] = useState({ visible: false, content: null, position: {} });
+
+    function filterUsersByExplorerId(users, explorerId) {
+      return users.filter(user =>
+        user.explorers.some(explorer => explorer.name === explorerId)
+      );
+    }
 
     useEffect(() => {
       const fetchData = async () => {
@@ -54,15 +61,17 @@ import {encodebody, getDecodedBody} from "../../utils/utils.js";
             clientNr:user.clientNr, chatbotKey: user.chatbotKey, email:user.email
           }));
           //set workspaces
-          const listExplorers = response.data.explorers;
+          const listExplorers = getDecodedBody(response.data.explorers);
           const names = listExplorers.map(explorer => explorer.name);
           setExplorers(names); // Adjust according to your response structure
           // fetch invites to populate submenu
+          setListExplorers(listExplorers);
           const inviteResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/invitation/queryall", encodebody({
             chatbotKey: user.chatbotKey
 
           }));
-          const emails = inviteResponse.data.map(invite => invite.email);
+          const inviteResponseData = getDecodedBody(inviteResponse.data)
+          const emails = inviteResponseData.map(invite => invite.email);
                 setInvites(emails);  // Set the state with the array of emails
 
           const usersResponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/queryall", encodebody({
@@ -70,8 +79,14 @@ import {encodebody, getDecodedBody} from "../../utils/utils.js";
             chatbotKey: user.chatbotKey
 
           }));
-          // const myUsersEmails = usersResponse.data.map(myuser => myuser.email);
-                setUsers(usersResponse.data);  // Set the state with the array of emails
+          // now filter the users so that the list will include only those tha are
+          // member of this workspace
+          
+          const allUsers = getDecodedBody(usersResponse.data);
+          const filteredUsers = filterUsersByExplorerId(allUsers, user.explorerId);
+
+
+          setUsers(filteredUsers);  // Set the state with the array of emails
 
           
         } catch (error) {
@@ -182,7 +197,7 @@ const openSubmenu3 = (item, event) => {
 
     const handleDeleteUser = (item, value) =>
      {
-      if (window.confirm(`Are you sure you want to delete ${value}? The user will be remove from all work spaces.`))
+      if (window.confirm(`Are you sure you want to remove ${value}? The user will be removed from this workspace only.`))
       {  
       onSelectTreeMenuItem(item, value);
       return
@@ -217,7 +232,22 @@ const openSubmenu3 = (item, event) => {
     };
 
     
+    function IsOwnerExplorer(explorers,name) {
+      const explorer = explorers.find(explorer => explorer.name === name);
+      return explorer ? explorer.owner : false;
+    }
+
+    function IsOwnerOrDesignerExplorer(explorers, name) {
+      const explorer = explorers.find(explorer => explorer.name === name);
+      return explorer ? (explorer.designer || explorer.owner) : false;
+  }
+
+    function hasOwnerOrDesigner(explorers) {
+      return explorers.some(explorer => explorer.owner || explorer.designer);
+    }
     
+
+   
     
   
   
@@ -229,22 +259,25 @@ const openSubmenu3 = (item, event) => {
               <>
 
               
-                
+              {IsOwnerExplorer(listExplorers, user.explorerId) && (
                 <div className="menu-item" onClick={(e) => handleMenuItemClick("invitations", null, e)}>
                   <GroupAdd  className="menu-icon" />
                   <span className="menu-text"> Invitations  </span>
                   <KeyboardArrowRight  className="menu-icon"/>
                 </div>
+              )}
                 
 
                 {submenu.visible && (
                 <div className="context-menu-sub-tree" style={{ position: "absolute", top: 40, left: 200 }}>
                     {/* Content based on `submenu.content` */}
+
                     <div className="menu-text-invitation">
-                    <Tippy content={<CustomTooltip content={tooltips.invitation.content} isHtml={tooltips.invitation.isHtml} />} placement="right" theme = "terminal" maxWidth= "700px"  trigger ='click' interactive = "true" >
-                    <HelpCenterIcon/>
-                    </Tippy>
+                    <a href="https://wiki.gwocu.com/en/GWOCU-Studio/product-tree-panel-menu#invitation-section" target="_blank" rel="noopener noreferrer">
+                        <HelpCenterIcon />
+                    </a>
                     </div>
+
                     <div className="menu-separator"></div>
                     <div className="menu-item" onClick={() => handleSendNewInvitation("SendNewInvitation", null)}>
                     <div className="menu-text-send">Send new invitation</div>
@@ -262,25 +295,28 @@ const openSubmenu3 = (item, event) => {
                       </div>
                     </React.Fragment>
                   ))}
+                     <div className="menu-separator"></div> 
                 </div>
+             
                 )}
 
              
               
-              <div className="menu-separator"></div> 
+            {IsOwnerExplorer(listExplorers, user.explorerId) && (
                 <div className="menu-item" onClick={(e) => handleMenuItemClick("users", null, e)}>
                   <GroupAdd  className="menu-icon" />
                   <span className="menu-text"> Users  </span>
                   <KeyboardArrowRight  className="menu-icon"/>
                 </div>
+            )}
 
               {submenu2.visible && (
                 <div className="context-menu-sub-tree" style={{ position: "absolute", top: 70, left: 200 }}>
                     {/* Content based on `submenu.content` */} 
                     <div className="menu-text-user">
-                    <Tippy content={<CustomTooltip content={tooltips.usersroles.content} isHtml={tooltips.usersroles.isHtml} />} placement="right" theme = "terminal" maxWidth= "700px"  trigger ='click' interactive = "true" >
-                    <HelpCenterIcon/>
-                    </Tippy>
+                    <a href="https://wiki.gwocu.com/en/GWOCU-Studio/product-tree-panel-menu#users-section" target="_blank" rel="noopener noreferrer">
+                        <HelpCenterIcon />
+                    </a>
                     </div>
                     
                     {users.map((user, index) => (
@@ -314,9 +350,12 @@ const openSubmenu3 = (item, event) => {
                 </div>
                 )}
 
-
-                <div className="menu-separator"></div> 
+       
+              
               </> 
+              { IsOwnerOrDesignerExplorer(listExplorers, user.explorerId) && (  
+              <div>
+              <div className="menu-separator"></div> 
               <div className="menu-item" onClick={(e) => handleMenuItemClick("importapidefinitions", null, e)}>
                 <Folder className="menu-icon" />
                 <span className="menu-text">Import Api Definitions</span>
@@ -327,14 +366,16 @@ const openSubmenu3 = (item, event) => {
                   <span className="menu-text"> Pre Request Actions  </span>
                   <KeyboardArrowRight  className="menu-icon"/>
               </div>
+              </div>
+              )}
 
               {submenu3.visible && (
                 <div className="context-menu-sub-tree" style={{ position: "absolute", top: 180, left: 200 }}>
                     {/* Content based on `submenu.content` */}
                     <div className="menu-text-invitation">
-                    <Tippy content={<CustomTooltip content={tooltips.apiPreRequestAction.content} isHtml={tooltips.apiPreRequestAction.isHtml} />} placement="right" theme = "terminal" maxWidth= "700px"  trigger ='click' interactive = "true" >
-                    <HelpCenterIcon/>
-                    </Tippy>
+                    <a href="https://wiki.gwocu.com/en/GWOCU-Studio/product-tree-panel-menu#prerequest-section" target="_blank" rel="noopener noreferrer">
+                        <HelpCenterIcon />
+                    </a>
                     </div>
                     <div className="menu-separator"></div>
                     <div className="menu-item" onClick={(e) => handleMenuItemClick("workspace-action", null, e)}>
@@ -344,11 +385,12 @@ const openSubmenu3 = (item, event) => {
                     <div className="menu-item" onClick={(e) => handleMenuItemClick("api-action", null,e)}>
                     <Code className="menu-icon" />
                     <span className="menu-text">Api Actions</span>
-            </div>
+                    </div>
                 </div>
                 )}
-
-
+      
+      { IsOwnerOrDesignerExplorer(listExplorers, user.explorerId) && (
+        <div>
               <div className="menu-separator"></div> 
               <div className="menu-item" onClick={(e) => handleMenuItemClick("exportproducts", null, e)}>
                 <Folder className="menu-icon" />
@@ -358,31 +400,49 @@ const openSubmenu3 = (item, event) => {
                 <Folder className="menu-icon" />
                 <span className="menu-text">Import Products</span>
               </div>
-
-          </>
+        </div>
+      )}
+    
+            </>
+            
+              
         )}
       
+      <div className="menu-separator">  </div>
+      <div className="menu-text-workspaces">Workspaces
+      <a href="https://wiki.gwocu.com/en/GWOCU-Studio/product-tree-panel-menu#workspaces-section" target="_blank" rel="noopener noreferrer">
+                        <HelpCenterIcon />
+      </a>
+      </div>
+      
       <div className="menu-separator"></div>
-      <Tippy content={<CustomTooltip content={tooltips.workspaces.content} isHtml={tooltips.workspaces.isHtml} />} placement="right" theme = "terminal"   trigger ='click' interactive = "true"> 
-      <div className="menu-text-workspaces">Workspaces(?)</div>
-      </Tippy>
-      <div className="menu-separator"></div>
+
+      { IsOwnerOrDesignerExplorer(listExplorers, user.explorerId) && (
         <div className="menu-item" onClick={() => handleCreateWorkspace("createWorkspace",null)}>
           <CreateNewFolder className="menu-icon" />
           <span className="menu-text">Create New Workspace</span>
-        </div>
+          
+        </div>  
+        
+      )}
+    <div className="menu-separator"></div>
         {/* Dynamically added menu items */}
        {/* Dynamically added menu items from API */}
        {explorers.map((explorer, index) => (
         <React.Fragment key={index}>
-          <div className="menu-separator"></div>
+          
           <div className="menu-item">
             <Bookmark className="menu-icon" />
             <span className="menu-text" onClick={(e) => handleMenuItemClick("explorer", explorer, e)}>{explorer}</span>
-            <Tippy content={<CustomTooltip content={tooltips.deleteWorkspace.content} isHtml={tooltips.deleteWorkspace.isHtml} />} placement="right" theme = "terminal"  interactive = "true"> 
+           
+            {explorer !== "1" && IsOwnerExplorer(listExplorers, explorer) && (
+            <Tippy content={<CustomTooltip content={tooltips.deleteWorkspace.content} isHtml={tooltips.deleteWorkspace.isHtml} />} placement="right" theme = "terminal"  interactive = "true">   
             <Delete className="menu-icon" onClick={(e) => handleDeleteExplorer("deleteExplorer",explorer, e)} style={{ cursor: 'pointer', marginLeft: '10px', fontSize: "14px", color: 'green'}} />
             </Tippy>
+            )}
+
           </div>
+          
         </React.Fragment>
       ))}
         

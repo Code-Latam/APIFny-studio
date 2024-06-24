@@ -306,7 +306,7 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
 
         history.push({
           pathname: '/edituser',
-          state: { targetuser: targetuser}
+          state: { targetuser: targetuser, explorerId : user.explorerId}
       });
         break;
 
@@ -337,28 +337,34 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
 
           case 'deleteUser':
           try {
-            await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/delete", encodebody({ clientNr: user.clientNr, chatbotKey: user.chatbotKey, email: value}));
+            // proceed to remove the current explorer from the user's explorers.
+            const myUser = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/query", encodebody({ clientNr: user.clientNr, chatbotKey: user.chatbotKey, email: value}));
+            const myUserData = getDecodedBody(myUser.data)
+            myUserData.explorers = myUserData.explorers.filter(explorer => explorer.name !== user.explorerId);
+            // Update the user to the backend
+            myUserData.clientNr = user.clientNr ;
+            await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/users/update", encodebody(myUserData));
           }
           catch (err) {
             if (err.response) {
               // The request was made and the server responded with a status code that is not in the range of 2xx
             
-              alert(`Failed to delete the user: ${getDecodedBody(err.response.data)}`);
+              alert(`Failed to remove the user: ${getDecodedBody(err.response.data)}`);
               break;
             } else if (err.request) {
               // The request was made but no response was received
               console.error("API Error: No response received");
-              alert("Failed to delete the user: No response from server");
+              alert("Failed to remove the user: No response from server");
               break
             } else {
               // Something happened in setting up the request that triggered an Error
-              alert(`Failed to delete the user: ${getDecodedBody(err.message)}`);
+              alert(`Failed to remove the user: ${getDecodedBody(err.message)}`);
               break;
             }
           
           }
           
-            alert(`User was successfully deleted`);
+            alert(`User was successfully removed from workspace`);
             break  
 
 
@@ -736,20 +742,23 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
           <button className="open-modal-button" onClick={openWorkflowModal}>
           Add Workflow
           </button>
-          <Tippy content={<CustomTooltip content={tooltips.leftPanel.content} isHtml={tooltips.leftPanel.isHtml} />} placement="right" theme = "terminal" trigger ='click' interactive = "true"> 
-          <HelpCenterIcon />
-          </Tippy>
+          <a href="https://wiki.gwocu.com/en/GWOCU-Studio/product-tree-panel#treebuttons-section" target="_blank" rel="noopener noreferrer">
+                        <HelpCenterIcon />
+            </a>
           </div>
-          <Tippy content={<CustomTooltip content={tooltips.mainMenu.content} isHtml={tooltips.mainMenu.isHtml} />} placement="right" theme = "terminal">
-          <div className="tree-icon-right-align">
-          <FiMoreVertical className="tree-context-menu-icon" onClick={handleTreeContextMenuClick} />
-          </div>
-          </Tippy>
+          
+
           <button  onClick={handleApiEditorClick}>All API's</button>
           <br></br>
           <br></br>
           </div>
           )}
+
+          <Tippy content={<CustomTooltip content={tooltips.mainMenu.content} isHtml={tooltips.mainMenu.isHtml} />} placement="right" theme = "terminal">       
+          <div className="tree-icon-right-align">
+          <FiMoreVertical className="tree-context-menu-icon" onClick={handleTreeContextMenuClick} />
+          </div>
+          </Tippy>
 
           {renderTree(products, false)}
         </div>

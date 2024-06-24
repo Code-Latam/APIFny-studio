@@ -402,9 +402,9 @@ function Linkview({ clientNr, explorerId, workflowName, mylink, linkId, authoriz
             {(authorization.designer || authorization.owner) && (
               <div className = "left-top-buttons-productview">
                 <button onClick={handleUpdate}>Update</button>
-                <Tippy content={<CustomTooltip content={tooltips.linkView.content} isHtml={tooltips.linkView.isHtml} />} placement="right" theme = "terminal" trigger ='click' interactive = "true" >      
-                <HelpCenterIcon/>
-                </Tippy>
+                <a href="https://wiki.gwocu.com/en/GWOCU-Studio/link-datail-panel" target="_blank" rel="noopener noreferrer">
+                        <HelpCenterIcon />
+            </a>
               </div>
             )}
             <br></br>

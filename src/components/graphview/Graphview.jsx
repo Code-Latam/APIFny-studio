@@ -520,14 +520,16 @@ const Graphview = ({ clientNr, explorerId, selectedProduct, selectedWork,onTaskC
          <div>
         <button className = "actionButton" onClick={() => handleDeleteLink()}>Remove Link</button>
         </div>
-        <div>
-        <button className="actionButton" onClick={saveSvgAsFile}>Save Image</button> {/* Button for saving SVG */}
-        </div>    
-        <Tippy content={<CustomTooltip content={tooltips.centerPanel.content} isHtml={tooltips.centerPanel.isHtml} />} placement="right" theme = "terminal" trigger ='click' interactive = "true" >
-        <HelpCenterIcon/>
-        </Tippy>
+        <a href="https://wiki.gwocu.com/en/GWOCU-Studio/graph-panel#graphpanel-section" target="_blank" rel="noopener noreferrer">
+                        <HelpCenterIcon />
+            </a>  
+        
         </div>
         )}
+
+        <div>
+        <button className="actionButton" onClick={saveSvgAsFile}>Save Image</button> {/* Button for saving SVG */}
+        </div> 
       <div className= "App">
         
         <div className="top-part">

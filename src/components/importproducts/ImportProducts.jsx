@@ -153,9 +153,9 @@ import {encodebody, getDecodedBody} from "../../utils/utils.js";
     <div className="topapidef">
      
           <div className="leftapiImport" >Import Products
-          <Tippy content={<CustomTooltip content={tooltips.importProducts.content} isHtml={tooltips.importProducts.isHtml} />} placement="right" theme = "terminal" maxWidth= "800px" trigger ='click' interactive="true" >
-          <HelpCenterIcon />
-          </Tippy>
+          <a href="https://wiki.gwocu.com/en/GWOCU-Studio/product-tree-panel-menu#importproducts-section" target="_blank" rel="noopener noreferrer">
+                        <HelpCenterIcon />
+            </a>
           </div>
    
           <div className="close" onClick={onClose}>

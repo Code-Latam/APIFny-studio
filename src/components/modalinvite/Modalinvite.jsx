@@ -62,19 +62,25 @@ function Modalinvite({ clientNr, explorerId, onClose }) {
       };
   
       const response = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/invitation/invite", encodebody(mypayload));
-      const responseData = getDecodedBody(response.data);
-      // Check if the response indicates an error
-      if (responseData && responseData.error) {
-        // Display an alert with the error data
-        alert(`Error: ${responseData.error}`);
-        return false;
-      }
       alert("Invite was successfully sent.")
       return true;
     } catch (error) {
-      // Handle unexpected errors (e.g., network issues)
-      alert("Invite was not succesfull. Please try again.");
-      return false;
+
+      if (error.response) {
+        // The request was made and the server responded with a status code that is not in the range of 2xx
+      
+        alert(`Failed to send invite to the user: ${getDecodedBody(error.response.data)}`);
+        return false
+      } else if (error.request) {
+        // The request was made but no response was received
+        alert("Failed to send invite to the user: No response from server");
+        return false
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        alert(`Failed to send invite to the user: ${getDecodedBody(error.message)}`);
+        return false
+      }
+      
     }
   };
   

@@ -161,9 +161,9 @@ const handleTextareaChange = (e) => {
                 <button className = 'editorButton' onClick={handleUpdate}>Update</button>
             
             )}
-       <Tippy content={<CustomTooltip content={tooltips.taskDescription.content} isHtml={tooltips.taskDescription.isHtml} />} placement="right" theme = "terminal" trigger ='click' interactive = "true" >      
-      <HelpCenterIcon/>
-      </Tippy>
+       <a href="https://wiki.gwocu.com/en/GWOCU-Studio/tasks-detail-panel" target="_blank" rel="noopener noreferrer">
+                        <HelpCenterIcon />
+            </a>
       </div>     
             <div>
               <label htmlFor="taskName">Task Name</label>

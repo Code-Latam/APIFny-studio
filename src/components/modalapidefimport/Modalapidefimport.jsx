@@ -104,9 +104,9 @@ function Modalapidefimport({ clientNr, explorerId,onClose }) {
       <div>
         <div className="topapidef">
             <div className="leftapiImport">Import Api Definitions
-            <Tippy content={<CustomTooltip content={tooltips.importApiDefinitions.content} isHtml={tooltips.importApiDefinitions.isHtml} />} placement="right" theme = "terminal" maxWidth= "600px" trigger ='click' interactive='true' >
-          <HelpCenterIcon />
-          </Tippy>
+            <a href="https://wiki.gwocu.com/en/GWOCU-Studio/product-tree-panel-menu#importapi-section" target="_blank" rel="noopener noreferrer">
+                        <HelpCenterIcon />
+            </a>
           </div>
         
           <div className="close" onClick={onClose}>

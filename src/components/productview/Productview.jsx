@@ -115,6 +115,8 @@ function Productview({ clientNr, explorerId, productName, authorization, updateT
         productName,
       };
 
+      console.log("PRODUCT REQUEST BODY", requestBody)
+
       try {
         // Make a POST request to fetch the product
         const response = await axios.post(apiUrl, encodebody(requestBody), {
@@ -130,7 +132,7 @@ function Productview({ clientNr, explorerId, productName, authorization, updateT
         const markdownContent = htmlToMd(data.description);
         setMarkdownContent(markdownContent);
       } catch (error) {
-        console.error('Error fetching product:', error);
+        console.log('Error fetching product:', error);
       }
     };
 
@@ -154,9 +156,9 @@ function Productview({ clientNr, explorerId, productName, authorization, updateT
       {(authorization.designer || authorization.owner) && (
                 <button className = "actionbutton" onClick={handleDelete}>Remove</button>
             )}
-      <Tippy content={<CustomTooltip content={tooltips.productDescription.content} isHtml={tooltips.productDescription.isHtml} />} placement="right" theme = "terminal" trigger ='click' interactive = "true" >      
-      <HelpCenterIcon/>
-      </Tippy>
+       <a href="https://wiki.gwocu.com/en/GWOCU-Studio/products-detail-panel" target="_blank" rel="noopener noreferrer">
+                        <HelpCenterIcon />
+            </a>  
       </div>
             <div className = "input-container">
               <label className = "input-label" htmlFor="productName">Product Name:</label>

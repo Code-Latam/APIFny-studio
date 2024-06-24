@@ -181,9 +181,9 @@ function Workflowview({ clientNr, explorerId, productName, name, authorization, 
       {(authorization.designer || authorization.owner) && (
                 <button className = "actionbutton" onClick={handleClone}>Clone</button>
             )}
-      <Tippy content={<CustomTooltip content={tooltips.workflowDescription.content} isHtml={tooltips.workflowDescription.isHtml} />} placement="right" theme = "terminal" trigger ='click' interactive = "true" >      
-      <HelpCenterIcon/>
-      </Tippy>
+      <a href="https://wiki.gwocu.com/en/GWOCU-Studio/workflows-detail-panel" target="_blank" rel="noopener noreferrer">
+                        <HelpCenterIcon />
+            </a>  
       </div>
       <div>
       {isWorkflowCloneModalOpen && (

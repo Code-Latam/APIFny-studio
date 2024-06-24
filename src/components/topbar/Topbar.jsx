@@ -28,7 +28,10 @@ export default function Topbar() {
     <div className="topbarContainer">
       <div className="topbarLeft">
       <a href={gwocuSettings.url} target="_blank" style={{ textDecoration: "none" }}>
-      <div className="logotext"> GWOCU Studio</div>
+      <div className="logotext">
+        {gwocuSettings.clientNr} GWOCU Studio: 
+        <span style={{ fontSize: 'smaller' }}>{user.explorerId}</span>
+      </div>
       </a>
       </div>
       <div className="topbarCenter">
@@ -39,18 +42,10 @@ export default function Topbar() {
         <span className="topbarLink" onClick={handleClick}>
         Sign Out
         </span>
+        <a target="_blank" className="topbarLink" href="https://wiki.gwocu.com/en/GWOCU-Studio/GWOCU-Studio">Wiki</a>    
         </div>
-        <a target="_blank" className="topbarLink" href="https://wiki.gwocu.com/en/GWOCU-Studio/GWOCU-Studio">Wiki</a>
-        <div className="topbarIcons">
-          <div className="topbarIconItem">
-            <Chat />
-            <span className="topbarIconBadge">2</span>
-          </div>
-          <div className="topbarIconItem">
-            <Notifications />
-            <span className="topbarIconBadge">1</span>
-          </div>
-        </div>
+        
+        
         <Link to={`/updateuser/`} className="user-container">   
          <div>{user.username}</div>
         </Link>
