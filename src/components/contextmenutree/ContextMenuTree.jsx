@@ -63,6 +63,7 @@ import {encodebody, getDecodedBody} from "../../utils/utils.js";
           //set workspaces
           const listExplorers = getDecodedBody(response.data.explorers);
           const names = listExplorers.map(explorer => explorer.name);
+          console.log("EXPLORER NAMES", names);
           setExplorers(names); // Adjust according to your response structure
           // fetch invites to populate submenu
           setListExplorers(listExplorers);
