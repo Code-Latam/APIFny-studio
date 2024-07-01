@@ -130,6 +130,7 @@ align-items: center; /* Vertically center items */
 .menu-text-send {
   text-align: center; /* Centers the text horizontally within the div */
   font-size: 14px; /* Adjust the font size of the text */
+  color: black;
  
 }
 

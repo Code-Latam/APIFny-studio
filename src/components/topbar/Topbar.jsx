@@ -46,9 +46,15 @@ export default function Topbar() {
         </div>
         
         
-        <Link to={`/updateuser/`} className="user-container">   
-         <div>{user.username}</div>
-        </Link>
+        {user.username === 'public@gwocu.com' ? (
+            <div className="user-container">
+              <div>{user.username}</div>
+            </div>
+          ) : (
+            <Link to={`/updateuser/`} className="user-container">
+              <div>{user.username}</div>
+            </Link>
+          )}
       </div>
     </div>
   );

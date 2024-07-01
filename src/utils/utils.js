@@ -10,7 +10,6 @@ export function encodebody(originalbody, gwokenPar = null, gwokenTokenPar= null,
 
     {
     console.log("GETTING STORAGE ITEMS");
-    console.log(localStorage.getItem('gwocu-setting'));
     const gwocuSettingsString = localStorage.getItem('gwocu-setting');
     const gwocuSettings = gwocuSettingsString ? JSON.parse(gwocuSettingsString) : null;
     gwoken = gwocuSettings.gwoken ;

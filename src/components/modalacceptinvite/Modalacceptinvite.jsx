@@ -61,8 +61,8 @@ function Modalacceptinvite({ clientNr, explorerId, onClose }) {
 
     // verify token and return JSON
     try {
-    const tokenresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/invitation/verifytoken', encodebody({token:token}));
-    var myuserData = getDecodedBody(tokenresponse.data)
+    const tokenresponse = await axios.post(process.env.REACT_APP_CENTRAL_BACK + '/invitation/verifytoken', {token:token});
+    var myuserData = tokenresponse.data
     setClient(myuserData.clientNr);
   
     }
@@ -70,6 +70,19 @@ function Modalacceptinvite({ clientNr, explorerId, onClose }) {
       alert("Your token is either invalid or expired or your login has already been created. Token expires after 5 days")
       return
     }
+    // set gwocu-setting so APIS can start using gwocu
+    const clientPayload = {
+      clientNr: myuserData.clientNr,
+      secretKey: process.env.REACT_APP_SECRET_KEY
+    }
+
+    console.log("Client Payload", clientPayload );
+
+    const clientRes = await axios.post(process.env.REACT_APP_CENTRAL_BACK + "/clients/query",clientPayload );
+   
+    const myclient = clientRes.data;
+    const gwocuSettingsString = JSON.stringify(myclient);
+    localStorage.setItem('gwocu-setting', gwocuSettingsString);
 
     // Send data to your API endpoint to create the user
     try {

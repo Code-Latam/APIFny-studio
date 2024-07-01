@@ -2,6 +2,8 @@
 
 import Explorer from "./pages/explorer/Explorer";
 import Modalacceptinvite from "./components/modalacceptinvite/Modalacceptinvite";
+import Modalacceptpublicinvite from "./components/modalacceptpublicinvite/Modalacceptpublicinvite";
+
 import {
   BrowserRouter as Router,
   Switch,
@@ -82,6 +84,9 @@ function App() {
         </Route>
         <Route path="/acceptinvite">
           <Modalacceptinvite />
+        </Route>
+        <Route path="/acceptpublicinvite">
+          <Modalacceptpublicinvite />
         </Route>
         <Route path="/apiseditor">
         {user ? <ApisEditor 

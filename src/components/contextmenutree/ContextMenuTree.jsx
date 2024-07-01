@@ -232,6 +232,11 @@ const openSubmenu3 = (item, event) => {
         onSelectTreeMenuItem(item, value)
     };
 
+    const handleCreatePublicInvitation = (item, value) => {
+      
+      onSelectTreeMenuItem(item, value)
+  };
+
     
     function IsOwnerExplorer(explorers,name) {
       const explorer = explorers.find(explorer => explorer.name === name);
@@ -281,8 +286,10 @@ const openSubmenu3 = (item, event) => {
 
                     <div className="menu-separator"></div>
                     <div className="menu-item" onClick={() => handleSendNewInvitation("SendNewInvitation", null)}>
-                    <div className="menu-text-send">Send new invitation</div>
-                
+                    <div className="menu-text-send">Send private invitation</div>
+                    </div>
+                    <div className="menu-item" onClick={() => handleCreatePublicInvitation("CreatePublicInvitation", null)}>
+                    <div className="menu-text-send">Create public invitation</div>
                     </div>
                     <div className="menu-separator"></div> 
                     <div className="menu-text-workspaces">Invitations Pending</div>
@@ -326,7 +333,7 @@ const openSubmenu3 = (item, event) => {
                       <div className="menu-item">
                         <Email className="menu-icon" />
                         <div className="menu-text" >{user.email}</div>
-                        {user.username !== "Admin" && (
+                        {user.username !== "Admin" && user.username !== "public@gwocu.com" && (
                           <>
                             <Tippy content={<CustomTooltip content={tooltips.editUser.content} isHtml={tooltips.editUser.isHtml} />} placement="right" theme = "terminal"  interactive = "true">
                             <Edit 

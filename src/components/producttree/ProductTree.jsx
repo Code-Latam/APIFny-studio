@@ -26,6 +26,7 @@ import ContextMenuTree from "../contextmenutree/ContextMenuTree";
 import Modalworkflow from "../modalworkflow/Modalworkflow"; 
 
 import Modalinvite from '../modalinvite/Modalinvite';
+import Modalpublicinvite from '../modalpublicinvite/Modalpublicinvite';
 
 import JiraServiceDeskModal from '../jiraservicedeskmodal/JiraServiceDeskModal';
 
@@ -98,6 +99,7 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
   const [newGraphItem, setNewGraphItem] = useState(0);
 
   const [showModalInvite, setShowModalInvite] = useState(false);
+  const [showModalPublicInvite, setShowModalPublicInvite] = useState(false);
 
   const [isWorkflowModalOpen, setIsWorkflowModalOpen] = useState(false);
   const [isApiDefImportModalOpen, setIsApiDefImportModalOpen] = useState(false);
@@ -298,6 +300,11 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
         case 'SendNewInvitation':
         setShowModalInvite(true);
         break;
+
+        case 'CreatePublicInvitation':
+          setShowModalPublicInvite(true);
+          break;
+  
 
         case 'editUser':
         // fetch user
@@ -816,6 +823,15 @@ const ProductTree = ({authorization, clientNr, explorerId}) => {
           explorerId={user.explorerId}
           onClose={() => {
             setShowModalInvite(false);
+          }}
+        />
+      )}
+      {showModalPublicInvite && (
+        <Modalpublicinvite
+          clientNr={user.clientNr}
+          explorerId={user.explorerId}
+          onClose={() => {
+            setShowModalPublicInvite(false);
           }}
         />
       )}
