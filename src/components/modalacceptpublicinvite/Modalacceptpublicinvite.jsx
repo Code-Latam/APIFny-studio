@@ -133,8 +133,8 @@ function Modalacceptpublicinvite({ clientNr, explorerId, onClose }) {
           }
         }
 
-      // redirect
-
+      // do a complete load
+      window.location.href = '/';
      
 
   };
